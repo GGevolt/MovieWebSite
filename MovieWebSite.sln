@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWebSite.Server", "MovieWebSite.Server\MovieWebSite.Server.csproj", "{C2F95C9E-0DA1-469C-948F-3B560D856146}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "moviewebsite.client", "moviewebsite.client\moviewebsite.client.esproj", "{77A199C2-A54F-43BC-BF1C-8524E64277EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2F95C9E-0DA1-469C-948F-3B560D856146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2F95C9E-0DA1-469C-948F-3B560D856146}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2F95C9E-0DA1-469C-948F-3B560D856146}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2F95C9E-0DA1-469C-948F-3B560D856146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5EC26485-02C7-4DCD-8492-1CFF8BE4B6E6}
+	EndGlobalSection
+EndGlobal
