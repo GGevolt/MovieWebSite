@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import './App.css';
+import NarBar from "./NavBar"
 
 function App() {
     
 
     return (
-        <div>
-            <p>This component demonstrates fetching data from the server.</p>
-        </div>
+        <>
+            <NarBar/>
+            <div  className="footer">
+
+            </div>
+        </>
     );
 }
 
