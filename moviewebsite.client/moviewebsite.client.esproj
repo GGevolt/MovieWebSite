@@ -9,7 +9,10 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="src\Footer\**" />
+    <TypeScriptConfiguration Remove="src\Footer\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="src\assets\Image\" />
-    <Folder Include="src\Footer\" />
   </ItemGroup>
 </Project>

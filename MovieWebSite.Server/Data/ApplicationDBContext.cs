@@ -16,6 +16,7 @@ namespace MovieWebSite.Server.Data
 		public ApplicationDBContext(DbContextOptions<ApplicationDBContext> option) : base(option)
 		{
 
+
 		}
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -45,6 +46,12 @@ namespace MovieWebSite.Server.Data
 				.HasOne(cf => cf.Film)
 				.WithMany(f => f.CategoryFilms)
 				.HasForeignKey(cf => cf.FilmId);
-		}
+
+			modelBuilder.Entity<Category>().HasData(
+				new Category { Id = 1, Name = "Action"},
+				new Category { Id = 2, Name = "Comedy"}
+				);
+
+        }
 	}
 }

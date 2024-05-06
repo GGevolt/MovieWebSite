@@ -4,15 +4,11 @@ using MovieWebSite.Server.Repository.IRepository;
 
 namespace MovieWebSite.Server.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    [Route("[controller]")]
+    public class CategoryController(IUnitOfWork unitOfWork) : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        public CategoryController(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         // GET: api/Category
         [HttpGet]

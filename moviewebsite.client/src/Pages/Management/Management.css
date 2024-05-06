@@ -1,0 +1,11 @@
+.firstLine{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    max-width: 100%;
+}
+.catePag{
+    display: flex;
+    justify-content: end;
+}

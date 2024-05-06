@@ -13,7 +13,7 @@ namespace MovieWebSite.Server.Models
 		[Key]
 		public int Id { get; set; }
 		[Required]
-		public string Name { get; set; }
+		public required string Name { get; set; }
 		[ValidateNever]
 		public virtual ICollection<CategoryFilm>? CategoryFilms { get; set; }
 	}
