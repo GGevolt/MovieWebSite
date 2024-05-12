@@ -30,4 +30,9 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\" />
+    <Folder Include="wwwroot\videos\" />
+  </ItemGroup>
+
 </Project>

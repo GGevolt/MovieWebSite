@@ -5,15 +5,20 @@ import Popup from 'reactjs-popup';
 import { XCircleFill } from 'react-bootstrap-icons';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import './CategoryCUForm.css';
+import './Form.css';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import PropTypes from 'prop-types';
+import { object, string} from 'yup';
 
 
 function CategoryCUForm({ category, onSuccess}){
     const [name, setName] = useState(category? category.name : '');
     const [id, setId] = useState(category? category.id : 0);
     const [openForm, setOpen] = useState(false);
+    const [errors,setErrors] = useState([]);
+    const validateSchema = object({
+        name: string().required("Category name field is empty, Pls input to proceed!").max(50,"The name is too long!")
+    });
     const resetForm = () => {
         setName(category ? category.name : '');
         setId(category ? category.id : 0);
@@ -26,9 +31,20 @@ function CategoryCUForm({ category, onSuccess}){
         resetForm();
     }, [category]);
     
-    const handleSubmit = (event) => {
+    const handleSubmit =async(event) => {
         event.preventDefault();
         const formData = { name, id };
+        try{
+            await validateSchema.validate(formData,{ abortEarly: false })
+            setErrors({});
+        }catch(error){
+            const newErrors = {};
+            error.inner.forEach(err => {
+                newErrors[err.path] = err.message;
+            });
+            setErrors(newErrors);
+            return;
+        }
         if (id === 0) {
             axios.post('/category', formData)
                 .then(() => {
@@ -39,7 +55,7 @@ function CategoryCUForm({ category, onSuccess}){
                     console.error('There has been a problem with category create operation:', error);
                 });
         } else {
-            axios.post('/categorymanagement', formData)
+            axios.post('/category', formData)
                 .then(() => {
                     onSuccess();
                     closeForm();
@@ -62,6 +78,7 @@ function CategoryCUForm({ category, onSuccess}){
                     <Form.Group className="mb-3">
                         <FloatingLabel controlId="floatingName" label="Name" className="custom-label">
                             <Form.Control type="text" value={name} onChange={e => setName(e.target.value)} placeholder='' />  
+                            {errors.name && <Form.Text className='error'>{errors.name}</Form.Text>} 
                         </FloatingLabel>
                     </Form.Group>
                     <Button type="submit" className='button'>{id === 0 ? "Create" : "Update"}</Button>

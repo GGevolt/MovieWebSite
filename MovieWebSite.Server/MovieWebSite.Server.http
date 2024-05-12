@@ -1,6 +1,0 @@
-@MovieWebSite.Server_HostAddress = http://localhost:7040
-
-GET {{MovieWebSite.Server_HostAddress}}/category/
-Accept: application/json
-
-###

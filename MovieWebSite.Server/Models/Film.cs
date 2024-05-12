@@ -15,7 +15,9 @@ namespace MovieWebSite.Server.Models
 		[Required]
 		public string Title { get; set; }
 		public string? FilmImg { get; set; }
+		[Required]
 		public string Synopsis { get; set; }
+		[Required]
 		public string Director { get; set; }
 		[ValidateNever]
 		public virtual ICollection<CategoryFilm> CategoryFilms { get; set; }

@@ -46,7 +46,23 @@ export default defineConfig({
                 target,
                 secure: false,
                 changeOrigin: true,
+            },
+            '^/film': {
+                target,
+                secure: false,
+                changeOrigin: true,
+            },
+            '^/images': {
+                target,
+                secure: false,
+                changeOrigin: true,
+            },
+            '^/file': {
+                target,
+                secure: false,
+                changeOrigin: true,
             }
+
         },
         port: 5173,
         https: {

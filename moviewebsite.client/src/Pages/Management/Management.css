@@ -2,10 +2,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 0.9375rem 0;
     max-width: 100%;
 }
-.catePag{
+.Pag{
     display: flex;
     justify-content: end;
+}
+.func{
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
 }

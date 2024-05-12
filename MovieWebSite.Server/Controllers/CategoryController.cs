@@ -10,37 +10,50 @@ namespace MovieWebSite.Server.Controllers
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        // GET: api/Category
         [HttpGet]
         public IActionResult GetCategories()
         {
             return Ok(_unitOfWork.CategoryRepository.GetAll());
         }
 
-        // POST: api/Category
         [HttpPost]
         public IActionResult CreateUpdateCategory([FromBody] Category category)
         {
-            if (category.Id == 0)
+            try
             {
-                _unitOfWork.CategoryRepository.Add(category);
+                if (category.Id == 0)
+                {
+                    _unitOfWork.CategoryRepository.Add(category);
+                }
+                else
+                {
+                    _unitOfWork.CategoryRepository.Update(category);
+                }
+                _unitOfWork.Save();
+                return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                _unitOfWork.CategoryRepository.Update(category);
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, "Internal server error.");
             }
-            _unitOfWork.Save();
-            return Ok();
         }
 
-        // DELETE: api/Category/5
         [HttpDelete("{id}")]
         public IActionResult DeleteCategory(int id)
         {
-            var category = _unitOfWork.CategoryRepository.Get(c => c.Id == id);
-            _unitOfWork.CategoryRepository.Remove(category);
-            _unitOfWork.Save();
-            return Ok();
+            try
+            {
+                var category = _unitOfWork.CategoryRepository.Get(c => c.Id == id);
+                _unitOfWork.CategoryRepository.Remove(category);
+                _unitOfWork.Save();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, "Internal server error.");
+            }
         }
     }
 }

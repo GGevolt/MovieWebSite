@@ -2,6 +2,8 @@
 
 .popup-content {
     background-color: #ffa580;
+    max-height: 90%;
+    max-width: 80%;
     padding: 30px 40px;
     border-radius: 10px;
     zoom: 110%;
@@ -65,4 +67,8 @@
     min-width: 120px;
     padding: 0 25px;
   }
+}
+
+.error{
+    color: firebrick;
 }

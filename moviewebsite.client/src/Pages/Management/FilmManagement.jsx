@@ -3,21 +3,23 @@ import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Spinner from 'react-bootstrap/Spinner';
 import axios from 'axios';
-import CategoryCUForm from '../../Components/Form/CategoryCUForm';
 import NavBar from "../../Components/NavBar";
 import Footer from "../../Footer";
+import Image from 'react-bootstrap/Image';
+import FilmCUForm from '../../Components/Form/FilmCUForm';
 import Pagination from '../../Components/Pagination';
+import PictureUpload from '../../Components/Upload/PictureUpload';
 import Delete from '../../Components/Utility/Delete';
 import './Management.css';
 
-function CategoryManagement(){
-    const [categories, setCategories] = useState([]);
+function FilmManagement(){
+    const [films, setFilms] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = categories.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = films.slice(indexOfFirstItem, indexOfLastItem);
 
     useEffect(() => {
         refreshData();
@@ -27,36 +29,38 @@ function CategoryManagement(){
         setCurrentPage(page);
     }
     const refreshData=() => {
-        axios.get('/category')
+        axios.get('/film')
             .then(response => {
-                setCategories(response.data);
+                setFilms(response.data);
                 setIsLoading(false);
             })
            .catch(error => {
-                console.error('There has been a problem with category get operation:', error);
+                console.error('There has been a problem with film get operation:', error);
                 setIsLoading(false);
             });
     }
 
-
-    const categotyTable = [
+    const filmTable = [
             <Table striped bordered responsive hover variant="dark">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Category</th>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Synopsis</th>
+                        <th>Diretor</th>
                         <th>Functions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {currentItems.map((category,i) => (
+                    {currentItems.map((film,i) => (
                         <tr key={i} >
-                            <td>{category.id}</td>
-                            <td>{category.name}</td>
+                            <td>{film.filmImg !=='' && <Image src={`/images/${film.filmImg}`} thumbnail alt='Movie picture'/>}</td>
+                            <td>{film.title}</td>
+                            <td>{film.synopsis}</td>
+                            <td>{film.director}</td>
                             <td>
                                 <div className='func'>
-                                    <CategoryCUForm category={category} onSuccess={refreshData} />
-                                    <Delete type="category" onSuccess={refreshData} id={category.id}/>
+                                    <Delete type="film" id={film.id} onSuccess={refreshData}/>
                                 </div>
                             </td>
                         </tr>
@@ -69,18 +73,18 @@ function CategoryManagement(){
             <NavBar/>
             <Container fluid>
                 <Container className='firstLine'>
-                    <h1>Manage Category</h1>
-                    <CategoryCUForm onSuccess={refreshData}/>
+                    <h1>Manage Films</h1>
+                    <FilmCUForm onSuccess={refreshData}/>
                 </Container>
                 {isLoading? (<Spinner animation="border" /> ) 
-                : categories.length > 0? categotyTable 
-                : (<h4>No categories found.</h4>)}
+                : films.length > 0? filmTable 
+                : (<h4>No Movies found.</h4>)}
                 <div className="Pag">
-                    <Pagination data={categories} onPageChange={handlePageChange} itemsPerPage= {itemsPerPage}/>
+                    <Pagination data={films} onPageChange={handlePageChange} itemsPerPage= {itemsPerPage}/>
                 </div>
             </Container>
             <Footer/>
         </div>
     );
 }
-export default CategoryManagement;
+export default FilmManagement;

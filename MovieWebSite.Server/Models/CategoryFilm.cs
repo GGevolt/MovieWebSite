@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +11,12 @@ namespace MovieWebSite.Server.Models
 	public class CategoryFilm
 	{
 		public int CategoryId { get; set; }
-		public Category Category { get; set; }
+        [ForeignKey("CategoryId")]
+        [ValidateNever]
+        public Category Category { get; set; }
 		public int FilmId { get; set; }
-		public Film Film { get; set; }
+        [ForeignKey("FilmId")]
+        [ValidateNever]
+        public Film Film { get; set; }
 	}
 }
