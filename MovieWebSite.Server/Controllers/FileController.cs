@@ -12,15 +12,15 @@ namespace MovieWebSite.Server.Controllers
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IWebHostEnvironment _webhost = webhost;
         [HttpPost]
-        public IActionResult UploadMoviePicture([FromForm] IFormFile imageFile, int filmId)
+        public IActionResult UploadMoviePicture([FromForm] FilmPicVM filmPicVM)
         {
             try
             {
                 string wwwRootPath = _webhost.WebRootPath;
-                if (imageFile != null)
+                if (filmPicVM.ImageFile != null)
                 {
-                    var film = _unitOfWork.FilmRepository.Get(f=>f.Id==filmId);
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    var film = _unitOfWork.FilmRepository.Get(f=>f.Id==filmPicVM.FilmId);
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filmPicVM.ImageFile.FileName);
                     string imagePath = Path.Combine(wwwRootPath, "img");
                     if (!string.IsNullOrEmpty(film.FilmImg))
                     {
@@ -32,17 +32,18 @@ namespace MovieWebSite.Server.Controllers
                     }
                     using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
                     {
-                        imageFile.CopyTo(fileStream);
+                        filmPicVM.ImageFile.CopyTo(fileStream);
                     }
                     film.FilmImg = fileName;
                     _unitOfWork.FilmRepository.Update(film);
+                    _unitOfWork.Save();
                 }
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while uploading the Movie picture.");
+                return StatusCode(500, "An error occurred while uploading the Movie picture:"+ex);
             }
         }
     }

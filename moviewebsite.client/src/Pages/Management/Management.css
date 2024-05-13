@@ -14,3 +14,28 @@
     flex-direction: column;
     gap: 0.625rem;
 }
+.movie-pic{
+    
+}
+.body-content{
+    max-width: 80%;
+}
+
+#film-table{
+    width: 100%;
+}
+#film-table .image-col{
+    width: 20%;
+}
+#film-table .title-col{
+    width: 20%;
+}
+#film-table .synopsis-col{
+    width: 30%;
+}
+#film-table .director-col{
+    width: 20%;
+}
+#film-table .funcs-col{
+    width: 10%;
+}

@@ -41,25 +41,27 @@ function FilmManagement(){
     }
 
     const filmTable = [
-            <Table striped bordered responsive hover variant="dark">
+            <Table striped bordered hover variant="dark" id='film-table'>
                 <thead>
                     <tr>
-                        <th>Image</th>
-                        <th>Title</th>
-                        <th>Synopsis</th>
-                        <th>Diretor</th>
-                        <th>Functions</th>
+                        <th className='image-col'>Image</th>
+                        <th className='title-col'>Title</th>
+                        <th className='synopsis-col'>Synopsis</th>
+                        <th className='director-col'>Diretor</th>
+                        <th className='funcs-col'>Functions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {currentItems.map((film,i) => (
                         <tr key={i} >
-                            <td>{film.filmImg !=='' && <Image src={`/images/${film.filmImg}`} thumbnail alt='Movie picture'/>}</td>
+                            <td>{film.filmImg !=='' && <Image src={`/images/${film.filmImg}`} thumbnail alt='Movie picture' className='movie-pic'/>}</td>
                             <td>{film.title}</td>
                             <td>{film.synopsis}</td>
                             <td>{film.director}</td>
                             <td>
                                 <div className='func'>
+                                    <PictureUpload id={film.id} onSuccess={refreshData}/>
+                                    <FilmCUForm film={film} onSuccess={refreshData}/>
                                     <Delete type="film" id={film.id} onSuccess={refreshData}/>
                                 </div>
                             </td>

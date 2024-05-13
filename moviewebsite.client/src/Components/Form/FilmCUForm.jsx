@@ -1,15 +1,9 @@
-import Form from 'react-bootstrap/Form';
+import {Form, Container, FloatingLabel, Button, Col, Row} from 'react-bootstrap';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import Container from 'react-bootstrap/Container';
+import React, { useEffect, useState } from 'react';
 import './Form.css';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Button from 'react-bootstrap/Button';
 import Popup from 'reactjs-popup';
 import { XCircleFill } from 'react-bootstrap-icons';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Image from 'react-bootstrap/Image';
 import PropTypes from 'prop-types';
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
@@ -116,11 +110,10 @@ function FilmCUForm (props) {
     return (
         <>
         <Button variant="outline-success" onClick={() => setOpen(o => !o)}>{film.id === 0 ? "Create New Film" : "Update"}</Button>
-        <Popup open={openForm} closeOnDocumentClick onClose={closeForm}>
-            <Container>
+        <Popup open={openForm} closeOnDocumentClick onClose={closeForm} className="form-popup">
+            <Container >
                 <XCircleFill className="close" onClick={closeForm}/>
                 <h3>{film.id === 0 ? "Create" : "Update"} a Movie</h3>
-                {film.filmImg !=='' && <Image src={`/images/${film.filmImg}`} thumbnail alt='Movie picture'  /> }
                 <Form onSubmit={handleSubmit} encType="multipart/form-data">
                     <Form.Control type="hidden" value={film.id} onChange={handleChange} name="id" />
                     <Row className="mb-3">

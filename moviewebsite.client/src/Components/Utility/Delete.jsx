@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const Delete = ({ type, id, onSuccess})=>{
     if(type==="category" || type==="film" && id > 0){
-        const handleDelete = (id) =>{
+        const handleDelete = () =>{
             axios.delete(`/${type}/${id}`).then(() => {
                 onSuccess();
             }).catch(error => {
@@ -13,7 +13,7 @@ const Delete = ({ type, id, onSuccess})=>{
             });
         }
         return(
-            <Button variant="outline-danger" onClick={()=>handleDelete(id)}>Delete</Button>
+            <Button variant="outline-danger" onClick={()=>handleDelete()}>Delete</Button>
         );
     }
     return console.log(`Something is wrong with delete! The type: ${type}, id:${id}`);

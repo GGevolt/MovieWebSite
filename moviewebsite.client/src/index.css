@@ -17,6 +17,7 @@ body{
     padding: 0;
 }
 .body{
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     min-height: 100vh;

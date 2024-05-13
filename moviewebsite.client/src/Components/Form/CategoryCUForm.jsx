@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { object, string} from 'yup';
 
 
+
 function CategoryCUForm({ category, onSuccess}){
     const [name, setName] = useState(category? category.name : '');
     const [id, setId] = useState(category? category.id : 0);
@@ -69,7 +70,7 @@ function CategoryCUForm({ category, onSuccess}){
     return (
         <>
         <Button variant="outline-success" onClick={() => setOpen(o => !o)}>{id === 0 ? "Create category" : "Update"}</Button>
-        <Popup open={openForm} closeOnDocumentClick onClose={closeForm}>
+        <Popup open={openForm} closeOnDocumentClick onClose={closeForm} className="form-popup">
             <Container>
                 <XCircleFill className="close" onClick={closeForm}/>
                 <h3>{id === 0 ? "Create" : "Update"} a category</h3>
