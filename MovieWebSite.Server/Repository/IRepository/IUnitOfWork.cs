@@ -2,7 +2,8 @@
 {
 	public interface IUnitOfWork
 	{
-		IVideoRepository VideoRepository { get; }
+		ITrailerRepository TrailerRepository { get; }
+		IEpisodeRepository EpisodeRepository { get; }
 		IQualityRepository QualityRepository { get; }
 		IVideoQualityRepository VideoQualityRepository { get; }
 		IApplicationUserRepository ApplicationUserRepository { get; }

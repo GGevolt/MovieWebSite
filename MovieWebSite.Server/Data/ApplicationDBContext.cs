@@ -10,7 +10,8 @@ namespace MovieWebSite.Server.Data
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<Film> Films { get; set; }
 		public DbSet<CategoryFilm> CategoryFilms { get; set; }
-		public DbSet<Video> Videos { get; set; }
+		public DbSet<Trailer> Trailers { get; set; }
+		public DbSet<Episode> Episodes {  get; set; }
 		public DbSet<Quality> Qualities { get; set; }
 		public DbSet<VideoQuality> VideoQualities { get; set; }
 		public ApplicationDBContext(DbContextOptions<ApplicationDBContext> option) : base(option)
@@ -22,14 +23,19 @@ namespace MovieWebSite.Server.Data
 		{
 			base.OnModelCreating(modelBuilder);
 			modelBuilder.Entity<VideoQuality>()
-				.HasKey(vq => new { vq.VideoId, vq.QualityId });
+				.HasKey(vq => new { vq.TrailerId, vq.EpisodeId, vq.QualityId });
 
 			modelBuilder.Entity<VideoQuality>()
-				.HasOne(vq => vq.Video)
-				.WithMany(v => v.VideoQualities)
-				.HasForeignKey(vq => vq.VideoId);
+				.HasOne(vq => vq.Trailer)
+				.WithMany(t => t.VideoQualities)
+				.HasForeignKey(vq => vq.TrailerId);
 
-			modelBuilder.Entity<VideoQuality>()
+            modelBuilder.Entity<VideoQuality>()
+                .HasOne(vq => vq.Episode)
+                .WithMany(e => e.VideoQualities)
+                .HasForeignKey(vq => vq.EpisodeId);
+
+            modelBuilder.Entity<VideoQuality>()
 				.HasOne(vq => vq.Quality)
 				.WithMany(q => q.VideoQualities)
 				.HasForeignKey(vq => vq.QualityId);

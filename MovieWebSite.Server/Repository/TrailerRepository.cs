@@ -4,17 +4,17 @@ using MovieWebSite.Server.Repository.IRepository;
 
 namespace MovieWebSite.Server.Repository
 {
-	internal class VideoRepository : Repository<Video>, IVideoRepository
+	internal class TrailerRepository : Repository<Trailer>, ITrailerRepository
 	{
 		private readonly ApplicationDBContext _dbContext;
-		public VideoRepository(ApplicationDBContext dbContext) : base(dbContext)
+		public TrailerRepository(ApplicationDBContext dbContext) : base(dbContext)
 		{
 			_dbContext = dbContext;
 		}
 
-		public void Update(Video video)
+		public void Update(Trailer trailer)
 		{
-			_dbContext.Update(video);
+			_dbContext.Update(trailer);
 		}
 	}
 }

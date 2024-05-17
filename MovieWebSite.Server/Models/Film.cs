@@ -12,13 +12,11 @@ namespace MovieWebSite.Server.Models
 	{
 		[Key]
 		public int Id { get; set; }
-		[Required]
-		public string Title { get; set; }
+		public required string Title { get; set; }
 		public string? FilmImg { get; set; }
-		[Required]
-		public string Synopsis { get; set; }
-		[Required]
-		public string Director { get; set; }
+		public required string Synopsis { get; set; }
+		public required string Director { get; set; }
+		public required string Type { get; set; }
 		[ValidateNever]
 		public virtual ICollection<CategoryFilm> CategoryFilms { get; set; }
 	}

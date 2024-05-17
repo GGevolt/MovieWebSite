@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieWebSite.Server.Models;
 using MovieWebSite.Server.Repository.IRepository;
 using MovieWebSite.Server.ViewModels;
+using System.Drawing;
 
 namespace MovieWebSite.Server.Controllers
 {
@@ -17,19 +18,26 @@ namespace MovieWebSite.Server.Controllers
             try
             {
                 string wwwRootPath = _webhost.WebRootPath;
+                string imagePath = Path.Combine(wwwRootPath, "img");
                 if (filmPicVM.ImageFile != null)
                 {
-                    var film = _unitOfWork.FilmRepository.Get(f=>f.Id==filmPicVM.FilmId);
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filmPicVM.ImageFile.FileName);
-                    string imagePath = Path.Combine(wwwRootPath, "img");
+                    var film = _unitOfWork.FilmRepository.Get(f => f.Id == filmPicVM.FilmId);
                     if (!string.IsNullOrEmpty(film.FilmImg))
                     {
-                        var oldImagePath = Path.Combine(wwwRootPath, film.FilmImg.TrimStart('\\'));
+                        var oldImagePath = Path.Combine(imagePath, film.FilmImg.TrimStart('\\'));
                         if (System.IO.File.Exists(oldImagePath))
                         {
-                            System.IO.File.Delete(oldImagePath);
+                            try
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                            catch (Exception ex)
+                            {
+                                return StatusCode(500, $"Failed to delete old image: {ex.Message}");
+                            }
                         }
                     }
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filmPicVM.ImageFile.FileName);
                     using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
                     {
                         filmPicVM.ImageFile.CopyTo(fileStream);
@@ -43,7 +51,7 @@ namespace MovieWebSite.Server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while uploading the Movie picture:"+ex);
+                return StatusCode(500, "An error occurred while uploading the Movie picture:" + ex);
             }
         }
     }

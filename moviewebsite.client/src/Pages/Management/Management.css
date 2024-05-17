@@ -14,28 +14,65 @@
     flex-direction: column;
     gap: 0.625rem;
 }
-.movie-pic{
-    
-}
+
 .body-content{
     max-width: 80%;
 }
 
-#film-table{
+.film-container{
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+.film-container .film-card{
+    display: grid;
+    grid-template-rows: 60px 1fr 1fr 1fr;
+    grid-template-columns: 260px 1fr 1fr ;
+}
+
+.film-container .film-card .film-title{
+    grid-area: 1/1/-4/4;
+    font-weight: bold;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+}
+.film-container .film-card .film-image{
+    grid-area: 2/1/-2/-2;
+    width: 240px;
+    height: 300px;
+    padding-left: 30px;
+}
+.film-container .film-card .film-image img{
     width: 100%;
+    height: 100%;
 }
-#film-table .image-col{
-    width: 20%;
+.film-container .film-card .film-info{
+    grid-area: 2/2/-3/4;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
 }
-#film-table .title-col{
-    width: 20%;
+.film-container .film-card .film-info .film-info-categories{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    column-gap: 10px;
 }
-#film-table .synopsis-col{
-    width: 30%;
+
+.film-container .film-card .film-functions{
+    grid-area: 3/2/-2/3;
 }
-#film-table .director-col{
-    width: 20%;
+.film-container .film-card .film-functions .film-functions-content{
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
+    column-gap: 10px;
 }
-#film-table .funcs-col{
-    width: 10%;
+.film-container .film-card .film-synopsis{
+    grid-area: 4/1/-1/-1;
+    padding-left: 30px;
+    padding-top: 15px;
 }

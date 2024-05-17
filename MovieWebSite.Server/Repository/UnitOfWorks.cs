@@ -6,7 +6,8 @@ namespace MovieWebSite.Server.Repository
 	public class UnitOfWorks : IUnitOfWork
 	{
 		private readonly ApplicationDBContext _dbContext;
-		public IVideoRepository VideoRepository { get; private set; }
+		public ITrailerRepository TrailerRepository { get; private set; }
+		public IEpisodeRepository EpisodeRepository { get; private set; }
 		public IQualityRepository QualityRepository { get; private set; }
 		public IVideoQualityRepository VideoQualityRepository { get; private set; }
 		public IApplicationUserRepository ApplicationUserRepository { get; private set; }
@@ -18,7 +19,8 @@ namespace MovieWebSite.Server.Repository
 		{
 			_dbContext = dBContext;
 			ApplicationUserRepository = new ApplicationUserRepository(dBContext);
-			VideoRepository = new VideoRepository(dBContext);
+            TrailerRepository = new TrailerRepository(dBContext);
+			EpisodeRepository = new EpisodeRepository(dBContext);
 			QualityRepository = new QualityRepository(dBContext);
 			VideoQualityRepository = new VideoQualityRepository(dBContext);
 			FilmRepository = new FilmRepository(dBContext);

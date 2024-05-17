@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import Container from 'react-bootstrap/Container';
-import Table from 'react-bootstrap/Table';
-import Spinner from 'react-bootstrap/Spinner';
+import {Spinner, Image, Container, Card} from 'react-bootstrap';
 import axios from 'axios';
 import NavBar from "../../Components/NavBar";
 import Footer from "../../Footer";
-import Image from 'react-bootstrap/Image';
 import FilmCUForm from '../../Components/Form/FilmCUForm';
 import Pagination from '../../Components/Pagination';
 import PictureUpload from '../../Components/Upload/PictureUpload';
 import Delete from '../../Components/Utility/Delete';
+import LoadFilmCategories from '../../Components/Utility/LoadFilmCategories';
 import './Management.css';
 
 function FilmManagement(){
     const [films, setFilms] = useState([]);
+    const [isCateUpdated, setIsCateUpdated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
@@ -25,6 +24,9 @@ function FilmManagement(){
         refreshData();
     }, []);
 
+    const hanldeCateUpdate =(updateStatus)=>{
+        setIsCateUpdated(updateStatus);
+    }
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
@@ -40,35 +42,32 @@ function FilmManagement(){
             });
     }
 
-    const filmTable = [
-            <Table striped bordered hover variant="dark" id='film-table'>
-                <thead>
-                    <tr>
-                        <th className='image-col'>Image</th>
-                        <th className='title-col'>Title</th>
-                        <th className='synopsis-col'>Synopsis</th>
-                        <th className='director-col'>Diretor</th>
-                        <th className='funcs-col'>Functions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentItems.map((film,i) => (
-                        <tr key={i} >
-                            <td>{film.filmImg !=='' && <Image src={`/images/${film.filmImg}`} thumbnail alt='Movie picture' className='movie-pic'/>}</td>
-                            <td>{film.title}</td>
-                            <td>{film.synopsis}</td>
-                            <td>{film.director}</td>
-                            <td>
-                                <div className='func'>
-                                    <PictureUpload id={film.id} onSuccess={refreshData}/>
-                                    <FilmCUForm film={film} onSuccess={refreshData}/>
-                                    <Delete type="film" id={film.id} onSuccess={refreshData}/>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>]
+    const displayFilms=[
+        <Container className='film-container'>
+            {currentItems.map((film) => (
+                <Card className='film-card' key={film.id}>
+                    <Card.Title className='film-title'>{film.title}</Card.Title>
+                    <div className='film-image'><Image src={`/images/${film.filmImg}`} thumbnail alt='Movie picture'/></div>
+                    <div className='film-info'>
+                        <div className='film-info-director'><strong>Director:</strong> {film.director}</div>
+                        <div className='film-info-categories'><strong>Categories:</strong> <LoadFilmCategories filmId={film.id} isCateUpdated={isCateUpdated} onCateUpdate={hanldeCateUpdate}/></div>
+                    </div>
+                    <div className='film-functions'>
+                        <strong>Functionalities: </strong>
+                        <div className='film-functions-content'>
+                            <PictureUpload id={film.id} onSuccess={refreshData}/>
+                            <FilmCUForm film={film} onSuccess={refreshData} onCateUpdate={hanldeCateUpdate}/>
+                            <Delete type="film" id={film.id} onSuccess={refreshData}/>
+                        </div>
+                    </div>
+                    <div className='film-synopsis'><h5>Synopsis</h5>{film.synopsis}</div>
+                </Card>
+            ))}
+            <div className="Pag">
+                    <Pagination data={films} onPageChange={handlePageChange} itemsPerPage= {itemsPerPage}/>
+            </div>
+        </Container>
+    ]
 
     return (
         <div className='body'>
@@ -78,12 +77,7 @@ function FilmManagement(){
                     <h1>Manage Films</h1>
                     <FilmCUForm onSuccess={refreshData}/>
                 </Container>
-                {isLoading? (<Spinner animation="border" /> ) 
-                : films.length > 0? filmTable 
-                : (<h4>No Movies found.</h4>)}
-                <div className="Pag">
-                    <Pagination data={films} onPageChange={handlePageChange} itemsPerPage= {itemsPerPage}/>
-                </div>
+                {isLoading? (<Spinner animation="border" /> ) : films.length > 0? displayFilms : (<h4>No Movies found.</h4>)}
             </Container>
             <Footer/>
         </div>

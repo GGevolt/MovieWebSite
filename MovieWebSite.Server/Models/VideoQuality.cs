@@ -11,14 +11,18 @@ namespace MovieWebSite.Server.Models
 {
 	public class VideoQuality
 	{
-		public int VideoId { get; set; }
-        [ForeignKey("VideoId")]
+		public int? TrailerId { get; set; }
+        [ForeignKey("TrailerId")]
         [ValidateNever]
-        public Video Video { get; set; }
-		public int QualityId { get; set; }
+        public Trailer? Trailer { get; set; }
+        public int? EpisodeId { get; set; }
+        [ForeignKey("EpisodeId")]
+        [ValidateNever]
+        public Episode? Episode { get; set; }
+		public required int QualityId { get; set; }
         [ForeignKey("QualityId")]
         [ValidateNever]
-        public Quality Quality { get; set; }
+        public required Quality Quality { get; set; }
 		public string VidUrl { get; set; }
 	}
 }

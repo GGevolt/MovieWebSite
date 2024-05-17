@@ -74,7 +74,7 @@ function PictureUpload({id, onSuccess}){
         <>
             <Button variant="outline-success" onClick={() => setOpen(o => !o)}>Upload Image</Button>
             <Popup open={open} closeOnDocumentClick onClose={closeForm}>
-                <Card>
+                <Card className='upload-card'>
                     <Card.Title className='top'>Drop & Drag Movie Image</Card.Title>
                     <div className='drag-area' onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
                         {isDragging? (<span className='select'>Drop Image Here</span>):

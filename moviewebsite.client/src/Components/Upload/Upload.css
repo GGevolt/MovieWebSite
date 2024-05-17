@@ -1,17 +1,18 @@
-.card{
+.upload-card{
     padding: 10px;
     box-shadow: 0 0 5px #fffdfd;
     overflow: hidden;
 }
-.card .top{
+.upload-card .top{
     text-align: center;
     font-weight: bold;
 }
-.card .btn-primary{
+.upload-card .btn-primary{
     margin-top: 5px;
 }
-.card .drag-area{
-    height: 9.375rem;
+.upload-card .drag-area{
+    height: 18.125rem;
+    width: 34.375rem;
     background-color: hsl(210, 37%, 97%);
     color: hsl(211, 76%, 62%);
     border: 2px dashed hsl(211, 91%, 42%);
@@ -24,21 +25,21 @@
     -webkit-user-select: none;
     margin-top: 10px;
 }
-.card .drag-area .visible{
+.upload-card .drag-area .visible{
     font-size: 18px;
 }
 
-.card .select{
+.upload-card .select{
     color: hsl(236, 92%, 24%);
     margin-left: 5px;
     cursor: pointer;
     transition: 0.4s;
 }
 
-.card .select :hover{
+.upload-card .select :hover{
     opacity: 0.6;
 }
-.card .container{
+.upload-card .container{
     width: 100%;
     height: auto;
     display: flex;
@@ -49,28 +50,32 @@
     overflow-y: auto;
     margin-top: 10px;
 }
-.card .container .image{
-    width: 75px;
+.upload-card .container .image{
+    width: 200px;
     margin-right: 5px;
-    height: 75px;
+    height: 200px;
     position: relative;
     margin-bottom: 8px;
 }
-.card .container .image img{
+.upload-card .container .image img{
     width: 100%;
     height: 100%;
     border-radius: 5px;
 }
-.card .container .image span{
+.upload-card .container .image span{
     position: absolute;
-    top: -2px;
+    top: -6px;
     right: 9px;
-    font-size: 20px;
+    font-size: 25px;
     cursor: pointer;
+    color: blue;
 }
-.card input,
-.card .drag-area .op-drop,
-.card .drag-area .dragover .visible{
+.upload-card .container .image span:hover{
+    color: red;
+}
+.upload-card input,
+.upload-card .drag-area .op-drop,
+.upload-card .drag-area .dragover .visible{
     display: none;
 }
 .delete{

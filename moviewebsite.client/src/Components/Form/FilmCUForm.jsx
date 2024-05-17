@@ -11,11 +11,9 @@ import { object, string, array } from 'yup';
 
 function FilmCUForm (props) {
     const [categories, setCategories] = useState([]);
+    const [filmCates, setFilmCates] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const categoryOption = categories.map((category)=>({
-        value: category.id,
-        label: category.name
-    }))
+    const [categoryOption, setcategoryOption] = useState([]);
     const [film,setFilm] = useState({
         id: props.film? props.film.id : 0,
         title: props.film? props.film.title : '',
@@ -36,23 +34,32 @@ function FilmCUForm (props) {
     });
     useEffect(() => {
         axios.get('/category')
-            .then(response => {
+           .then(response => {
                 setCategories(response.data);
             })
-            .catch(error => {
+           .catch(error => {
                 console.error('There has been a problem with category get operation:', error);
             });
+    }, []);
+
+    useEffect(() => {
         if (film.id!==0) {
             axios.get(`/film/${film.id}`)
                 .then(response => {
-                    let cateIds = response.data;
-                    setSelectedCategories(categoryOption.filter(option => cateIds.includes(option.value)));
+                    setFilmCates(response.data);
                 })
                 .catch(error => {
                     console.error('There has been a problem with get film categories operation:', error);
                 });
         }
     }, [film, film.id]);
+    useEffect(() => {
+        setcategoryOption(categories.map((category)=>({
+            value: category.id,
+            label: category.name
+        })));
+        setSelectedCategories(categoryOption.filter(option => filmCates.some(filmCategory => filmCategory.id === option.value)));
+    }, [filmCates, categories]);
 
     const handleChange=(event)=>{
         setFilm( prev=> ({...prev, [event.target.name]: event.target.value}));
@@ -99,6 +106,14 @@ function FilmCUForm (props) {
         })
         .then(() => {
             props.onSuccess();
+            let pastFilmCateId = filmCates.map(cate=>cate.id)
+            if(filmCates.length !== filmVM.selectedCategories.length){
+                props.onCateUpdate(true);
+            }else{
+                if (JSON.stringify([...pastFilmCateId].sort()) !== JSON.stringify([...filmVM.selectedCategories].sort())) {
+                    props.onCateUpdate(true);
+                }            
+            };
             closeForm();
         })
         .catch(error => {
@@ -109,7 +124,7 @@ function FilmCUForm (props) {
 
     return (
         <>
-        <Button variant="outline-success" onClick={() => setOpen(o => !o)}>{film.id === 0 ? "Create New Film" : "Update"}</Button>
+        <Button variant="outline-success" onClick={() => setOpen(o => !o)}>{film.id === 0 ? "Create New Film" : "Update Film"}</Button>
         <Popup open={openForm} closeOnDocumentClick onClose={closeForm} className="form-popup">
             <Container >
                 <XCircleFill className="close" onClick={closeForm}/>
@@ -163,7 +178,8 @@ FilmCUForm.propTypes ={
         director: PropTypes.string,
        filmImg: PropTypes.string 
     }),
-    onSuccess: PropTypes.func
+    onSuccess: PropTypes.func,
+    onCateUpdate: PropTypes.func
 }
 
 export default FilmCUForm;
