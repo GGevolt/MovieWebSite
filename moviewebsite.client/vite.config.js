@@ -47,7 +47,17 @@ export default defineConfig({
                 secure: false,
                 changeOrigin: true,
             },
+            '^/episode': {
+                target,
+                secure: false,
+                changeOrigin: true,
+            },
             '^/film': {
+                target,
+                secure: false,
+                changeOrigin: true,
+            },
+            '^/filmCate': {
                 target,
                 secure: false,
                 changeOrigin: true,
@@ -56,13 +66,7 @@ export default defineConfig({
                 target,
                 secure: false,
                 changeOrigin: true,
-            },
-            '^/file': {
-                target,
-                secure: false,
-                changeOrigin: true,
             }
-
         },
         port: 5173,
         https: {

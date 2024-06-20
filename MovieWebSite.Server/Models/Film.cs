@@ -19,5 +19,7 @@ namespace MovieWebSite.Server.Models
 		public required string Type { get; set; }
 		[ValidateNever]
 		public virtual ICollection<CategoryFilm> CategoryFilms { get; set; }
-	}
+        [ValidateNever]
+        public virtual ICollection<Episode> Episodes { get; set; }
+    }
 }

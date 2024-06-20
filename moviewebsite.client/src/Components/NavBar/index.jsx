@@ -24,10 +24,6 @@ function NavBar() {
                   <NavDropdown menuVariant="dark" title="CRUD Management" id="collapsible-nav-dropdown">
                     <NavDropdown.Item as={Link} to="/Admin/Category-Management">Category</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/Admin/Film-Management">Film</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action/3.4">
-                      Separated link
-                    </NavDropdown.Item>
                   </NavDropdown>
                 </Nav>
                 {/* <Nav>

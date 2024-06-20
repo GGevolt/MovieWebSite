@@ -6,7 +6,7 @@ function LoadFilmCategories({filmId, isCateUpdated, onCateUpdate}){
     const [filmCates,setFilmCates] = useState([]);
     useEffect(() => {
         if (filmId!==0 || isCateUpdated) {
-            axios.get(`/film/${filmId}`)
+            axios.get(`/filmCate/${filmId}`)
                 .then(response => {
                     setFilmCates(response.data);
                     onCateUpdate(false);

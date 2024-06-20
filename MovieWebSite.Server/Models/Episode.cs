@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieWebSite.Server.Models
 {
@@ -7,9 +8,12 @@ namespace MovieWebSite.Server.Models
     {
         [Key]
         public int Id { get; set; }
-        public required string Title { get; set; }
         public required int EpisodeNumber { get; set; }
+        public required int FilmId { get; set; }
+        [ForeignKey("FilmId")]
         [ValidateNever]
-        public virtual ICollection<VideoQuality>? VideoQualities { get; set; }
+        public Film Film { get; set; }
+        [ValidateNever]
+        public virtual ICollection<Video>? Videos{ get; set; }
     }
 }

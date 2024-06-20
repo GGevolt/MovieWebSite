@@ -4,6 +4,7 @@
     background-color: #ffa580;
     max-height: 90%;
     max-width: 80%;
+    min-width: 60%;
     padding: 30px 40px;
     border-radius: 10px;
     zoom: 110%;
@@ -16,6 +17,9 @@
 }
 .form-popup-content .custom-label{
     color: gray;
+}
+.form-popup-content #floating-Synopsis{
+    height: 130px;
 }
 .form-popup-content .close{
     cursor: pointer;
@@ -71,4 +75,8 @@
 
 .error{
     color: firebrick;
+}
+
+.exclude-vid{
+    color: blue;
 }

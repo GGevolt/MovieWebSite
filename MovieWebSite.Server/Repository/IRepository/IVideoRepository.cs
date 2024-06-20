@@ -2,8 +2,8 @@
 
 namespace MovieWebSite.Server.Repository.IRepository
 {
-	public interface ITrailerRepository : IRepository<Trailer>
+	public interface IVideoRepository : IRepository<Video>
 	{
-		void Update(Trailer trailer);
+		void Update(Video videoQuality);
 	}
 }

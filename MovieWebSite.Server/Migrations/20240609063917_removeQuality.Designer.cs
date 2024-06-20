@@ -12,15 +12,15 @@ using MovieWebSite.Server.Data;
 namespace MovieWebSite.Server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240517134350_SeadTrailerEpisode")]
-    partial class SeadTrailerEpisode
+    [Migration("20240609063917_removeQuality")]
+    partial class removeQuality
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -51,6 +51,96 @@ namespace MovieWebSite.Server.Migrations
                         {
                             Id = 2,
                             Name = "Comedy"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Horror"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Drama"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Thriller"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Science Fiction"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Romance"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Animation"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Fantasy"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Adventure"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Historical"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Shonen"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Sport"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Musical"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Idol"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Game"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "Martial Arts"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "Music"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "War"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Western"
                         });
                 });
 
@@ -80,11 +170,12 @@ namespace MovieWebSite.Server.Migrations
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("FilmId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FilmId");
 
                     b.ToTable("Episodes");
                 });
@@ -121,62 +212,26 @@ namespace MovieWebSite.Server.Migrations
                     b.ToTable("Films");
                 });
 
-            modelBuilder.Entity("MovieWebSite.Server.Models.Quality", b =>
+            modelBuilder.Entity("MovieWebSite.Server.Models.Video", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("QualityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Qualities");
-                });
-
-            modelBuilder.Entity("MovieWebSite.Server.Models.Trailer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Trailers");
-                });
-
-            modelBuilder.Entity("MovieWebSite.Server.Models.VideoQuality", b =>
-                {
-                    b.Property<int?>("TrailerId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("EpisodeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QualityId")
                         .HasColumnType("int");
 
                     b.Property<string>("VidUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("TrailerId", "EpisodeId", "QualityId");
+                    b.HasKey("Id");
 
                     b.HasIndex("EpisodeId");
 
-                    b.HasIndex("QualityId");
-
-                    b.ToTable("VideoQualities");
+                    b.ToTable("Videos");
                 });
 
             modelBuilder.Entity("MovieWebSite.Server.Models.CategoryFilm", b =>
@@ -198,31 +253,24 @@ namespace MovieWebSite.Server.Migrations
                     b.Navigation("Film");
                 });
 
-            modelBuilder.Entity("MovieWebSite.Server.Models.VideoQuality", b =>
+            modelBuilder.Entity("MovieWebSite.Server.Models.Episode", b =>
+                {
+                    b.HasOne("MovieWebSite.Server.Models.Film", "Film")
+                        .WithMany("Episodes")
+                        .HasForeignKey("FilmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Film");
+                });
+
+            modelBuilder.Entity("MovieWebSite.Server.Models.Video", b =>
                 {
                     b.HasOne("MovieWebSite.Server.Models.Episode", "Episode")
                         .WithMany("VideoQualities")
-                        .HasForeignKey("EpisodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieWebSite.Server.Models.Quality", "Quality")
-                        .WithMany("VideoQualities")
-                        .HasForeignKey("QualityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieWebSite.Server.Models.Trailer", "Trailer")
-                        .WithMany("VideoQualities")
-                        .HasForeignKey("TrailerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EpisodeId");
 
                     b.Navigation("Episode");
-
-                    b.Navigation("Quality");
-
-                    b.Navigation("Trailer");
                 });
 
             modelBuilder.Entity("MovieWebSite.Server.Models.Category", b =>
@@ -238,16 +286,8 @@ namespace MovieWebSite.Server.Migrations
             modelBuilder.Entity("MovieWebSite.Server.Models.Film", b =>
                 {
                     b.Navigation("CategoryFilms");
-                });
 
-            modelBuilder.Entity("MovieWebSite.Server.Models.Quality", b =>
-                {
-                    b.Navigation("VideoQualities");
-                });
-
-            modelBuilder.Entity("MovieWebSite.Server.Models.Trailer", b =>
-                {
-                    b.Navigation("VideoQualities");
+                    b.Navigation("Episodes");
                 });
 #pragma warning restore 612, 618
         }

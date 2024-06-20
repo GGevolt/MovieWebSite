@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Delete = ({ type, id, onSuccess})=>{
-    if(type==="category" || type==="film" && id > 0){
+    if(type==="category" || type==="film" || type==="quality" && id > 0){
         const handleDelete = () =>{
             axios.delete(`/${type}/${id}`).then(() => {
                 onSuccess();

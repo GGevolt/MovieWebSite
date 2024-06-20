@@ -4,17 +4,17 @@ using MovieWebSite.Server.Repository.IRepository;
 
 namespace MovieWebSite.Server.Repository
 {
-	internal class QualityRepository : Repository<Quality>, IQualityRepository
+	internal class VideoRepository : Repository<Video>, IVideoRepository
 	{
 		private readonly ApplicationDBContext _dbContext;
-		public QualityRepository(ApplicationDBContext dbContext) : base(dbContext)
+		public VideoRepository(ApplicationDBContext dbContext) : base(dbContext)
 		{
 			_dbContext = dbContext;
 		}
 
-		public void Update(Quality quality)
+		public void Update(Video videoQuality)
 		{
-			_dbContext.Update(quality);
+			_dbContext.Update(videoQuality);
 		}
 	}
 }

@@ -18,16 +18,11 @@ namespace MovieWebSite.Server.Controllers
             return Ok(_unitOfWork.FilmRepository.GetAll());
         }
         [HttpGet("{id}")]
-        public IActionResult GetCateFilm(int id)
+        public IActionResult GetFilm(int id)
         {
             try
             {
-                List<Category> filmCate = new  List<Category>();
-                var cateIds = _unitOfWork.CategoryFilmRepository.GetAll().Where(cf => cf.FilmId == id).Select(cf => cf.CategoryId);
-                foreach(var cateId in cateIds){
-                    filmCate.Add(_unitOfWork.CategoryRepository.Get(c=>c.Id == cateId));
-                }
-                return Ok(filmCate);
+                return Ok(_unitOfWork.FilmRepository.Get(f=>f.Id == id));
             }
             catch (Exception ex)
             {

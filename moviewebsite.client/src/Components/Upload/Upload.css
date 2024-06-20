@@ -11,8 +11,8 @@
     margin-top: 5px;
 }
 .upload-card .drag-area{
-    height: 18.125rem;
-    width: 34.375rem;
+    height: 18.75rem;
+    width: 31.25rem;
     background-color: hsl(210, 37%, 97%);
     color: hsl(211, 76%, 62%);
     border: 2px dashed hsl(211, 91%, 42%);
@@ -24,6 +24,9 @@
     user-select: none;
     -webkit-user-select: none;
     margin-top: 10px;
+}
+.upload-card .drag-area p{
+    color: #219949;
 }
 .upload-card .drag-area .visible{
     font-size: 18px;
@@ -81,4 +84,8 @@
 .delete{
     z-index: 999;
     color: hsl(0, 0%, 0%);
+}
+.vid-up-section{
+    display: flex;
+    justify-content: center;   
 }

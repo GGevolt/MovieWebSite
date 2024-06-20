@@ -1,7 +1,6 @@
 import Popup from 'reactjs-popup';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, Button, Container, Image } from 'react-bootstrap';
-import { XCircleFill } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import './Upload.css'
@@ -60,7 +59,7 @@ function PictureUpload({id, onSuccess}){
             const filmPicData = new FormData();
             filmPicData.append("filmId", id);
             filmPicData.append("imageFile", imageFile);
-            axios.post('/file', filmPicData)
+            axios.post('/images', filmPicData)
             .then(() => {
                 onSuccess();
                 closeForm();
