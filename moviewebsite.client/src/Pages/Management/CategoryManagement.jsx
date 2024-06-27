@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Spinner from "react-bootstrap/Spinner";
@@ -6,36 +6,35 @@ import CategoryCUForm from "../../Components/Form/CategoryCUForm";
 import NavBar from "../../Components/NavBar";
 import Footer from "../../Components/Footer";
 import Pagination from "../../Components/Pagination";
-import Delete from "../../Components/Utility/Delete";
-// import { getCategories } from "../../api/serverApi.jsx";
+import DeleteButton from "../../Components/Utility/DeleteButton";
 import AdminContext from "../../Context/AdminContext/Context";
 import "./Management.css";
 
 function CategoryQualityManagement() {
   const adminContext = useContext(AdminContext);
-  const [categories, getCategories] = adminContext;
+  const { categories, getCategories } = adminContext;
   const [isCateLoading, setIsCateLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = categories.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = categories
+    ? categories.slice(indexOfFirstItem, indexOfLastItem)
+    : 0;
 
   useEffect(() => {
-    refreshCategoryData();
+    loadCategoryData();
   }, []);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  const refreshCategoryData = async () => {
-    getCategories();
-    // const cateData = await getCategories();
-    // setCategories(cateData);
+  const loadCategoryData = async () => {
+    await getCategories();
     setIsCateLoading(false);
   };
 
-  const categotyTable = [
+  const categotyTable = (
     <Table striped bordered responsive hover variant="dark">
       <thead>
         <tr>
@@ -49,22 +48,15 @@ function CategoryQualityManagement() {
             <td>{category.name}</td>
             <td>
               <div className="func">
-                <CategoryCUForm
-                  category={category}
-                  onSuccess={refreshCategoryData}
-                />
-                <Delete
-                  type="category"
-                  onSuccess={refreshCategoryData}
-                  id={category.id}
-                />
+                <CategoryCUForm category={category} />
+                <DeleteButton type="category" id={category.id} />
               </div>
             </td>
           </tr>
         ))}
       </tbody>
-    </Table>,
-  ];
+    </Table>
+  );
 
   return (
     <div className="body">
@@ -72,7 +64,7 @@ function CategoryQualityManagement() {
       <Container fluid className="cate-container">
         <Container className="firstLine">
           <h1>Manage Category</h1>
-          <CategoryCUForm onSuccess={refreshCategoryData} />
+          <CategoryCUForm />
         </Container>
         {isCateLoading ? (
           <Spinner animation="border" />

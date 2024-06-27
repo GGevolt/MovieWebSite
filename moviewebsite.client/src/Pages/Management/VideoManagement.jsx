@@ -3,7 +3,7 @@ import { Button, Card, Container, Image } from "react-bootstrap";
 import { useLoaderData } from "react-router-dom";
 import EpisodeForm from "../../Components/Form/EpisodeForm";
 import NavBar from "../../Components/NavBar";
-import { getEpisode } from "../../api/serverApi.jsx";
+import serverApi from "../../api/serverApi.jsx";
 import "./Management.css";
 
 function VideoManagement() {
@@ -17,7 +17,7 @@ function VideoManagement() {
   const [isAdd, setIsAdd] = useState(true);
   const [episode, setEp] = useState();
   const loadData = async () => {
-    const epdata = await getEpisode(film.id);
+    const epdata = await serverApi.getEpisode(film.id);
     setEpisodes(epdata);
   };
   const handeAdd = () => {
@@ -50,7 +50,7 @@ function VideoManagement() {
           </div>
           <EpisodeForm
             filmId={film.id}
-            onSuccess={getEpisode}
+            onSuccess={loadData}
             episodes={episodes}
             {...(!isAdd && { episode: episode })}
           />

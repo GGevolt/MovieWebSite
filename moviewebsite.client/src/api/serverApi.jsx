@@ -44,11 +44,21 @@ const getFilmCates = async (id) => {
   return response.data;
 };
 
+const Delete = async (type, id) => {
+  await axios.delete(`/${type}/${id}`).catch((error) => {
+    console.error(
+      `There has been a problem with ${type} delete operation:'`,
+      error
+    );
+  });
+};
+
 const serverApi = {
   getEpisode,
   getCategories,
   getFilm,
   getFilmCates,
   getFilms,
+  Delete,
 };
 export default serverApi;

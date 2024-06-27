@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { mixed, number, object } from "yup";
+import PropTypes from 'prop-types';
 import "./Form.css";
 
 function EpisodeCForm({ filmId, onSuccess, episodes }) {
@@ -200,5 +201,17 @@ function EpisodeCForm({ filmId, onSuccess, episodes }) {
       <Button type="submit">Add new episode</Button>
     </Form>
   );
+}
+EpisodeCForm.propTypes ={
+  filmId: PropTypes.number.isRequired,
+  episodes : PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      episodeNumber: PropTypes.number,
+      filmId: PropTypes.number,
+      videoFile: PropTypes.any,
+    })
+  ),
+  onSuccess: PropTypes.func.isRequired
 }
 export default EpisodeCForm;

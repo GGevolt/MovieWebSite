@@ -1,6 +1,6 @@
 import axios from "axios";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Button,
   Col,
@@ -14,11 +14,14 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import Popup from "reactjs-popup";
 import { array, object, string } from "yup";
-import { getCategories, getFilmCates } from "../../api/serverApi";
+import serverApi from "../../api/serverApi";
+import AdminContext from "../../Context/AdminContext/Context";
 import "./Form.css";
 
 function FilmCUForm(props) {
-  const [categories, setCategories] = useState([]);
+  const adminContext = useContext(AdminContext);
+  const { categories, getCategories, onFilmCateUpdate, getFilms } =
+    adminContext;
   const [filmCates, setFilmCates] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categoryOption, setcategoryOption] = useState([]);
@@ -52,23 +55,19 @@ function FilmCUForm(props) {
       .min(1, "Select atleast 1 category!")
       .required("Select atleast 1 category!"),
   });
-  useEffect(() => {
-    loadCateData();
-  }, []);
-  const loadCateData = async () => {
-    const cateData = await getCategories();
-    setCategories(cateData);
-  };
-  const loadFilmCates = async () => {
-    const filmcatesData = await getFilmCates(film.id);
-    setFilmCates(filmcatesData);
-  };
 
   useEffect(() => {
+    getCategories();
     if (film.id !== 0) {
       loadFilmCates();
     }
-  }, [film, film.id]);
+  }, [film]);
+
+  const loadFilmCates = async () => {
+    const filmcatesData = await serverApi.getFilmCates(film.id);
+    setFilmCates(filmcatesData);
+  };
+
   useEffect(() => {
     setcategoryOption(
       categories.map((category) => ({
@@ -76,11 +75,13 @@ function FilmCUForm(props) {
         label: category.name,
       }))
     );
-    setSelectedCategories(
-      categoryOption.filter((option) =>
-        filmCates.some((filmCategory) => filmCategory.id === option.value)
-      )
-    );
+    if (film.id !== 0) {
+      setSelectedCategories(
+        categoryOption.filter((option) =>
+          filmCates.some((filmCategory) => filmCategory.id === option.value)
+        )
+      );
+    }
   }, [filmCates, categories]);
 
   const handleChange = (event) => {
@@ -130,19 +131,18 @@ function FilmCUForm(props) {
           "Content-Type": "application/json",
         },
       })
-      .then(() => {
-        props.onSuccess();
-        let pastFilmCateId = filmCates.map((cate) => cate.id);
-        if (filmCates.length !== filmVM.selectedCategories.length) {
-          props.onCateUpdate(true);
-        } else {
+      .then(async () => {
+        if (film.id !== 0) {
+          let pastFilmCateId = filmCates.map((cate) => cate.id);
           if (
+            filmCates.length !== filmVM.selectedCategories.length ||
             JSON.stringify([...pastFilmCateId].sort()) !==
-            JSON.stringify([...filmVM.selectedCategories].sort())
+              JSON.stringify([...filmVM.selectedCategories].sort())
           ) {
-            props.onCateUpdate(true);
+            onFilmCateUpdate(true);
           }
         }
+        await getFilms();
         closeForm();
       })
       .catch((error) => {
@@ -298,8 +298,6 @@ FilmCUForm.propTypes = {
     type: PropTypes.string,
     filmImg: PropTypes.string,
   }),
-  onSuccess: PropTypes.func,
-  onCateUpdate: PropTypes.func,
 };
 
 export default FilmCUForm;
