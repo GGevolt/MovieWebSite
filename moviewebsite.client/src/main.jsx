@@ -2,14 +2,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./Pages/Home";
-import NotFoundPage from "./Pages/error/NotFoundPage";
-import CategoryManagement from "./Pages/Management/CategoryManagement.jsx";
-import FilmManagement from "./Pages/Management/FilmManagement.jsx";
-import VideoManagement from "./Pages/Management/VideoManagement";
-import serverApi from "./api/serverApi.jsx";
+import Home from "../src/Admin/Pages/Home";
+import NotFoundPage from "../src/Admin/Pages/error/NotFoundPage";
+import CategoryManagement from "../src/Admin/Pages/Management/CategoryManagement.jsx";
+import FilmManagement from "../src/Admin/Pages/Management/FilmManagement.jsx";
+import VideoManagement from "../src/Admin/Pages/Management/VideoManagement";
+import serverApi from "../src/Admin/api/serverApi.jsx";
 import "./index.css";
-import AdminState from "./Context/AdminContext/State";
+import AdminState from "../src/Admin/Context/AdminContext/State";
 
 const router = createBrowserRouter([
   {

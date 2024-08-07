@@ -1,9 +1,9 @@
-﻿using MovieWebSite.Server.Models;
+﻿using Server.Model.Models;
 
 namespace MovieWebSite.Server.Repository.IRepository
 {
-	public interface IFilmRepository : IRepository<Film>
-	{
-		void Update(Film film);
-	}
+    public interface IFilmRepository : IRepository<Film>
+    {
+        void Update(Film film);
+    }
 }

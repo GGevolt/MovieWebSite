@@ -16,7 +16,7 @@ namespace MovieWebSite.Server.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -169,6 +169,10 @@ namespace MovieWebSite.Server.Migrations
                     b.Property<int>("FilmId")
                         .HasColumnType("int");
 
+                    b.Property<string>("VidName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FilmId");
@@ -208,28 +212,6 @@ namespace MovieWebSite.Server.Migrations
                     b.ToTable("Films");
                 });
 
-            modelBuilder.Entity("MovieWebSite.Server.Models.Video", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EpisodeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VidName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EpisodeId");
-
-                    b.ToTable("Videos");
-                });
-
             modelBuilder.Entity("MovieWebSite.Server.Models.CategoryFilm", b =>
                 {
                     b.HasOne("MovieWebSite.Server.Models.Category", "Category")
@@ -260,25 +242,9 @@ namespace MovieWebSite.Server.Migrations
                     b.Navigation("Film");
                 });
 
-            modelBuilder.Entity("MovieWebSite.Server.Models.Video", b =>
-                {
-                    b.HasOne("MovieWebSite.Server.Models.Episode", "Episode")
-                        .WithMany("Videos")
-                        .HasForeignKey("EpisodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Episode");
-                });
-
             modelBuilder.Entity("MovieWebSite.Server.Models.Category", b =>
                 {
                     b.Navigation("CategoryFilms");
-                });
-
-            modelBuilder.Entity("MovieWebSite.Server.Models.Episode", b =>
-                {
-                    b.Navigation("Videos");
                 });
 
             modelBuilder.Entity("MovieWebSite.Server.Models.Film", b =>

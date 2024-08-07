@@ -66,6 +66,11 @@ export default defineConfig({
                 target,
                 secure: false,
                 changeOrigin: true,
+            },
+            '^/video': {
+                target,
+                secure: false,
+                changeOrigin: true,
             }
         },
         port: 5173,

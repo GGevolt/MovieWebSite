@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieWebSite.Server.Repository.IRepository;
-using MovieWebSite.Server.ViewModels;
+using Server.Model.ViewModels;
+
 
 namespace MovieWebSite.Server.Controllers
 {
