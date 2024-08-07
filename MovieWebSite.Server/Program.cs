@@ -44,7 +44,19 @@ builder.Services.AddDbContext<AuthDBContext>(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<AuthDBContext>();
-builder.Services.AddIdentityCore<ApplicationUser>(options => { }).AddEntityFrameworkStores<AuthDBContext>();
+builder.Services.AddIdentityCore<ApplicationUser>(options => {
+    options.SignIn.RequireConfirmedEmail = true;
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 0;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+}).AddEntityFrameworkStores<AuthDBContext>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWorks>();
 builder.Services.AddTransient<IEmailService, EmailService>();

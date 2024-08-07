@@ -20,6 +20,5 @@ namespace Server.Model.Models
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         [Column(TypeName = "datetime")]
         public DateTime LastLogin { get; set; } = DateTime.Now;
-        //public Boolean IsAdmin { get; set; } = false;
     }
 }
