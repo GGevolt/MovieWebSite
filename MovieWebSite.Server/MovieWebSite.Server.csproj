@@ -36,7 +36,7 @@
     <ProjectReference Include="..\moviewebsite.client\moviewebsite.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\Server.Modell\Server.Model.csproj" />
+    <ProjectReference Include="..\Server.Model\Server.Model.csproj" />
     <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
   </ItemGroup>
 
