@@ -45,7 +45,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<AuthDBContext>();
 builder.Services.AddIdentityCore<ApplicationUser>(options => {
-    options.SignIn.RequireConfirmedEmail = true;
+    //options.SignIn.RequireConfirmedEmail = true;
     options.Password.RequireDigit = true;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = false;

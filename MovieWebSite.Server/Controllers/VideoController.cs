@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MovieWebSite.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class VideoController(IWebHostEnvironment webhost) : ControllerBase
     {
         private readonly IWebHostEnvironment _webhost = webhost;

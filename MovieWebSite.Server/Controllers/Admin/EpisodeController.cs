@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 namespace MovieWebSite.Server.Controllers.Admin
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class EpisodeController(IUnitOfWork unitOfWork, IWebHostEnvironment webhost) : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;

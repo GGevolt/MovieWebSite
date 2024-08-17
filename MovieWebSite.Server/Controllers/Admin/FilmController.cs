@@ -6,7 +6,7 @@ using Server.Model.ViewModels;
 namespace MovieWebSite.Server.Controllers.Admin
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FilmController(IUnitOfWork unitOfWork, IWebHostEnvironment webhost) : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;

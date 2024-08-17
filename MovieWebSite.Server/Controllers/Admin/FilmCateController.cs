@@ -5,7 +5,7 @@ using MovieWebSite.Server.Repository.IRepository;
 namespace MovieWebSite.Server.Controllers.Admin
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FilmCateController(IUnitOfWork unitOfWork) : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
