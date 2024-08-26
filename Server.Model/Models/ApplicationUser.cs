@@ -15,7 +15,7 @@ namespace Server.Model.Models
         public string FirstName { get; set; }
         [MaxLength(40)]
         public string LastName { get; set; }
-        public int Age { get; set; }
+        public DateOnly Dob { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         [Column(TypeName = "datetime")]

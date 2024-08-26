@@ -19,27 +19,7 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-image: url(../src/assets/Image/spider-man-white.jpg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    margin: 0;
     color: rgb(0, 0, 0);
 }
 
 
-.Footer{
-    position: relative;
-    width: 100%;
-    background-color: black;
-    height: 7%;
-    margin-top: auto; 
-    color: white;
-}
-.Footer p{
-    margin: auto;
-}
-.Footer .Horizontal{
-    margin-top: 0;
-}

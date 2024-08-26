@@ -23,7 +23,7 @@ namespace MovieWebSite.Server.Controllers.Identity
                     FirstName =user.FirstName,
                     LastName =user.LastName,
                     Email =user.Email,
-                    Age = user.Age,
+                    Dob = user.Dob,
                 };
                 result = await userManager.CreateAsync(new_user, user.PasswordHash);
                 if (!result.Succeeded) { 

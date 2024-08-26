@@ -61,7 +61,7 @@
     color: #422800;
 }
 
-.form-popup-content.form-popup-content .button:active {
+.form-popup-content .button:active {
   box-shadow: #422800 2px 2px 0 0;
   transform: translate(2px, 2px);
 }

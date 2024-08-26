@@ -1,0 +1,14 @@
+.Footer{
+    position: relative;
+    width: 100%;
+    background-color: black;
+    height: 7%;
+    margin-top: auto; 
+    color: white;
+}
+.Footer p{
+    margin: auto;
+}
+.Footer .Horizontal{
+    margin-top: 0;
+}

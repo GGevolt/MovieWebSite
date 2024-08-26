@@ -188,10 +188,9 @@ function EpisodeCForm({ filmId, passEp }) {
           value={episode.episodeNumber}
           name="episodeNumber"
           onChange={handleChange}
+          isInvalid={errors.episodeNumber}
         />
-        {errors.episodeNumber && (
-          <Form.Text className="error">{errors.episodeNumber}</Form.Text>
-        )}
+        <Form.Control.Feedback className="error" type="invalid">{errors.episodeNumber}</Form.Control.Feedback>
       </Form.Group>
       <Form.Group className="mb-2 vid-upload">
         <Form.Label>Upload video:</Form.Label>
@@ -249,7 +248,7 @@ function EpisodeCForm({ filmId, passEp }) {
               )}
             </div>
           </div>
-          <input
+          <Form.Control
             type="file"
             className="file"
             name="file"

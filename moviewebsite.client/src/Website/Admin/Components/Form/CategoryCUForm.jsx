@@ -109,10 +109,9 @@ function CategoryCUForm({ category }) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder=""
+                  isInvalid={errors.name}
                 />
-                {errors.name && (
-                  <Form.Text className="error">{errors.name}</Form.Text>
-                )}
+                <Form.Control.Feedback className="error" type="invalid">{errors.name}</Form.Control.Feedback>
               </FloatingLabel>
             </Form.Group>
             <Button type="submit" className="button">

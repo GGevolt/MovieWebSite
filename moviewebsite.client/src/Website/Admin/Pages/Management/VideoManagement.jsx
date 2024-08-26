@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Button, Card, Container, Image } from "react-bootstrap";
 import { useLoaderData } from "react-router-dom";
-import EpisodeForm from "../../Components/Form/EpisodeForm";
+import EpisodeForm from "../../Components/Form/EpisodeForm.jsx";
 import WebContext from "../../../WebContext/Context.jsx";
 import "./Management.css";
 

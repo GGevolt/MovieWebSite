@@ -1,0 +1,15 @@
+.Container{
+    border: 1px solid;
+    padding: 3.125rem;
+}
+
+
+.body{
+    display: flex;
+    justify-content: center;
+    padding-top: 5rem; 
+}
+
+.error{
+    color: red;
+}

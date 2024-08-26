@@ -192,12 +192,9 @@ function FilmCUForm(props) {
                   onChange={handleChange}
                   placeholder=""
                   name="title"
+                  isInvalid={errors["film.title"]}
                 />
-                {errors["film.title"] && (
-                  <Form.Text className="error">
-                    {errors["film.title"]}
-                  </Form.Text>
-                )}
+                <Form.Control.Feedback className="error" type="invalid">{errors["film.title"]}</Form.Control.Feedback>
               </FloatingLabel>
             </Form.Group>
             <Row className="mb-3">
@@ -213,12 +210,9 @@ function FilmCUForm(props) {
                     onChange={handleChange}
                     placeholder=""
                     name="director"
+                    isInvalid={errors["film.director"]}
                   />
-                  {errors["film.director"] && (
-                    <Form.Text className="error">
-                      {errors["film.director"]}
-                    </Form.Text>
-                  )}
+                  <Form.Control.Feedback className="error" type="invalid">{errors["film.director"]}</Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
               <Form.Group as={Col}>
@@ -231,16 +225,13 @@ function FilmCUForm(props) {
                     onChange={handleChange}
                     name="type"
                     value={film.type}
+                    isInvalid={errors["film.type"]}
                   >
                     <option value="">Pls choose a type</option>
                     <option>TV-Show</option>
                     <option>Movie</option>
                   </Form.Select>
-                  {errors["film.type"] && (
-                    <Form.Text className="error">
-                      {errors["film.type"]}
-                    </Form.Text>
-                  )}
+                  <Form.Control.Feedback className="error" type="invalid">{errors["film.type"]}</Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
             </Row>
@@ -256,12 +247,9 @@ function FilmCUForm(props) {
                   onChange={handleChange}
                   placeholder=""
                   name="synopsis"
+                  isInvalid={errors["film.synopsis"]}
                 />
-                {errors["film.synopsis"] && (
-                  <Form.Text className="error">
-                    {errors["film.synopsis"]}
-                  </Form.Text>
-                )}
+                <Form.Control.Feedback className="error" type="invalid">{errors["film.synopsis"]}</Form.Control.Feedback>
               </FloatingLabel>
             </Form.Group>
             <Form.Group className="mb-3">

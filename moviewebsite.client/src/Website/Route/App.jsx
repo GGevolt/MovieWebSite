@@ -1,19 +1,29 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Body from "./Layout/Body";
-import NotFoundPage from "./Pages/error/NotFoundPage";
-import CategoryManagement from "./Pages/Management/CategoryManagement";
-import FilmManagement from "./Pages/Management/FilmManagement";
-import VideoManagement from "./Pages/Management/VideoManagement";
+import AdminBody from "../Admin/Layout/AdminBody";
+import NotFoundPage from "../Admin/Pages/error/NotFoundPage";
+import CategoryManagement from "../Admin/Pages/Management/CategoryManagement";
+import FilmManagement from "../Admin/Pages/Management/FilmManagement";
+import VideoManagement from "../Admin/Pages/Management/VideoManagement";
 import WebApi from "../WebApi";
-import "./AdminIndex.css";
+import "./index.css";
 import AdminState from "../Admin/AminContext/State";
 import WebState from "../WebContext/State";
+import Login from "../User/Page/Login";
+import Register from "../User/Page/Register";
 const router = createBrowserRouter([
   {
+    path: "/Login",
+    element: <Login />,
+  },
+  {
+    path: "/Register",
+    element: <Register />,
+  },
+  {
     path: "/",
-    element: <Body />,
+    element: <AdminBody />,
     children: [
       { index: true, element: <FilmManagement /> },
       { path: "/Admin/Category-Management", element: <CategoryManagement /> },
