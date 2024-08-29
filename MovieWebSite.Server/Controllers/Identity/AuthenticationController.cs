@@ -20,8 +20,8 @@ namespace MovieWebSite.Server.Controllers.Identity
             try
             {
                 ApplicationUser new_user = new ApplicationUser() { 
-                    FirstName =user.FirstName,
-                    LastName =user.LastName,
+                    FullName =user.FullName,
+                    Gender =user.Gender,
                     Email =user.Email,
                     Dob = user.Dob,
                 };
