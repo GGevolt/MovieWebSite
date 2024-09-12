@@ -7,7 +7,7 @@ import "./Management.css";
 
 function VideoManagement() {
   const webContext = useContext(WebContext);
-  const { episodes, getFilmEps } = webContext;
+  const { filmEpisodes, getFilmEps } = webContext;
   const film = useLoaderData();
   useEffect(() => {
     if (film) {
@@ -44,7 +44,7 @@ function VideoManagement() {
             <strong>Type:</strong> {film.type}
           </div>
           <div className="ep-count">
-            <strong>Ep Count:</strong> {episodes.length} Episodes
+            <strong>Ep Count:</strong> {filmEpisodes.length} Episodes
           </div>
           {!isAdd ? (
             <EpisodeForm filmId={film.id} passEp={episode} />
@@ -60,7 +60,7 @@ function VideoManagement() {
               <Button onClick={handeAdd}>Add</Button>
             </div>
             <div className="ep-list">
-              {episodes
+              {filmEpisodes
                 .sort((a, b) => a.episodeNumber - b.episodeNumber)
                 .map((ep) => (
                   <button key={ep.id} onClick={() => handleEdit(ep)}>

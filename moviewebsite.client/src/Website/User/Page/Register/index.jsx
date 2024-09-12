@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Form, Col, Row, Button } from "react-bootstrap";
 import { object, string, date } from "yup";
 import styles from "./Register.module.css";
+import AuthContext from "../../AuthContext/Context";
 
 function Register() {
+  document.title = "Register";
+  const authContext = useContext(AuthContext);
+  const { register, isLoggedIn } = authContext;
+  useEffect(() => {
+    if (isLoggedIn) {
+      document.location = "/";
+    }
+  }, []);
   const [userInfo, setUserInfo] = useState({
     fullName: "",
     gender: "",
@@ -23,10 +32,10 @@ function Register() {
       .required("Full Name is missing!")
       .matches(
         /^([A-Za-z]+(([',. -][A-Za-z ])?[A-Za-z]*)*)*$/,
-        "Invalid full name format.")
+        "Invalid full name format."
+      )
       .max(100, "Name too long!"),
-    gender: string()
-      .required("Gender is missing!"),
+    gender: string().required("Gender is missing!"),
     username: string()
       .required("Username is missing!")
       .matches(
@@ -42,6 +51,10 @@ function Register() {
       ),
     password: string()
       .required("Password is missing!")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        "At least 8 characters, 1 uppercase, 1 lowercase, 1 digit, 1 special character"
+      )
       .max(30, "Password is too long!"),
     dob: date()
       .required("The Date of Birth is missing!")
@@ -67,13 +80,21 @@ function Register() {
       setErrors(newErrors);
       return;
     }
+    const formData = new FormData();
+    formData.append("fullName", userInfo.fullName.trim());
+    formData.append("gender", userInfo.gender);
+    formData.append("email", userInfo.email.trim());
+    formData.append("dob", userInfo.dob);
+    formData.append("passwordHash", userInfo.password);
+    formData.append("username", userInfo.username.trim());
+    await register(formData);
   };
   return (
     <div className={styles.page}>
       <div className={styles.Container}>
         <div className={styles.content}>
           <h1 className={styles.h1}>Create an Account</h1>
-          <br/>
+          <br />
           <Form
             onSubmit={handleRegister}
             encType="multipart/form-data"
@@ -119,7 +140,11 @@ function Register() {
                   {errors.gender}
                 </Form.Control.Feedback>
               </Col>
-              <Form.Label column className={styles.label} id={styles.date_label}>
+              <Form.Label
+                column
+                className={styles.label}
+                id={styles.date_label}
+              >
                 Date of Birth
               </Form.Label>
               <Col sm={4}>
@@ -143,7 +168,7 @@ function Register() {
                 Username
               </Form.Label>
               <Col sm={10}>
-              <Form.Control
+                <Form.Control
                   type="text"
                   placeholder="Username"
                   value={userInfo.username}
@@ -196,16 +221,26 @@ function Register() {
               </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-              <Form.Label className={styles.label}>Terms and Conditions</Form.Label>
-              <Form.Check type="checkbox"
+              <Form.Label className={styles.label}>
+                Terms and Conditions
+              </Form.Label>
+              <Form.Check
+                type="checkbox"
                 value={agreeToTerm}
                 onChange={(e) => {
                   setAgreeToTerm(e.target.checked);
                 }}
-                className={styles.check} 
-                label="I accept the terms and conditions for signing up to this service, and hereby confirm I have read the privacy policy."/>
+                className={styles.check}
+                label="I accept the terms and conditions for signing up to this service, and hereby confirm I have read the privacy policy."
+              />
             </Form.Group>
-            <Button type="submit" className={styles.btn} disabled={!agreeToTerm}>Register</Button>
+            <Button
+              type="submit"
+              className={styles.btn}
+              disabled={!agreeToTerm}
+            >
+              Register
+            </Button>
           </Form>
         </div>
       </div>

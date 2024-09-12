@@ -9,7 +9,7 @@ const Delete = async (type, id) => {
   });
 };
 
-const serverApi = {
+const adminApi = {
   Delete,
 };
-export default serverApi;
+export default adminApi;

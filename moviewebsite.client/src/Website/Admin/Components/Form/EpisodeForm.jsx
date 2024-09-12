@@ -5,11 +5,14 @@ import ReactPlayer from "react-player";
 import { mixed, number, object } from "yup";
 import PropTypes from "prop-types";
 import WebContext from "../../../WebContext/Context";
+import AdminContext from "../../AminContext/Context";
 import "./Form.css";
 
 function EpisodeCForm({ filmId, passEp }) {
   const webContext = useContext(WebContext);
-  const { episodes, getFilmEps, Delete } = webContext;
+  const { episodes, getFilmEps} = webContext;
+  const adminContext = useContext(AdminContext);
+  const {Delete} = adminContext;
   const [episode, setEpisode] = useState({
     id: 0,
     episodeNumber: 0,

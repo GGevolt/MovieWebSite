@@ -1,0 +1,35 @@
+.navbar {
+    background-color: hsl(240, 5%, 9%);
+    color: hsl(220, 7%, 92%);
+}
+.navbar .navbar-brand,
+.navbar .navbar-nav .nav-link,
+.navbar .navbar-nav .nav-dropdown .dropdown-item {
+    color: hsl(220, 7%, 92%);
+}
+
+.d-flex{
+    width: 350px;
+    max-width: 100%;
+    position:relative;
+}
+.d-flex .form-control {
+    box-shadow:none;
+}
+.d-flex .form-control:focus{
+    box-shadow:none;
+    border: 2px solid hsl(119, 73%, 53%);
+}
+.d-flex .icon{
+    background-color: transparent;
+}
+.d-flex #search::-webkit-search-cancel-button{
+    -webkit-appearance: none;
+}
+.d-flex #search::placeholder{
+    color:  hsl(0, 0%, 100%);
+}
+.d-flex #search[type=search]{
+    background-color: hsl(220, 4%, 29%);
+    color: hsl(0, 0%, 100%);
+}

@@ -20,7 +20,7 @@ export default (state, action) => {
     case GET_FILM_EPS:
       return {
         ...state,
-        episodes: action.payload,
+        filmEpisodes: action.payload,
       };
     case GET_CATEGORIES:
       return {

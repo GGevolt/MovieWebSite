@@ -8,7 +8,7 @@ const WebState = (props) => {
     film: {},
     films: [],
     categories: [],
-    episodes: []
+    filmEpisodes: []
   };
   const [state, dispatch] = useReducer(WebReducer, initialState);
   const getFilm = async (id) => {
@@ -26,7 +26,7 @@ const WebState = (props) => {
     });
   };
   const getFilmEps = async (id) => {
-    const response = await webApi.getEpisode(id);
+    const response = await webApi.getEpisodes(id);
     dispatch({
       type: "GET_FILM_EPS",
       payload: response,
@@ -44,7 +44,7 @@ const WebState = (props) => {
     <WebContext.Provider
       value={{
         films: state.films,
-        episodes: state.episodes,
+        filmEpisodes: state.filmEpisodes,
         categories: state.categories,
         getFilm,
         getFilms,

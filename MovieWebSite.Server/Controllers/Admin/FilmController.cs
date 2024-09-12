@@ -2,6 +2,7 @@
 using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
 using Server.Model.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieWebSite.Server.Controllers.Admin
 {
@@ -32,7 +33,7 @@ namespace MovieWebSite.Server.Controllers.Admin
         }
 
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult CreateUpdate([FromBody] FilmVM filmVM)
         {
             try
@@ -95,7 +96,7 @@ namespace MovieWebSite.Server.Controllers.Admin
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public IActionResult Delete(int id)
         {
             try

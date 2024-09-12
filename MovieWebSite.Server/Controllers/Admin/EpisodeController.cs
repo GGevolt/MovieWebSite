@@ -3,6 +3,7 @@ using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
 using Server.Model.ViewModels;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -28,7 +29,7 @@ namespace MovieWebSite.Server.Controllers.Admin
                 return StatusCode(500, "Internal server error.");
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult CreateUpdate([FromForm] EpisodeVM episodevm)
         {
             try
@@ -88,7 +89,7 @@ namespace MovieWebSite.Server.Controllers.Admin
             }
         }
 
-        [HttpDelete("{epId}")]
+        [HttpDelete("{epId}"), Authorize]
         public IActionResult Delete(int epId)
         {
             try

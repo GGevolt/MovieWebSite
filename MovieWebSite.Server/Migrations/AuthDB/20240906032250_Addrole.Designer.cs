@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieWebSite.Server.Data;
 
@@ -11,9 +12,11 @@ using MovieWebSite.Server.Data;
 namespace MovieWebSite.Server.Migrations.AuthDB
 {
     [DbContext(typeof(AuthDBContext))]
-    partial class AuthDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240906032250_Addrole")]
+    partial class Addrole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,19 +54,19 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                     b.HasData(
                         new
                         {
-                            Id = "e895a8e7-1cf3-449b-9b42-a80209eab8f4",
+                            Id = "fc86ab9c-77ad-4454-a2b0-44d9bc56088f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a78a2db5-ca4c-4d72-b865-ff08aa3741a2",
+                            Id = "b5311451-61ee-476f-a2c2-5bfaa6827153",
                             Name = "UserT0",
-                            NormalizedName = "USERT0"
+                            NormalizedName = "USER0"
                         },
                         new
                         {
-                            Id = "3cb0b449-836c-4875-82b9-e032a144e46c",
+                            Id = "794fc0af-5be7-4889-9f20-d054a870dc18",
                             Name = "UserT1",
                             NormalizedName = "USERT1"
                         });

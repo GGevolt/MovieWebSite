@@ -1,8 +1,51 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+import AuthApi from "../../AuthApi";
+import AuthContext from "../../AuthContext/Context";
 
 function Home() {
-    return(
-        <h1>This is the Home page</h1>
-    )
+  document.title = "welcome";
+  const authContext = useContext(AuthContext);
+  const { isLoggedIn } = authContext;
+  const [userInfo, setUserInfo] = useState({});
+  useEffect(() => {
+    getUser();
+  }, []);
+  const getUser = async () => {
+    if (isLoggedIn) {
+      const info = await AuthApi.getUserInfo();
+      setUserInfo(info);
+    }
+  };
+  return (
+    <section>
+      <h1>welcome to then home page</h1>
+      {isLoggedIn ? (
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Created date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{userInfo?.fullName}</td>
+                <td>{userInfo?.email}</td>
+                <td>
+                  {userInfo?.createdDate
+                    ? userInfo?.createdDate.split("T")[0]
+                    : ""}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="warning"></div>
+      )}
+    </section>
+  );
 }
 export default Home;

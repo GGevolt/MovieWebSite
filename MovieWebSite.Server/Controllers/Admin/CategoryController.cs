@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieWebSite.Server.Controllers.Admin
 {
@@ -16,7 +17,7 @@ namespace MovieWebSite.Server.Controllers.Admin
             return Ok(_unitOfWork.CategoryRepository.GetAll());
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult CreateUpdateCategory([FromBody] Category category)
         {
             try
@@ -39,7 +40,7 @@ namespace MovieWebSite.Server.Controllers.Admin
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public IActionResult DeleteCategory(int id)
         {
             try
