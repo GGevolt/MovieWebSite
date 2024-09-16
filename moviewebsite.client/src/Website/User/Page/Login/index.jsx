@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Form, Button, FloatingLabel } from "react-bootstrap";
 import styles from "./Login.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../AuthContext/Context";
 
 function Login() {
   document.title = "Login";
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
   const authContext = useContext(AuthContext);
   const { signIn, isLoggedIn, roles } = authContext;
   const [email, setEmail] = useState("");
@@ -18,6 +20,7 @@ function Login() {
     formData.append("password", password);
     formData.append("rememberMe", rememberMe);
     await signIn(formData);
+    navigate(from, { replace: true });
   };
   useEffect(() => {
     if (isLoggedIn && roles.length !== 0) {
