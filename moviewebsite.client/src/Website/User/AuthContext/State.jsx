@@ -1,8 +1,8 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import AuthContext from "./Context";
 import AuthReducer from "./Reducer";
 import AuthApi from "../AuthApi";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 
 const AuthState = (props) => {
   const initialState = {
@@ -10,10 +10,18 @@ const AuthState = (props) => {
     roles: [],
   };
 
-  const [state, dispatch] = useReducer(AuthReducer, initialState);
+  const storedState = JSON.parse(localStorage.getItem("authState"));
+  const [state, dispatch] = useReducer(
+    AuthReducer,
+    storedState || initialState
+  );
+
+  useEffect(() => {
+    // Save state to localStorage whenever it changes
+    localStorage.setItem("authState", JSON.stringify(state));
+  }, [state]);
 
   const setRoles = (values) => {
-    console.log("🚀 ~ setRoles ~ values:", values)
     dispatch({ type: "SET_ROLES", payload: values });
   };
 
@@ -26,7 +34,6 @@ const AuthState = (props) => {
     if (data) {
       // localStorage.setItem("token", data.token);
       setRoles(data.userRoles);
-      console.log("hola",state.roles)
       setIsLoggedIn(true);
       // document.location = "/";
     }
@@ -42,13 +49,15 @@ const AuthState = (props) => {
       // localStorage.clear();
       setIsLoggedIn(false);
       setRoles([]);
+      localStorage.removeItem("authState");
     }
   };
-  const validateUser = async ()=>{
-    const res = await AuthApi.validateUser()
-    if(!res){
+  const validateUser = async () => {
+    const res = await AuthApi.validateUser();
+    if (!res) {
       setIsLoggedIn(false);
       setRoles([]);
+      localStorage.removeItem("authState");
     }
   };
   return (
@@ -56,12 +65,10 @@ const AuthState = (props) => {
       value={{
         isLoggedIn: state.isLoggedIn,
         roles: state.roles,
-        setIsLoggedIn,
-        setRoles,
         signIn,
         register,
         signOut,
-        validateUser
+        validateUser,
       }}
     >
       {props.children}

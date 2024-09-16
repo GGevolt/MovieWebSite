@@ -1,20 +1,27 @@
-import React, {  useEffect, useContext } from "react";
-import { Navigate } from "react-router-dom";
-import UserBody from "../User/Layout/UserBody";
+import React, { useEffect, useContext, useState } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import AuthContext from "../User/AuthContext/Context";
+import PropTypes from "prop-types";
 
-function ProtectedRoutes() {
+function ProtectedRoutes({ allowedRoles }) {
   const authContext = useContext(AuthContext);
-  const { validateUser, isLoggedIn } = authContext;
+  const { validateUser, isLoggedIn, roles } = authContext;
   useEffect(() => {
     hanldeProcess();
   }, []);
-  const hanldeProcess = async ()=>{
-    if (!isLoggedIn) {
-      <Navigate to="/login" />;
-    }
+  const hanldeProcess = async () => {
     await validateUser();
+  };
+  if (
+    !isLoggedIn ||
+    (allowedRoles && !roles.some((role) => allowedRoles.includes(role)))
+  ) {
+    return <Navigate to="/login" replace />;
   }
-  return <UserBody />;
+  return <Outlet />;
 }
+
+ProtectedRoutes.propTypes = {
+  allowedRoles: PropTypes.array,
+};
 export default ProtectedRoutes;

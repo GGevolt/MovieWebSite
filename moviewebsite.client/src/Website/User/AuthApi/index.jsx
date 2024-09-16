@@ -4,7 +4,6 @@ const api = axios.create({
   baseURL: "/api",
   withCredentials: true,
 });
-// const token = localStorage.getItem("token");
 const signIn = async (formData) => {
   let res = null;
   await api

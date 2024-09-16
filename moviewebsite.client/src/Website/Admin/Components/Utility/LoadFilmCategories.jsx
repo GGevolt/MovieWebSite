@@ -17,7 +17,7 @@ function LoadFilmCategories({ filmId }) {
     setFilmCates(data);
     onFilmCateUpdate(false);
   };
-  return filmCates.map((cate, i) => (
+  return filmCates?.map((cate, i) => (
     <p key={cate.id}>
       {cate.name}
       {filmCates.length === i + 1 ? "." : ","}
