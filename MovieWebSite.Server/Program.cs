@@ -49,7 +49,7 @@ builder.Services.AddDbContext<AuthDBContext>(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<AuthDBContext>().AddDefaultTokenProviders(); ;
 builder.Services.AddIdentityCore<ApplicationUser>(options => {
-    //options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedEmail = true;
     options.Password.RequireDigit = true;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = false;
@@ -58,7 +58,6 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => {
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
-    
     options.User.RequireUniqueEmail = true;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 });

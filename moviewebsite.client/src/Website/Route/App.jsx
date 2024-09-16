@@ -6,11 +6,10 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-// import AdminBody from "../Admin/Layout/AdminBody";
-// import CategoryManagement from "../Admin/Pages/Management/CategoryManagement";
-// import FilmManagement from "../Admin/Pages/Management/FilmManagement";
-// import VideoManagement from "../Admin/Pages/Management/VideoManagement";
-// import WebApi from "../WebApi";
+import CategoryManagement from "../Admin/Pages/Management/CategoryManagement";
+import FilmManagement from "../Admin/Pages/Management/FilmManagement";
+import VideoManagement from "../Admin/Pages/Management/VideoManagement";
+import WebApi from "../WebApi";
 import "./index.css";
 import AdminState from "../Admin/AminContext/State";
 import AuthState from "../User/AuthContext/State";
@@ -20,46 +19,38 @@ import Register from "../User/Page/Register";
 import Home from "../User/Page/Home";
 import ProtectedRoutes from "./ProtectedRoutes";
 import NotFoundPage from "../User/Page/error/NotFoundPage";
-// const router = createBrowserRouter(
-//   // [
-//   // {
-//   //   path: "/",
-//   //   element: <Home/>,
-//   // },
-//   // {
-//   //   path: "/Login",
-//   //   element: <Login />,
-//   // },
-//   // {
-//   //   path: "/Register",
-//   //   element: <Register />,
-//   // },
-//   // {
-//   //   path: "/Admin",
-//   //   element: <AdminBody />,
-//   //   children: [
-//   //     { index: true, element: <FilmManagement /> },
-//   //     { path: "/Admin/Category-Management", element: <CategoryManagement /> },
-//   //     { path: "/Admin/Film-Management", element: <FilmManagement /> },
-//   //     {
-//   //       path: "/Admin/Video-Management/:filmId",
-//   //       element: <VideoManagement />,
-//   //       loader: async ({ params }) => WebApi.getFilm(params.filmId),
-//   //     },
-//   //     { path: "*", element: <NotFoundPage /> },
-//   //   ],
-//   // },
-// // ]
-// );
+import UnAuthorize from "../User/Page/error/UnAuthorize";
+import UserBody from "../Layout/UserBody";
+import UserInfo from "../User/Page/UserInfo";
 
+const ROLES = {
+  User: "UserT0",
+  SubUser: "UserT1",
+  Admin: "Admin",
+};
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/">
-      <Route element={<ProtectedRoutes />}>
-        <Route path="/" element={<Home />} />
+    <Route path="/" element={<UserBody />}>
+      <Route element={<ProtectedRoutes allowedRoles={[ROLES.User]} />}>
+        <Route path="/userinfo" element={<UserInfo />} />
       </Route>
+      <Route element={<ProtectedRoutes allowRoles={[ROLES.Admin]} />}>
+        {/* <Route path="/" element={<FilmManagement />} /> */}
+        <Route
+          path="/admin/category-Management"
+          element={<CategoryManagement />}
+        />
+        <Route path="/admin/film-Management" element={<FilmManagement />} />
+        <Route
+          path="/admin/video-Management/:filmId"
+          element={<VideoManagement />}
+          loader={async ({ params }) => WebApi.getFilm(params.filmId)}
+        />
+      </Route>
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/unauthorize" element={<UnAuthorize />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

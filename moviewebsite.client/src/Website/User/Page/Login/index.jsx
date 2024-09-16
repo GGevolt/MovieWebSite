@@ -20,8 +20,8 @@ function Login() {
     await signIn(formData);
   };
   useEffect(() => {
-    if (isLoggedIn) {
-      // document.location = "/";
+    if (isLoggedIn && roles.length !== 0) {
+      document.location = "/";
     }
   }, []);
   return (

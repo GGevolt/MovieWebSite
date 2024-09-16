@@ -10,9 +10,9 @@ import "./Form.css";
 
 function EpisodeCForm({ filmId, passEp }) {
   const webContext = useContext(WebContext);
-  const { episodes, getFilmEps} = webContext;
+  const { filmEpisodes, getFilmEps } = webContext;
   const adminContext = useContext(AdminContext);
-  const {Delete} = adminContext;
+  const { Delete } = adminContext;
   const [episode, setEpisode] = useState({
     id: 0,
     episodeNumber: 0,
@@ -50,7 +50,7 @@ function EpisodeCForm({ filmId, passEp }) {
             .positive("Episode number must be positive")
             .integer("Episode number must be an integer!")
             .notOneOf(
-              episodes.map((ep) => ep.episodeNumber),
+              filmEpisodes.map((ep) => ep.episodeNumber),
               "This episode is already exist!"
             ),
           videoFile: mixed().required("Pls, Choose a video to upload."),
@@ -193,7 +193,9 @@ function EpisodeCForm({ filmId, passEp }) {
           onChange={handleChange}
           isInvalid={errors.episodeNumber}
         />
-        <Form.Control.Feedback className="error" type="invalid">{errors.episodeNumber}</Form.Control.Feedback>
+        <Form.Control.Feedback className="error" type="invalid">
+          {errors.episodeNumber}
+        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group className="mb-2 vid-upload">
         <Form.Label>Upload video:</Form.Label>
@@ -210,7 +212,7 @@ function EpisodeCForm({ filmId, passEp }) {
           episode.vidName && (
             <div className="temp-vid">
               <ReactPlayer
-                url={`/video/${episode.vidName}`}
+                url={`/api/video/${episode.vidName}`}
                 controls
                 width="100%"
                 height="100%"
@@ -291,7 +293,7 @@ EpisodeCForm.propTypes = {
     id: PropTypes.number,
     episodeNumber: PropTypes.number,
     filmId: PropTypes.number,
-    vidName : PropTypes.string,
+    vidName: PropTypes.string,
   }),
 };
 export default EpisodeCForm;

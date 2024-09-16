@@ -1,14 +1,14 @@
-/* eslint-disable react/prop-types */
 import React, { useReducer } from "react";
 import webApi from "../WebApi";
 import WebContext from "./Context";
 import WebReducer from "./Reducer";
+import PropTypes from "prop-types";
 const WebState = (props) => {
   const initialState = {
     film: {},
     films: [],
     categories: [],
-    filmEpisodes: []
+    filmEpisodes: [],
   };
   const [state, dispatch] = useReducer(WebReducer, initialState);
   const getFilm = async (id) => {
@@ -40,7 +40,6 @@ const WebState = (props) => {
     });
   };
   return (
-    // eslint-disable-next-line react/react-in-jsx-scope
     <WebContext.Provider
       value={{
         films: state.films,
@@ -55,6 +54,10 @@ const WebState = (props) => {
       {props.children}
     </WebContext.Provider>
   );
+};
+
+WebState.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default WebState;

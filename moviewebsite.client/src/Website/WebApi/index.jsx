@@ -1,20 +1,53 @@
 import axios from "axios";
 
-const createGetRequest = (url, errorMessage='') => async () => {
-  try {
-    const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    console.error(`${errorMessage}: ${error.message}`);
-    throw error;
-  }
+const getEpisodes = async (filmId) => {
+  const response = await axios.get(`/api/episode/${filmId}`).catch((error) => {
+    console.error(
+      "There has been a problem with episode get operation:",
+      error
+    );
+  });
+  return response.data;
 };
 
+const getCategories = async () => {
+  const response = await axios.get("/api/category").catch((error) => {
+    console.error(
+      "There has been a problem with categories get operation:",
+      error
+    );
+  });
+  return response.data;
+};
+
+const getFilm = async (id) => {
+  const response = await axios.get(`/api/film/${id}`).catch((error) => {
+    console.error("There has been a problem with film get operation:", error);
+  });
+  return response.data;
+};
+
+const getFilms = async () => {
+  const response = await axios.get(`/api/film`).catch((error) => {
+    console.error("There has been a problem with films get operation:", error);
+  });
+  return response.data;
+};
+
+const getFilmCates = async (id) => {
+  const response = await axios.get(`/api/filmCate/${id}`).catch((error) => {
+    console.error(
+      "There has been a problem with film categories get operation:",
+      error
+    );
+  });
+  return response.data;
+};
 const WebApi = {
-  getEpisodes: (filmId) => createGetRequest(`/api/episode/${filmId}, , 'Error fetching episodes'`),
-  getCategories: createGetRequest("/api/category", 'Error fetching categories'),
-  getFilm: (id) => createGetRequest(`/api/film/${id}`, 'Error fetching film '),
-  getFilms: createGetRequest("/api/film", 'Error fetching films'),
-  getFilmCates: (id) => createGetRequest(`/api/filmCate/${id}`, 'Error fetching film categories ')
+  getEpisodes,
+  getCategories,
+  getFilm,
+  getFilmCates,
+  getFilms,
 };
 export default WebApi;

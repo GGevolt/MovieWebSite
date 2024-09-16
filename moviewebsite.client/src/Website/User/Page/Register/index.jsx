@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Form, Col, Row, Button } from "react-bootstrap";
+import { Form, Col, Row, Button, Spinner } from "react-bootstrap";
 import { object, string, date } from "yup";
 import styles from "./Register.module.css";
 import AuthContext from "../../AuthContext/Context";
+import RegisterPopUp from "../../Components/Popup";
+import { EnvelopeAt } from "react-bootstrap-icons";
 
 function Register() {
   document.title = "Register";
   const authContext = useContext(AuthContext);
+  const [uploading, setUploading] = useState(false);
   const { register, isLoggedIn } = authContext;
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   useEffect(() => {
     if (isLoggedIn) {
       document.location = "/";
@@ -80,6 +84,7 @@ function Register() {
       setErrors(newErrors);
       return;
     }
+    setUploading(true);
     const formData = new FormData();
     formData.append("fullName", userInfo.fullName.trim());
     formData.append("gender", userInfo.gender);
@@ -87,10 +92,38 @@ function Register() {
     formData.append("dob", userInfo.dob);
     formData.append("passwordHash", userInfo.password);
     formData.append("username", userInfo.username.trim());
-    await register(formData);
+    if (await register(formData)) {
+      setIsPopupOpen(true);
+    }
+    setUploading(false);
   };
+  const popUpContent = () => {
+    return (
+      <div>
+        <h3 className={styles.pop_header}>
+          Check Your Email <EnvelopeAt />
+        </h3>
+        <p className={styles.pop_content}>
+          We've sent a confirmation link to your email address. Please check
+          your inbox and click the link to verify your account.
+        </p>
+      </div>
+    );
+  };
+  const handleClosePop = () => {
+    setIsPopupOpen(false);
+    document.location = "/login";
+  };
+
   return (
     <div className={styles.page}>
+      {
+        <RegisterPopUp
+          isOpen={isPopupOpen}
+          handleClose={handleClosePop}
+          children={popUpContent}
+        />
+      }
       <div className={styles.Container}>
         <div className={styles.content}>
           <h1 className={styles.h1}>Create an Account</h1>
@@ -237,9 +270,9 @@ function Register() {
             <Button
               type="submit"
               className={styles.btn}
-              disabled={!agreeToTerm}
+              disabled={!agreeToTerm || uploading}
             >
-              Register
+              {uploading ? <Spinner animation="border" /> : "Register"}
             </Button>
           </Form>
         </div>

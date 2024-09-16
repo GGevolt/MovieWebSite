@@ -12,22 +12,30 @@ using System.Security.Claims;
 using System.Text;
 using Server.Utility.Interfaces;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.WebUtilities;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace MovieWebSite.Server.Controllers.Identity
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController(SignInManager<ApplicationUser> sM, UserManager<ApplicationUser> uM, ITokenService tokenService) : ControllerBase
+    public class AuthenticationController(SignInManager<ApplicationUser> sM, UserManager<ApplicationUser> uM, ITokenService tokenService, IEmailService emailService) : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> signInManager = sM;
         private readonly UserManager<ApplicationUser> userManager = uM;
         private readonly ITokenService _tokenService= tokenService;
+        private readonly IEmailService _emailService = emailService;
 
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] ApplicationUser user)
         {
             try
             {
+                var userExist = await userManager.FindByEmailAsync(user.Email);
+                if (userExist != null) {
+                    return BadRequest(new { message = "This user already exist!" });
+                }
                 ApplicationUser new_user = new ApplicationUser()
                 {
                     FullName = user.FullName,
@@ -47,12 +55,49 @@ namespace MovieWebSite.Server.Controllers.Identity
                     await userManager.DeleteAsync(new_user);
                     return BadRequest(new { message = "Failed to assign role!", errors = roleResult.Errors });
                 }
+                var token =await userManager.GenerateEmailConfirmationTokenAsync(new_user);
+                token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+                var confirmLink = Url.Action(nameof(ConfirmEmail), "Authentication", new {token, email = new_user.Email}, Request.Scheme);
+                var emailSubject = "Confirm your email with Sodoki.";
+                var emailBody = $"You can confirm your account by <a href='{HtmlEncoder.Default.Encode(confirmLink)}'>clicking here</a>. Hope you have nice day :)";
+                var emailComponent = new EmailComponent
+                {
+                    To = new_user.Email,
+                    Subject = emailSubject,
+                    Body = emailBody
+                };
+                await _emailService.SendEmailAsync(emailComponent);
                 return Ok();
             }
             catch (Exception ex) {
                 return BadRequest(new { message =  ex.Message } );
             }
         }
+
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string email, string token)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    return NotFound("User don't exist to confirm email!");
+                }
+                token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+                var result = await userManager.ConfirmEmailAsync(user, token);
+                if (!result.Succeeded) {
+                    await userManager.DeleteAsync(user);
+                    return BadRequest(new { message = "Failed to confirm eamil!", errors = result.Errors });
+                }
+                return Ok("Confirm email succsessfully. Pls close this page");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Something have gone wrong with confirm Email" });
+            }
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromForm] LoginVM loginVM)
         {
@@ -62,7 +107,7 @@ namespace MovieWebSite.Server.Controllers.Identity
                 if (login_user != null ) {
                     if (!login_user.EmailConfirmed)
                     {
-                        login_user.EmailConfirmed = true;
+                        return Unauthorized(new {error="You need to confirm email"});
                     }
                     var result = await signInManager.PasswordSignInAsync(login_user, loginVM.Password, loginVM.RememberMe, lockoutOnFailure: false);
                     if (!result.Succeeded)
