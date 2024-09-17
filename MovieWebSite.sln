@@ -3,9 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWebSite.Server", "MovieWebSite.Server\MovieWebSite.Server.csproj", "{C2F95C9E-0DA1-469C-948F-3B560D856146}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWebSite.Server", "MovieWebSite.Server\MovieWebSite.Server.csproj", "{C2F95C9E-0DA1-469C-948F-3B560D856146}"
+	ProjectSection(ProjectDependencies) = postProject
+		{251ED4D7-17AA-4051-AEDF-A1ABDDE967CF} = {251ED4D7-17AA-4051-AEDF-A1ABDDE967CF}
+	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "moviewebsite.client", "moviewebsite.client\moviewebsite.client.esproj", "{77A199C2-A54F-43BC-BF1C-8524E64277EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Utility", "Server.Utility\Server.Utility.csproj", "{C449F481-98F0-4D69-B51B-1FA692D3DA48}"
+	ProjectSection(ProjectDependencies) = postProject
+		{251ED4D7-17AA-4051-AEDF-A1ABDDE967CF} = {251ED4D7-17AA-4051-AEDF-A1ABDDE967CF}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Model", "Server.Model\Server.Model.csproj", "{251ED4D7-17AA-4051-AEDF-A1ABDDE967CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +33,14 @@ Global
 		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{77A199C2-A54F-43BC-BF1C-8524E64277EE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{C449F481-98F0-4D69-B51B-1FA692D3DA48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C449F481-98F0-4D69-B51B-1FA692D3DA48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C449F481-98F0-4D69-B51B-1FA692D3DA48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C449F481-98F0-4D69-B51B-1FA692D3DA48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{251ED4D7-17AA-4051-AEDF-A1ABDDE967CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{251ED4D7-17AA-4051-AEDF-A1ABDDE967CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{251ED4D7-17AA-4051-AEDF-A1ABDDE967CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{251ED4D7-17AA-4051-AEDF-A1ABDDE967CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

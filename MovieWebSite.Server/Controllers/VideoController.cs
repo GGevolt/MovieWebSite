@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MovieWebSite.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class VideoController(IWebHostEnvironment webhost) : ControllerBase
     {
         private readonly IWebHostEnvironment _webhost = webhost;
@@ -14,15 +14,14 @@ namespace MovieWebSite.Server.Controllers
         {
             string wwwRootPath = _webhost.WebRootPath;
             var videoPath = Path.Combine(wwwRootPath, "videos", videoName);
-
-            // Check if the file exists
             if (!System.IO.File.Exists(videoPath))
             {
-                return NotFound("Video file not found.");
+                return NotFound($"Video {videoName} file not found.");
             }
 
-            // Return the file with the correct MIME type for HLS
-            return PhysicalFile(videoPath, "application/x-mpegURL");
+            string contentType = "video/mp4";
+
+            return PhysicalFile(videoPath, contentType, videoName);
         }
     }
 }

@@ -42,27 +42,36 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/category': {
+            '^/api/category': {
                 target,
                 secure: false,
                 changeOrigin: true,
             },
-            '^/episode': {
+            '^/api/episode': {
                 target,
                 secure: false,
                 changeOrigin: true,
             },
-            '^/film': {
+            '^/api/film': {
                 target,
                 secure: false,
                 changeOrigin: true,
             },
-            '^/filmCate': {
+            '^/api/filmCate': {
                 target,
                 secure: false,
                 changeOrigin: true,
             },
-            '^/images': {
+            '^/api/images': {
+                target,
+                secure: false,
+                changeOrigin: true,
+            },
+            '^/api/video': {
+                target,
+                secure: false,
+                changeOrigin: true,
+            },'^/api/authentication': {
                 target,
                 secure: false,
                 changeOrigin: true,
