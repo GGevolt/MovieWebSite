@@ -3,6 +3,7 @@
     color: hsl(220, 7%, 92%);
 }
 .navbar .navbar-brand,
+.navbar .navbar-text,
 .navbar .navbar-nav .nav-link,
 .navbar .navbar-nav .nav-dropdown .dropdown-item {
     color: hsl(220, 7%, 92%);

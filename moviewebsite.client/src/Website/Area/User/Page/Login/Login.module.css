@@ -1,0 +1,28 @@
+.Container{
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 2fr 1fr ;
+    height: 100vh;
+}
+
+.Container .Log_in_form{
+    grid-area: 1/2/-1/-1;
+    text-align: center;
+    padding-right: 3.125rem;
+    padding-left: 3.125rem;
+    padding-top: 9.375rem;
+    background-color: rgba(241, 241, 241, 0.986);
+}
+
+.Container .Log_in_form .btn{
+    width: 100%;
+}
+.Container .Banner{
+    background-image: url(../../src/assets/Image/welcome_banner.jpg);
+    background-size: cover;
+}
+.loading{
+    display: flex;
+    justify-content: center;
+    padding-top: 40vh;
+}

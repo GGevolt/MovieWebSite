@@ -57,9 +57,10 @@ namespace MovieWebSite.Server.Controllers.Identity
                 }
                 var token =await userManager.GenerateEmailConfirmationTokenAsync(new_user);
                 token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-                var confirmLink = Url.Action(nameof(ConfirmEmail), "Authentication", new {token, email = new_user.Email}, Request.Scheme);
+                var urlComfirmEmail = $"https://localhost:5173/emailconfirm/{token}/{new_user.Email}";
+                //var confirmLink = Url.Action(nameof(ConfirmEmail), "Authentication", new {token, email = new_user.Email}, Request.Scheme);
                 var emailSubject = "Confirm your email with Sodoki.";
-                var emailBody = $"You can confirm your account by <a href='{HtmlEncoder.Default.Encode(confirmLink)}'>clicking here</a>. Hope you have nice day :)";
+                var emailBody = $"You can confirm your account by <a href='{HtmlEncoder.Default.Encode(urlComfirmEmail)}'>clicking here</a>. Hope you have nice day :)";
                 var emailComponent = new EmailComponent
                 {
                     To = new_user.Email,
@@ -74,23 +75,23 @@ namespace MovieWebSite.Server.Controllers.Identity
             }
         }
 
-        [HttpGet("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(string email, string token)
+        [HttpPost("confirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromForm] ConfirmDTO confirmDTO)
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(email);
+                var user = await userManager.FindByEmailAsync(confirmDTO.Email);
                 if (user == null)
                 {
-                    return NotFound("User don't exist to confirm email!");
+                    return NotFound(new { message = "User don't exist to confirm email!", email= confirmDTO.Email });
                 }
-                token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+                var token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(confirmDTO.Token));
                 var result = await userManager.ConfirmEmailAsync(user, token);
                 if (!result.Succeeded) {
                     await userManager.DeleteAsync(user);
-                    return BadRequest(new { message = "Failed to confirm eamil!", errors = result.Errors });
+                    return BadRequest(new { message = "Failed to confirm email!", errors = result.Errors });
                 }
-                return Ok("Confirm email succsessfully. Pls close this page");
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -99,17 +100,17 @@ namespace MovieWebSite.Server.Controllers.Identity
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromForm] LoginVM loginVM)
+        public async Task<ActionResult> Login([FromForm] LoginDTO loginDTO)
         {
             try
             {
-                ApplicationUser login_user = await userManager.FindByEmailAsync(loginVM.Email);
+                ApplicationUser login_user = await userManager.FindByEmailAsync(loginDTO.Email);
                 if (login_user != null ) {
                     if (!login_user.EmailConfirmed)
                     {
                         return Unauthorized(new {error="You need to confirm email"});
                     }
-                    var result = await signInManager.PasswordSignInAsync(login_user, loginVM.Password, loginVM.RememberMe, lockoutOnFailure: false);
+                    var result = await signInManager.PasswordSignInAsync(login_user, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure: false);
                     if (!result.Succeeded)
                     {
                         return Unauthorized(new { error = "Invalid Password! Try again.", statusCode = 401 });
@@ -119,7 +120,7 @@ namespace MovieWebSite.Server.Controllers.Identity
                     var updateResult = await userManager.UpdateAsync(login_user);
                     //string tokenValue = _tokenService.GenarateToken(login_user);
                     var roles = await userManager.GetRolesAsync(login_user);
-                    return Ok(new {  UserRoles = roles });
+                    return Ok(new {  UserRoles = roles, UserName = login_user.UserName });
                 }
                 else
                 {

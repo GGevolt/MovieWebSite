@@ -1,39 +1,71 @@
-import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { Container, Nav, Navbar, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import React, { useContext } from "react";
 import "./NavBar.css";
-import AuthContext from "../../User/AuthContext/Context";
+import AuthContext from "../../Area/AuthContext/Context";
 
 function NavBar() {
   const authContext = useContext(AuthContext);
-  const { isLoggedIn, signOut, roles } = authContext;
+  const { isLoggedIn, signOut, roles, userName } = authContext;
   const logOut = async () => {
     await signOut();
   };
   const roleMap = {
     UserT0: () => (
       <>
-        <Nav.Link as={Link} to="/userinfo">
-          UserInfo
-        </Nav.Link>
-        <Nav.Link onClick={logOut}>Logout</Nav.Link>
+        <Row>
+          <Col xs="auto">
+            <Nav.Link as={Link} to="/">
+              Home
+            </Nav.Link>
+          </Col>
+          <Col>
+            <Nav.Link as={Link} to="/user/userinfo">
+              UserInfo
+            </Nav.Link>
+          </Col>
+        </Row>
+        <Navbar.Collapse className="justify-content-end">
+          <Row>
+            <Col xs="auto">
+              <Navbar.Text>Signed in as: {userName}</Navbar.Text>
+            </Col>
+            <Col xs="auto">
+              <Nav.Link onClick={logOut}>Logout</Nav.Link>
+            </Col>
+          </Row>
+        </Navbar.Collapse>
       </>
     ),
     Admin: () => (
       <>
-        <NavDropdown
-          menuVariant="dark"
-          title="CRUD Management"
-          id="collapsible-nav-dropdown"
-        >
-          <NavDropdown.Item as={Link} to="/Admin/Category-Management">
-            Category
-          </NavDropdown.Item>
-          <NavDropdown.Item as={Link} to="/Admin/Film-Management">
-            Film
-          </NavDropdown.Item>
-        </NavDropdown>
-        <Nav.Link onClick={logOut}>Logout</Nav.Link>
+        <Row>
+          <Col xs="auto">
+            <Nav.Link as={Link} to="/">
+              Home
+            </Nav.Link>
+          </Col>
+          <Col xs="auto">
+            <Nav.Link as={Link} to="/Admin/Category-Management">
+              Category
+            </Nav.Link>
+          </Col>
+          <Col xs="auto">
+            <Nav.Link as={Link} to="/Admin/Film-Management">
+              Film
+            </Nav.Link>
+          </Col>
+        </Row>
+        <Navbar.Collapse className="justify-content-end">
+          <Row>
+            <Col xs="auto">
+              <Navbar.Text>Signed in as: {userName}</Navbar.Text>
+            </Col>
+            <Col xs="auto">
+              <Nav.Link onClick={logOut}>Logout</Nav.Link>
+            </Col>
+          </Row>
+        </Navbar.Collapse>
       </>
     ),
   };
@@ -43,14 +75,20 @@ function NavBar() {
   };
   const renderUnAuthLinks = () => {
     return (
-      <>
-        <Nav.Link as={Link} to="/login">
-          Login
-        </Nav.Link>
-        <Nav.Link as={Link} to="/register">
-          Register
-        </Nav.Link>
-      </>
+      <Navbar.Collapse className="justify-content-end">
+        <Row>
+          <Col xs="auto">
+            <Nav.Link as={Link} to="/login">
+              Login
+            </Nav.Link>
+          </Col>
+          <Col xs="auto">
+            <Nav.Link as={Link} to="/register">
+              Register
+            </Nav.Link>
+          </Col>
+        </Row>
+      </Navbar.Collapse>
     );
   };
   return (
@@ -62,12 +100,7 @@ function NavBar() {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link as={Link} to="/">
-                Home
-              </Nav.Link>
-              {isLoggedIn ? renderAuthLinks() : renderUnAuthLinks()}
-            </Nav>
+            {isLoggedIn ? renderAuthLinks() : renderUnAuthLinks()}
           </Navbar.Collapse>
         </Container>
       </Navbar>

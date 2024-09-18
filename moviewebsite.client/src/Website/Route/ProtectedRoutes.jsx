@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import AuthContext from "../User/AuthContext/Context";
+import AuthContext from "../Area/AuthContext/Context";
 import PropTypes from "prop-types";
 
 function ProtectedRoutes({ allowedRoles }) {

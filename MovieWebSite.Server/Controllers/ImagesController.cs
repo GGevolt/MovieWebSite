@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieWebSite.Server.Repository.IRepository;
 using Server.Model.ViewModels;
 
@@ -20,30 +21,26 @@ namespace MovieWebSite.Server.Controllers
             {
                 return NotFound();
             }
-            // Determine the MIME type of the file
-            var mimeType = "image/jpeg"; // Default to JPEG. Adjust based on the file extension if necessary.
+            var mimeType = "image/jpeg"; 
             var extension = Path.GetExtension(imageName).ToLowerInvariant();
             if (extension == ".png")
             {
                 mimeType = "image/png";
             }
 
-            // Read the file into a byte array
             var imageBytes = System.IO.File.ReadAllBytes(imagePath);
-
-            // Return the image as a response
             return File(imageBytes, mimeType);
         }
-        [HttpPost]
-        public IActionResult UploadMoviePicture([FromForm] FilmPicVM filmPicVM)
+        [HttpPost, Authorize(Roles = "Admin")]
+        public IActionResult UploadMoviePicture([FromForm] FilmPicDTO filmPicDTO)
         {
             try
             {
                 string wwwRootPath = _webhost.WebRootPath;
                 string imagePath = Path.Combine(wwwRootPath, "img");
-                if (filmPicVM.ImageFile != null)
+                if (filmPicDTO.ImageFile != null)
                 {
-                    var film = _unitOfWork.FilmRepository.Get(f => f.Id == filmPicVM.FilmId);
+                    var film = _unitOfWork.FilmRepository.Get(f => f.Id == filmPicDTO.FilmId);
                     if (!string.IsNullOrEmpty(film.FilmImg))
                     {
                         var oldImagePath = Path.Combine(imagePath, film.FilmImg.TrimStart('\\'));
@@ -59,10 +56,10 @@ namespace MovieWebSite.Server.Controllers
                             }
                         }
                     }
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filmPicVM.ImageFile.FileName);
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filmPicDTO.ImageFile.FileName);
                     using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
                     {
-                        filmPicVM.ImageFile.CopyTo(fileStream);
+                        filmPicDTO.ImageFile.CopyTo(fileStream);
                     }
                     film.FilmImg = fileName;
                     _unitOfWork.FilmRepository.Update(film);

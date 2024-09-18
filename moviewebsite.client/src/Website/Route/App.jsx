@@ -6,22 +6,22 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import CategoryManagement from "../Admin/Pages/Management/CategoryManagement";
-import FilmManagement from "../Admin/Pages/Management/FilmManagement";
-import VideoManagement from "../Admin/Pages/Management/VideoManagement";
+import CategoryManagement from "../Area/Admin/Pages/Management/CategoryManagement";
+import FilmManagement from "../Area/Admin/Pages/Management/FilmManagement";
+import VideoManagement from "../Area/Admin/Pages/Management/VideoManagement";
 import WebApi from "../WebApi";
 import "./index.css";
-import AdminState from "../Admin/AminContext/State";
-import AuthState from "../User/AuthContext/State";
+import AdminState from "../Area/Admin/AminContext/State";
+import AuthState from "../Area/AuthContext/State";
 import WebState from "../WebContext/State";
-import Login from "../User/Page/Login";
-import Register from "../User/Page/Register";
-import Home from "../User/Page/Home";
+import Login from "../Area/User/Page/Login";
+import Register from "../Area/User/Page/Register";
+import Home from "../Area/User/Page/Home";
 import ProtectedRoutes from "./ProtectedRoutes";
-import NotFoundPage from "../User/Page/error/NotFoundPage";
-import UnAuthorize from "../User/Page/error/UnAuthorize";
+import NotFoundPage from "../Area/User/Page/error/NotFoundPage";
 import UserBody from "../Layout/UserBody";
-import UserInfo from "../User/Page/UserInfo";
+import UserInfo from "../Area/User/Page/UserInfo";
+import EmailConfirm from "../Area/User/Page/EmailConfirm";
 
 const ROLES = {
   User: "UserT0",
@@ -31,11 +31,18 @@ const ROLES = {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<UserBody />}>
-      <Route element={<ProtectedRoutes allowedRoles={[ROLES.User]} />}>
-        <Route path="/userinfo" element={<UserInfo />} />
+      <Route
+        path="/user"
+        element={<ProtectedRoutes allowedRoles={[ROLES.User]} />}
+      >
+        <Route element={<Home />} index />
+        <Route path="/user/userinfo" element={<UserInfo />} />
       </Route>
-      <Route element={<ProtectedRoutes allowRoles={[ROLES.Admin]} />}>
-        {/* <Route path="/" element={<FilmManagement />} /> */}
+      <Route
+        path="/admin"
+        element={<ProtectedRoutes allowRoles={[ROLES.Admin]} />}
+      >
+        <Route index element={<FilmManagement />} />
         <Route
           path="/admin/category-Management"
           element={<CategoryManagement />}
@@ -47,10 +54,10 @@ const router = createBrowserRouter(
           loader={async ({ params }) => WebApi.getFilm(params.filmId)}
         />
       </Route>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/unauthorize" element={<UnAuthorize />} />
+      <Route path="/emailconfirm/:token/:email" element={<EmailConfirm />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
