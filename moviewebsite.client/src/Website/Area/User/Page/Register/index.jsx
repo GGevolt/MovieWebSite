@@ -5,18 +5,14 @@ import styles from "./Register.module.css";
 import AuthContext from "../../../AuthContext/Context";
 import RegisterPopUp from "../../Components/Popup";
 import { EnvelopeAt } from "react-bootstrap-icons";
+import { Navigate } from "react-router-dom";
 
 function Register() {
   document.title = "Register";
   const authContext = useContext(AuthContext);
   const [uploading, setUploading] = useState(false);
-  const { register, isLoggedIn } = authContext;
+  const { register, isLoggedIn, roles } = authContext;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  useEffect(() => {
-    if (isLoggedIn) {
-      document.location = "/";
-    }
-  }, []);
   const [userInfo, setUserInfo] = useState({
     fullName: "",
     gender: "",
@@ -104,8 +100,8 @@ function Register() {
           Check Your Email <EnvelopeAt />
         </h3>
         <p className={styles.pop_content}>
-          We&apos;ve sent a confirmation link to your email address. Please check
-          your inbox and click the link to verify your account.
+          We&apos;ve sent a confirmation link to your email address. Please
+          check your inbox and click the link to verify your account.
         </p>
       </div>
     );
@@ -115,13 +111,14 @@ function Register() {
     document.location = "/login";
   };
 
+  if (isLoggedIn && roles.length !== 0) {
+    return <Navigate to="/login" />;
+  }
+
   return (
     <div className={styles.page}>
       {
-        <RegisterPopUp
-          isOpen={isPopupOpen}
-          handleClose={handleClosePop}
-        >
+        <RegisterPopUp isOpen={isPopupOpen} handleClose={handleClosePop}>
           {popUpContent()}
         </RegisterPopUp>
       }

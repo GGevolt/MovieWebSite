@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Card, Container, Image, Spinner } from "react-bootstrap";
+import { Button, Card, Container, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import FilmCUForm from "../../Components/Form/FilmCUForm";
 import Pagination from "../../Components/Pagination";
@@ -7,6 +7,7 @@ import PictureUpload from "../../Components/Upload/PictureUpload";
 import DeleteButton from "../../Components/Utility/DeleteButton";
 import LoadFilmCategories from "../../Components/Utility/LoadFilmCategories";
 import WebContext from "../../../../WebContext/Context";
+import FilmImg from "../../../User/Components/Img/FilmImg";
 import "./Management.css";
 
 function FilmManagement() {
@@ -20,7 +21,6 @@ function FilmManagement() {
   const currentItems = films
     ? films.slice(indexOfFirstItem, indexOfLastItem)
     : 0;
-
   useEffect(() => {
     loadFilmsData();
   }, []);
@@ -38,11 +38,7 @@ function FilmManagement() {
         <Card className="film-card" key={film.id}>
           <Card.Title className="film-title">{film.title}</Card.Title>
           <div className="film-image">
-            <Image
-              src={`/api/images/${film.filmImg}`}
-              thumbnail
-              alt="Movie picture"
-            />
+            <FilmImg src={`/api/images/${film.filmPath}`} hash={film.blurHash}/>
           </div>
           <div className="film-info">
             <div className="film-info-director">

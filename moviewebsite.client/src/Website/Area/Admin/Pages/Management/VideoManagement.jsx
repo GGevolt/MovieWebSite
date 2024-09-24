@@ -34,7 +34,7 @@ function VideoManagement() {
         </div>
         <div className="vid-manage-img">
           <Image
-            src={`/api/images/${film.filmImg}`}
+            src={`/api/images/${film.filmPath}`}
             thumbnail
             alt="Movie picture"
           />

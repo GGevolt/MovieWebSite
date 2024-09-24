@@ -13,13 +13,8 @@ body{
     font-family: "Taviraj", serif;
     margin: 0;
     padding: 0;
+    background-color: black;
 }
-.body{
-    margin-inline: auto;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    color: rgb(0, 0, 0);
-}
+
 
 

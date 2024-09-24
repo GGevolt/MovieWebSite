@@ -75,6 +75,11 @@ export default defineConfig({
                 target,
                 secure: false,
                 changeOrigin: true,
+            },
+            '^/api/payment': {
+                target,
+                secure: false,
+                changeOrigin: true,
             }
         },
         port: 5173,

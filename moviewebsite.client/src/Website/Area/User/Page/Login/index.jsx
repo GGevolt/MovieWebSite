@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Form, Button, FloatingLabel, Spinner } from "react-bootstrap";
+import React, { useState, useContext } from "react";
+import { Form, Button, FloatingLabel } from "react-bootstrap";
 import styles from "./Login.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import AuthContext from "../../../AuthContext/Context";
 
 function Login() {
@@ -19,37 +19,22 @@ function Login() {
     formData.append("password", password);
     formData.append("rememberMe", rememberMe);
     if (await signIn(formData)) {
-      const redirectFunction = roleMap[roles];
-      if (redirectFunction) {
-        redirectFunction();
+      const path = roleMap[roles[0]];
+      if (path) {
+        navigate(path);
       }
     }
   };
   const roleMap = {
-    UserT0: () => {
-      navigate("/user");
-    },
-    UserT1: () => {
-      navigate("/user");
-    },
-    Admin: () => {
-      navigate("/admin");
-    },
+    UserT0: "/user",
+    UserT1: "/user",
+    Admin: "/admin",
   };
-  useEffect(() => {
-    if (isLoggedIn && roles.length !== 0) {
-      const redirectFunction = roleMap[roles];
-      if (redirectFunction) {
-        redirectFunction();
-      }
-    }
-  }, [isLoggedIn, roles]);
   if (isLoggedIn && roles.length !== 0) {
-    return (
-      <div className={styles.loading}>
-        <Spinner /> looding...
-      </div>
-    );
+    const path = roleMap[roles[0]];
+    if (path) {
+      return <Navigate to={path} />;
+    }
   }
   return (
     <div className={styles.Container}>

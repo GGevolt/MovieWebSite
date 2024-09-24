@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React from "react";
+import React, {useContext} from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -10,7 +10,6 @@ import CategoryManagement from "../Area/Admin/Pages/Management/CategoryManagemen
 import FilmManagement from "../Area/Admin/Pages/Management/FilmManagement";
 import VideoManagement from "../Area/Admin/Pages/Management/VideoManagement";
 import WebApi from "../WebApi";
-import "./index.css";
 import AdminState from "../Area/Admin/AminContext/State";
 import AuthState from "../Area/AuthContext/State";
 import WebState from "../WebContext/State";
@@ -19,9 +18,11 @@ import Register from "../Area/User/Page/Register";
 import Home from "../Area/User/Page/Home";
 import ProtectedRoutes from "./ProtectedRoutes";
 import NotFoundPage from "../Area/User/Page/error/NotFoundPage";
-import UserBody from "../Layout/UserBody";
+import Body from "../Layout/Body";
 import UserInfo from "../Area/User/Page/UserInfo";
 import EmailConfirm from "../Area/User/Page/EmailConfirm";
+import PaymentPage from "../Area/User/Page/Payment";
+
 
 const ROLES = {
   User: "UserT0",
@@ -30,13 +31,14 @@ const ROLES = {
 };
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<UserBody />}>
+    <Route path="/" element={<Body />}>
       <Route
         path="/user"
         element={<ProtectedRoutes allowedRoles={[ROLES.User]} />}
       >
-        <Route element={<Home />} index />
+        <Route  index  element={<Home />}/>
         <Route path="/user/userinfo" element={<UserInfo />} />
+        <Route path="/user/payment" element={<PaymentPage/>} />
       </Route>
       <Route
         path="/admin"

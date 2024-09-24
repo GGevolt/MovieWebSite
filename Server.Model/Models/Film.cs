@@ -13,7 +13,8 @@ namespace Server.Model.Models
         [Key]
         public int Id { get; set; }
         public required string Title { get; set; }
-        public string? FilmImg { get; set; }
+        public string? FilmPath { get; set; }
+        public string? BlurHash { get; set; }
         public required string Synopsis { get; set; }
         public required string Director { get; set; }
         public required string Type { get; set; }

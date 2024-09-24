@@ -104,9 +104,9 @@ namespace MovieWebSite.Server.Controllers
                 var film = _unitOfWork.FilmRepository.Get(f => f.Id == id);
                 string wwwRootPath = _webhost.WebRootPath;
                 string imagePath = Path.Combine(wwwRootPath, "img");
-                if (!string.IsNullOrEmpty(film.FilmImg))
+                if (!string.IsNullOrEmpty(film.FilmPath))
                 {
-                    var oldImagePath = Path.Combine(imagePath, film.FilmImg.TrimStart('\\'));
+                    var oldImagePath = Path.Combine(imagePath, film.FilmPath.TrimStart('\\'));
                     if (System.IO.File.Exists(oldImagePath))
                     {
                         try

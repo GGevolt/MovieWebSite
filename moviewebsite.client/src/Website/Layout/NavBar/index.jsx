@@ -24,6 +24,11 @@ function NavBar() {
               UserInfo
             </Nav.Link>
           </Col>
+          <Col>
+            <Nav.Link as={Link} to="/user/payment">
+              Payment
+            </Nav.Link>
+          </Col>
         </Row>
         <Navbar.Collapse className="justify-content-end">
           <Row>

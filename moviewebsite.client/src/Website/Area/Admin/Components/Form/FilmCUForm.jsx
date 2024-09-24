@@ -30,7 +30,7 @@ function FilmCUForm(props) {
     synopsis: props.film ? props.film.synopsis : "",
     director: props.film ? props.film.director : "",
     type: props.film ? props.film.type : "",
-    filmImg: props.film ? props.film.filmImg : "",
+    filmPath: props.film ? props.film.filmPath : "",
   });
   const [openForm, setOpen] = useState(false);
   const animatedComponents = makeAnimated();
@@ -94,7 +94,7 @@ function FilmCUForm(props) {
       synopsis: props.film ? props.film.synopsis : "",
       director: props.film ? props.film.director : "",
       type: props.film ? props.film.type : "",
-      filmImg: props.film ? props.film.filmImg : "",
+      filmPath: props.film ? props.film.filmPath : "",
     });
     setSelectedCategories(null);
     setErrors({});
@@ -175,9 +175,9 @@ function FilmCUForm(props) {
             />
             <Form.Control
               type="hidden"
-              value={film.filmImg}
+              value={film.filmPath}
               onChange={handleChange}
-              name="filmImg"
+              name="filmPath"
             />
             <Form.Group className="mb-3">
               <FloatingLabel
@@ -231,7 +231,7 @@ function FilmCUForm(props) {
                     isInvalid={errors["film.type"]}
                   >
                     <option value="">Pls choose a type</option>
-                    <option>TV-Show</option>
+                    <option>TV-Series</option>
                     <option>Movie</option>
                   </Form.Select>
                   <Form.Control.Feedback className="error" type="invalid">
@@ -291,7 +291,7 @@ FilmCUForm.propTypes = {
     synopsis: PropTypes.string,
     director: PropTypes.string,
     type: PropTypes.string,
-    filmImg: PropTypes.string,
+    filmPath: PropTypes.string,
   }),
 };
 

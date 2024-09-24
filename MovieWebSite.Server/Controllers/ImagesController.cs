@@ -2,16 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieWebSite.Server.Repository.IRepository;
 using Server.Model.ViewModels;
+using Server.Utility.Interfaces;
+using Server.Utility.Services;
+using System.IO;
 
 
 namespace MovieWebSite.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ImagesController(IUnitOfWork unitOfWork, IWebHostEnvironment webhost) : ControllerBase
+    public class ImagesController(IUnitOfWork unitOfWork, IWebHostEnvironment webhost, IBlurhasher blurhasher) : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IWebHostEnvironment _webhost = webhost;
+        private  readonly IBlurhasher _blurhasher = blurhasher;
         [HttpGet("{imageName}")]
         public IActionResult GetImage(string imageName)
         {
@@ -41,9 +45,9 @@ namespace MovieWebSite.Server.Controllers
                 if (filmPicDTO.ImageFile != null)
                 {
                     var film = _unitOfWork.FilmRepository.Get(f => f.Id == filmPicDTO.FilmId);
-                    if (!string.IsNullOrEmpty(film.FilmImg))
+                    if (!string.IsNullOrEmpty(film.FilmPath))
                     {
-                        var oldImagePath = Path.Combine(imagePath, film.FilmImg.TrimStart('\\'));
+                        var oldImagePath = Path.Combine(imagePath, film.FilmPath.TrimStart('\\'));
                         if (System.IO.File.Exists(oldImagePath))
                         {
                             try
@@ -61,7 +65,9 @@ namespace MovieWebSite.Server.Controllers
                     {
                         filmPicDTO.ImageFile.CopyTo(fileStream);
                     }
-                    film.FilmImg = fileName;
+                    string blurhashString = _blurhasher.Encode(Path.Combine(imagePath, fileName));
+                    film.FilmPath = fileName;
+                    film.BlurHash = blurhashString;
                     _unitOfWork.FilmRepository.Update(film);
                     _unitOfWork.Save();
                 }
