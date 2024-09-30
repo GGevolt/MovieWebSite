@@ -3,8 +3,8 @@ using MailKit.Security;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
-using Server.Model.ViewModels;
 using Server.Utility.Interfaces;
+using Server.Model.DTO;
 
 namespace Server.Utility.Services
 {

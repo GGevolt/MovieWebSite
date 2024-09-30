@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, {useContext} from "react";
+import React from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -21,12 +21,11 @@ import NotFoundPage from "../Area/User/Page/error/NotFoundPage";
 import Body from "../Layout/Body";
 import UserInfo from "../Area/User/Page/UserInfo";
 import EmailConfirm from "../Area/User/Page/EmailConfirm";
-import PaymentPage from "../Area/User/Page/Payment";
-
+import Detail from "../Area/User/Page/Detail";
+import Subscription from "../Area/User/Page/Subscription";
 
 const ROLES = {
-  User: "UserT0",
-  SubUser: "UserT1",
+  User: "UserT0" || "UserT1" || "UserT2",
   Admin: "Admin",
 };
 const router = createBrowserRouter(
@@ -36,9 +35,14 @@ const router = createBrowserRouter(
         path="/user"
         element={<ProtectedRoutes allowedRoles={[ROLES.User]} />}
       >
-        <Route  index  element={<Home />}/>
+        <Route index element={<Home />} />
         <Route path="/user/userinfo" element={<UserInfo />} />
-        <Route path="/user/payment" element={<PaymentPage/>} />
+        <Route path="/user/subscription" element={<Subscription/>} />
+        <Route
+          path="/user/detail/:filmId"
+          element={<Detail />}
+          loader={async ({ params }) => WebApi.getFilm(params.filmId)}
+        />
       </Route>
       <Route
         path="/admin"

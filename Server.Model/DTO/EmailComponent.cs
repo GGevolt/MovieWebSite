@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Model.ViewModels
+namespace Server.Model.DTO
 {
     public class EmailComponent
     {

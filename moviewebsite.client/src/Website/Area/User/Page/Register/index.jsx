@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { Form, Col, Row, Button, Spinner } from "react-bootstrap";
 import { object, string, date } from "yup";
 import styles from "./Register.module.css";
 import AuthContext from "../../../AuthContext/Context";
-import RegisterPopUp from "../../Components/Popup";
+import PopUp from "../../Components/Popup";
 import { EnvelopeAt } from "react-bootstrap-icons";
 import { Navigate } from "react-router-dom";
 
@@ -118,9 +118,9 @@ function Register() {
   return (
     <div className={styles.page}>
       {
-        <RegisterPopUp isOpen={isPopupOpen} handleClose={handleClosePop}>
+        <PopUp isOpen={isPopupOpen} handleClose={handleClosePop}>
           {popUpContent()}
-        </RegisterPopUp>
+        </PopUp>
       }
       <div className={styles.Container}>
         <div className={styles.content}>

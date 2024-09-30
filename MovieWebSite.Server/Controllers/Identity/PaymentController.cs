@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Server.Model.DTO;
 using Stripe;
 
 namespace MovieWebSite.Server.Controllers.Identity
@@ -15,11 +16,11 @@ namespace MovieWebSite.Server.Controllers.Identity
             StripeConfiguration.ApiKey = _configuration["Stripe:ApiKey"];
         }
         [HttpPost]
-        public ActionResult Post()
+        public ActionResult PaymentIntent([FromBody] PaymentDTO payment)
         {
             var options = new PaymentIntentCreateOptions
             {
-                Amount = 1099,
+                Amount = payment.Amount,
                 Currency = "usd",
                 AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
                 {
@@ -30,7 +31,19 @@ namespace MovieWebSite.Server.Controllers.Identity
             PaymentIntent intent = service.Create(options);
             return Json(new { client_secret = intent.ClientSecret });
         }
-
+        
+        [HttpGet("paymentsucess")]
+        public ActionResult PaymentSuccessful()
+        {
+            try
+            {
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while processing the payment: {ex.Message}");
+            }
+        }
 
     }
 }

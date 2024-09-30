@@ -1,5 +1,4 @@
 import Popup from "reactjs-popup";
-import React from "react";
 import PropTypes from "prop-types";
 import style from "./popup.module.css";
 

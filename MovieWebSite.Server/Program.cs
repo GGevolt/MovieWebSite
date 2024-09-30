@@ -7,7 +7,6 @@ using MovieWebSite.Server.Data;
 using MovieWebSite.Server.Repository.IRepository;
 using MovieWebSite.Server.Repository;
 using Server.Model.Models;
-using Server.Model.ViewModels;
 using Server.Utility.Services;
 using Server.Utility.Interfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Server.Model.DTO;
 
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from "react";
+import {useEffect, useContext} from "react";
 import { Container} from "react-bootstrap"
 import FilmRow from "../../Components/DisplayFilm/FilmRow";
 import WebContext from "../../../../WebContext/Context";
@@ -22,8 +22,8 @@ function Home() {
   return (
     <Container fluid className="p-0">
       <CarouselDisplay films={randomFilms}/>
-      <FilmRow films={movies} filmType="Movies"/>
-      <FilmRow films={tvSeries} filmType="TV-Series"/>
+      <FilmRow films={movies} filmsRowTitle="Movies"/>
+      <FilmRow films={tvSeries} filmsRowTitle="TV-Series"/>
     </Container>
   )
 }

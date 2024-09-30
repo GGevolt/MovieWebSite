@@ -2,7 +2,7 @@
 using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
 
-namespace MovieWebSite.Server.Controllers.Admin
+namespace MovieWebSite.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

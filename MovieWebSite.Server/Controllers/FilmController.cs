@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
-using Server.Model.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Server.Model.DTO;
 
 namespace MovieWebSite.Server.Controllers
 {
@@ -28,8 +28,75 @@ namespace MovieWebSite.Server.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, "Internal server error.");
+                return BadRequest("Error, Fail to get film!");
             }
+        }
+        [HttpGet("relatefilms/{filmId}")]
+        public IActionResult RelateFilms(int filmId) {
+            try
+            {
+                Film film = _unitOfWork.FilmRepository.Get(f => f.Id == filmId);
+                if (film == null)
+                {
+                    return NotFound("Film not found");
+                }
+                var relatedFilms = GetRelatedFilms(film);
+                return Ok(relatedFilms);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest("Error, Fail to get relate film!");
+            }
+        }
+
+        private List<RelatedFilmDto> GetRelatedFilms(Film parentFilm)
+        {
+            var directorMatch = _unitOfWork.FilmRepository.GetAll()
+                .Where(f => f.Director == parentFilm.Director && f.Id != parentFilm.Id);
+
+            string titleBeforeColon = parentFilm.Title.Trim().ToLower();
+            string seriesTitle = parentFilm.Title.Trim().ToLower();
+            if (parentFilm.Title.Contains(':'))
+            {
+                string[] titleParts = parentFilm.Title.Split(new[] { ':' }, 2);
+                titleBeforeColon = titleParts[0].Trim().ToLower();
+            }
+            if (parentFilm.Title.Contains("season", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string[] titleParts = parentFilm.Title.ToLower().Split(new[] { "season" }, StringSplitOptions.None);
+                seriesTitle = titleParts[0].Trim().ToLower();
+            }
+
+            var titleMatch = _unitOfWork.FilmRepository.GetAll()
+                .Where(f => f.Id != parentFilm.Id &&
+                           (f.Title.StartsWith(titleBeforeColon, StringComparison.OrdinalIgnoreCase) ||
+                            f.Title.StartsWith(seriesTitle, StringComparison.OrdinalIgnoreCase)));
+
+            var parentfilmCateIds = _unitOfWork.CategoryFilmRepository.GetAll()
+                .Where(cf => cf.FilmId == parentFilm.Id)
+                .Select(cf => cf.CategoryId);
+
+            var relatedFilmIds = _unitOfWork.CategoryFilmRepository.GetAll()
+                .Where(cf => parentfilmCateIds.Contains(cf.CategoryId) && cf.FilmId != parentFilm.Id)
+                .Select(cf => cf.FilmId)
+                .Distinct();
+
+            var genreMatch = _unitOfWork.FilmRepository.GetAll()
+                .Where(f => relatedFilmIds.Contains(f.Id));
+
+            var combinedQuery = directorMatch.Union(titleMatch).Union(genreMatch).Distinct();
+
+            return combinedQuery.Select(f => new RelatedFilmDto
+            {
+                Id = f.Id,
+                Title = f.Title,
+                FilmPath = f.FilmPath,
+                BlurHash = f.BlurHash,
+                Synopsis = f.Synopsis,
+                Director = f.Director,
+                Type = f.Type
+            }).Take(20).ToList();
         }
 
 

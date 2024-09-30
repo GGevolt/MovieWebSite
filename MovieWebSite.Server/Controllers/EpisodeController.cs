@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
-using Server.Model.ViewModels;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
+using Server.Model.DTO;
 
 
 

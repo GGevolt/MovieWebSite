@@ -8,7 +8,7 @@
 }
 .film-row {
     flex-grow: 1;
-    padding: 20px 0;
+    padding: 1.25rem 0;
     transition: transform 0.3s ease-in-out;
 }
 .film-card-wrapper {
@@ -20,8 +20,8 @@
     position: relative;
     transition: transform 0.3s ease-in-out;
     will-change: transform;
-    height: 300px;
-    width: 200px;
+    height: 18.75rem;
+    width: 12.5rem;
     background-color: #2a2a2a;
     overflow: hidden;
 }
@@ -47,7 +47,7 @@
     right: 0;
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
-    padding: 8px;
+    padding: 0.5rem;
     font-size: 1.125rem;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
@@ -56,27 +56,35 @@
 .film-card-wrapper:focus .film-title {
     opacity: 1;
     }
+.button-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .scroll-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 2.5rem;
+    height: 18.75rem;
+    margin-bottom: 1.5rem;
+    background-color:transparent;
     border: none;
     transition: background-color 0.3s ease-in-out;
 }
 .scroll-button:hover:not(:disabled) {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(255, 255, 255, 0.542);
+    color: black;
 }
 .scroll-button:disabled {
     opacity: 0.3;
     cursor: not-allowed;
 }
 .scroll-left {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    border-top-left-radius: 0.125rem;
+    border-bottom-left-radius: 0.125rem;
 }
 .scroll-right {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-top-right-radius: 0.125rem;
+    border-bottom-right-radius: 0.125rem;
 }

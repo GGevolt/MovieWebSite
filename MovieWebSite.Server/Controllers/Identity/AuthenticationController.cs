@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Server.Model.Models;
-using Server.Model.ViewModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,6 +14,7 @@ using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using Server.Model.DTO;
 
 namespace MovieWebSite.Server.Controllers.Identity
 {
