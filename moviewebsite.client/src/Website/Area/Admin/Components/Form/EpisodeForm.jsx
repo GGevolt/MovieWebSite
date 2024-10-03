@@ -209,9 +209,7 @@ function EpisodeCForm({ filmId, passEp }) {
           </div>
         ) : (
           episode.vidName && (
-            <div className="temp-vid">
-              Video Name: {episode.vidName}
-            </div>
+            <div className="temp-vid">Video Name: {episode.vidName}</div>
           )
         )}
         <Card className="upload-card">

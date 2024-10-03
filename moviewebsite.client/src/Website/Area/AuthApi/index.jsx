@@ -106,17 +106,40 @@ const confirmEmail = async (formData) => {
       res = true;
     })
     .catch((error) => {
-      console.log(error.response.data)
+      console.log(error.response.data);
       res = false;
     });
   return res;
 };
+const createCheckOutSession = async (selectedPlan)=>{
+  let res = null;
+  const priceKeyIds = {
+    "pro": "price_1Q5XdAATmHlXrMYowulmblzP",
+    "premium": "price_1Q5XemATmHlXrMYoZLybRoux"
+  }
+  const successUrl = `${window.location.origin}/user/memberships/success`;
+  const failureUrl = `${window.location.origin}/user/memberships/failure`;
+  const formData = { 
+    priceId: priceKeyIds[selectedPlan], 
+    successUrl, 
+    failureUrl 
+  };
+  await axios.post("/api/payment/create_checkout_session", formData)
+  .then((response) => {
+    res= response.data;
+  })
+  .catch((error) => {
+    console.log("Fail to create check out session: ", error.response.data.ErrorMessage || error);
+  });
+  return res;
+}
 const AuthApi = {
   register,
   signIn,
   signOut,
   getUserInfo,
   validateUser,
-  confirmEmail
+  confirmEmail,
+  createCheckOutSession
 };
 export default AuthApi;

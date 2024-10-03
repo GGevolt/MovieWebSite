@@ -38,7 +38,10 @@ function FilmManagement() {
         <Card className="film-card" key={film.id}>
           <Card.Title className="film-title">{film.title}</Card.Title>
           <div className="film-image">
-            <FilmImg src={`/api/images/${film.filmPath}`} hash={film.blurHash}/>
+            <FilmImg
+              src={`/api/images/${film.filmPath}`}
+              hash={film.blurHash}
+            />
           </div>
           <div className="film-info">
             <div className="film-info-director">

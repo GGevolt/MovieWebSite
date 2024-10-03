@@ -66,6 +66,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWorks>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IBlurhasher, Blurhasher>();
+builder.Services.Configure<StripeSettingDTO>(builder.Configuration.GetSection("Stripe"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

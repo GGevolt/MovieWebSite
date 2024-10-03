@@ -20,3 +20,33 @@
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     max-width: 40vw;
 }
+.confirmation_card {
+    background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.confirmation_card .btn_primary {
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    border: none;
+}
+.confirmation_card .btn_primary:hover {
+    background: linear-gradient(45deg, #0056b3, #008ba3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+.confirmation_card strong {
+    color: #00bcd4;
+}
+.close_btn{
+    cursor: pointer;
+    position: absolute;
+    display: block;
+    line-height: 20px;
+    right: 2px;
+    top: 2px;
+    height: 20px;
+}
+.close_btn:hover{
+    color: red;
+}

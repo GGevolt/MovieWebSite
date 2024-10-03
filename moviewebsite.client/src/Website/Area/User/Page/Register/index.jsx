@@ -88,6 +88,7 @@ function Register() {
     formData.append("dob", userInfo.dob);
     formData.append("passwordHash", userInfo.password);
     formData.append("username", userInfo.username.trim());
+    formData.append("emailConfirnUrl", `${window.location.origin}/emailconfirm`);
     if (await register(formData)) {
       setIsPopupOpen(true);
     }

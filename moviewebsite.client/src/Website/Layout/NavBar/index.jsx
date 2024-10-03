@@ -21,8 +21,8 @@ function NavBar() {
             </Nav.Link>
           </Col>
           <Col>
-            <Nav.Link as={Link} to="/user/subscription">
-              Subscription
+            <Nav.Link as={Link} to="/user/memberships">
+            Memberships
             </Nav.Link>
           </Col>
         </Row>

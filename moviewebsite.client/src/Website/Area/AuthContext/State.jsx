@@ -1,8 +1,9 @@
-import React, { useReducer, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import AuthContext from "./Context";
 import AuthReducer from "./Reducer";
 import AuthApi from "../AuthApi";
 import PropTypes from "prop-types";
+import { loadStripe } from "@stripe/stripe-js";
 
 const AuthState = (props) => {
   const initialState = {
@@ -10,7 +11,6 @@ const AuthState = (props) => {
     roles: [],
     userName: {},
   };
-
   const storedState = JSON.parse(localStorage.getItem("authState"));
   const [state, dispatch] = useReducer(
     AuthReducer,
@@ -18,7 +18,6 @@ const AuthState = (props) => {
   );
 
   useEffect(() => {
-    // Save state to localStorage whenever it changes
     localStorage.setItem("authState", JSON.stringify(state));
   }, [state]);
 
@@ -71,6 +70,19 @@ const AuthState = (props) => {
     const res = await AuthApi.confirmEmail(formData);
     return res;
   };
+  const createCheckoutSession = async (selectedPlan) => {
+    const data = await AuthApi.createCheckOutSession(selectedPlan);
+    if (data) {
+      const stripe = await loadStripe(data.publicKey);
+      const result = stripe.redirectToCheckout({
+        sessionId: data.sessionId,
+      });
+
+      if (result.error) {
+        console.log("Rediect to Check out fail: ", result.error);
+      }
+    }
+  };
   return (
     <AuthContext.Provider
       value={{
@@ -81,7 +93,8 @@ const AuthState = (props) => {
         register,
         signOut,
         validateUser,
-        emailConfirm
+        emailConfirm,
+        createCheckoutSession,
       }}
     >
       {props.children}
