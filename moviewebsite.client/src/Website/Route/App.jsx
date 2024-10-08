@@ -21,12 +21,13 @@ import Body from "../Layout/Body";
 import UserInfo from "../Area/User/Page/UserInfo";
 import EmailConfirm from "../Area/User/Page/EmailConfirm";
 import Detail from "../Area/User/Page/Detail";
-import Memberships from "../Area/User/Page/Subscription"
+import Memberships from "../Area/User/Page/Subscription";
 import SubscriptionSuccess from "../Area/User/Page/Subscription/SubscriptionSuccess";
 import SubscriptionFailure from "../Area/User/Page/Subscription/SubscriptionFailure";
+import WatchFilm from "../Area/User/Page/WatchFilm";
 
 const ROLES = {
-  User: "UserT0" || "UserT1" || "UserT2",
+  User: "UserT0",
   Admin: "Admin",
 };
 const router = createBrowserRouter(
@@ -38,14 +39,29 @@ const router = createBrowserRouter(
       >
         <Route index element={<Home />} />
         <Route path="/user/userinfo" element={<UserInfo />} />
-        <Route path="/user/memberships" element={<Memberships/>} />
-        <Route path="/user/memberships/success" element={<SubscriptionSuccess/>} />
-        <Route path="/user/memberships/failure" element={<SubscriptionFailure/>} />
+        <Route path="/user/memberships" element={<Memberships />} />
+        <Route
+          path="/user/memberships/success"
+          element={<SubscriptionSuccess />}
+        />
+        <Route
+          path="/user/memberships/failure"
+          element={<SubscriptionFailure />}
+        />
         <Route
           path="/user/detail/:filmId"
           element={<Detail />}
           loader={async ({ params }) => WebApi.getFilm(params.filmId)}
         />
+        <Route path="/user/watchfilm/:filmId" 
+          element={<WatchFilm />} 
+          loader={async ({ params }) => {
+            const [episodes, film] = await Promise.all([
+              WebApi.getEpisodes(params.filmId),
+              WebApi.getFilm(params.filmId)
+            ]);
+            return { episodes, film };
+          }}/>
       </Route>
       <Route
         path="/admin"

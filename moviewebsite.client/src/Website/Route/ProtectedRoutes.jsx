@@ -1,11 +1,12 @@
-import React, { useEffect, useContext, useState } from "react";
+import { useEffect, useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import AuthContext from "../Area/AuthContext/Context";
 import PropTypes from "prop-types";
 
 function ProtectedRoutes({ allowedRoles }) {
   const authContext = useContext(AuthContext);
-  const { validateUser, isLoggedIn, roles } = authContext;
+  const { validateUser, isLoggedIn, roles } =
+    authContext;
   useEffect(() => {
     hanldeProcess();
   }, []);

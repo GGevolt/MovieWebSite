@@ -9,6 +9,7 @@ namespace MovieWebSite.Server.Data
         public DbSet<Film> Films { get; set; }
         public DbSet<CategoryFilm> CategoryFilms { get; set; }
         public DbSet<Episode> Episodes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> option) : base(option)
         {
 

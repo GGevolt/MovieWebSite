@@ -1,9 +1,18 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { StarFill, Tv, Film, CheckCircleFill } from "react-bootstrap-icons"
 import {useNavigate} from "react-router-dom"
+import AuthContext from '../../../AuthContext/Context';
+import { useContext, useEffect } from 'react';
 import './SubscriptionSuccess.css';
 
 export default function SubscriptionSuccess() {
+    const authContext = useContext(AuthContext);
+    const{ isUserUpdated, getUserStatus} = authContext;
+    useEffect(()=>{
+        if(isUserUpdated){
+          getUserStatus();
+        }
+      },[])
     const navigate = useNavigate();
     return (
         <div className="subscription-success-wrapper">

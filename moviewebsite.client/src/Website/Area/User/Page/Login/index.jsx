@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Form, Button, FloatingLabel } from "react-bootstrap";
 import styles from "./Login.module.css";
 import { Link, useNavigate, Navigate } from "react-router-dom";
@@ -28,6 +28,7 @@ function Login() {
   const roleMap = {
     UserT0: "/user",
     UserT1: "/user",
+    UserT2: "/user",
     Admin: "/admin",
   };
   if (isLoggedIn && roles.length !== 0) {

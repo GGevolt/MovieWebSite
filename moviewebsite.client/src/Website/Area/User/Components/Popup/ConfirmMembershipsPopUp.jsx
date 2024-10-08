@@ -13,7 +13,6 @@ function ConfirmMembershipsPopUp({ isOpen, handleClose, selectedPlan }) {
     const hanldeCheckOut = async ()=>{
         SetLoading(true);
         await createCheckoutSession(selectedPlan);
-        SetLoading(false);
     }
     return (
         <Popup open={isOpen} closeOnDocumentClick onClose={handleClose}>

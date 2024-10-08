@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #1a1a1a;
+  background: linear-gradient(90deg, #000000 0%, #434343 100%);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   color: hsl(220, 7%, 92%);
 }
@@ -75,4 +75,14 @@
   width: 100%;
   border: none;
   background: none;
+}
+.dropdown-menu{
+  background: linear-gradient(90deg, #232526 0%, #414345 100%);
+}
+.dropdown-item{
+  color: white;
+}
+.dropdown-item:hover{
+  background-color: transparent;
+  color: #61dafb;
 }

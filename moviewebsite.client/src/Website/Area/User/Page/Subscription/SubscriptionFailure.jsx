@@ -1,10 +1,19 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import {EnvelopeAtFill, QuestionCircleFill, ArrowCounterclockwise , ExclamationTriangleFill} from "react-bootstrap-icons"
 import {useNavigate} from "react-router-dom"
+import AuthContext from '../../../AuthContext/Context';
+import { useContext, useEffect } from 'react';
 import './SubscriptionFailure.css';
 
 export default function SubscriptionFailure() {
     const navigate = useNavigate();
+    const authContext = useContext(AuthContext);
+    const{ isUserUpdated, getUserStatus} = authContext;
+    useEffect(()=>{
+        if(isUserUpdated){
+          getUserStatus();
+        }
+      },[])
     return (
         <div className="subscription-failure-wrapper">
         <Container className="py-5">

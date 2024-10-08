@@ -70,7 +70,12 @@ input[type="checkbox"]:checked {
 
 .check{
     padding-left: 2.25rem;
+    color: black;
+}
+.pop_header{
+    color: black;
 }
 .pop_content{
     text-align: center;
+    color: black;
 }

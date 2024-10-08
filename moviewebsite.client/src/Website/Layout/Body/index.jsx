@@ -10,27 +10,25 @@ function Body() {
   const authContext = useContext(AuthContext);
   const { isLoggedIn, roles } = authContext;
   if (isLoggedIn && roles.length !== 0) {
-    switch (roles[0]) {
-      case "Admin":  
-        return (
-          <div className={adminStyle.body}>
-            <NavBar />
-            <main>
-              <Outlet />
-            </main>
-          </div>
-        );
-      case "UserT0" || "UserT1":
-        return (
-          <div className={userStyle.body}>
-            <NavBar />
-            <main>
-              <Outlet />
-            </main>
-          </div>
-        );
-      default:
-        break;
+    if(roles.includes("Admin")){
+      return (
+        <div className={adminStyle.body}>
+          <NavBar />
+          <main>
+            <Outlet />
+          </main>
+        </div>
+      );
+    }
+    if(roles.includes("UserT0")){
+      return (
+        <div className={userStyle.body}>
+          <NavBar />
+          <main>
+            <Outlet />
+          </main>
+        </div>
+      );
     }
   }
   return (

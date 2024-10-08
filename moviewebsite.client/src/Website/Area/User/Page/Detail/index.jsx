@@ -3,7 +3,7 @@ import styles from "./FilmDetail.module.css";
 import FilmImg from "../../Components/Img/FilmImg";
 import { Play, BookmarkPlusFill } from "react-bootstrap-icons";
 import { Container, Row, Col, Badge } from "react-bootstrap";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import WebApi from "../../../../WebApi";
 import FilmRow from "../../Components/DisplayFilm/FilmRow";
 
@@ -11,6 +11,7 @@ function Detail() {
   const film = useLoaderData();
   const [categories, setCategories] = useState([]);
   const [relatedFilms, setRelatedFilms] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     if (film) {
       loadData();
@@ -52,7 +53,10 @@ function Detail() {
               <strong>Director:</strong> {film.director}
             </p>
             <div className={styles.actions}>
-              <button className={styles.playButton}>
+              <button
+                className={styles.playButton}
+                onClick={() => navigate(`/user/watchfilm/${film.id}`)}
+              >
                 <Play size={20} /> Play
               </button>
               <button className={styles.infoButton}>

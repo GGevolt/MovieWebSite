@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Server.Model.Models
+namespace Server.Model.AuthModels
 {
     public class ApplicationUser : IdentityUser
     {
@@ -14,5 +14,9 @@ namespace Server.Model.Models
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         [Column(TypeName = "datetime")]
         public DateTime LastLogin { get; set; } = DateTime.Now;
+        public string? CustomerId { get; set; }
+        public string? PriceId { get; set; }
+        public string? SubscriptionStatus { get; set; }
+        public DateTime? SubscriptionEndPeriod { get; set; }
     }
 }

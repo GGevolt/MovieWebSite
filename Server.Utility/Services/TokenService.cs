@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Server.Model.Models;
+using Server.Model.AuthModels;
 using Server.Utility.Interfaces;
 using System;
 using System.Collections.Generic;

@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import ConfirmMembershipsPopUp from '../../Components/Popup/ConfirmMembershipsPopUp';
+import { Navigate } from 'react-router-dom';
+import AuthContext from "../../../AuthContext/Context";
 import './index.css';
 
 export default function Memberships() {
     const [selectedPlan, setSelectedPlan] = useState(null);
+    const authContext = useContext(AuthContext);
+    const { roles } = authContext;
     const handleSelectPlan = (plan) => {
         setSelectedPlan(plan);
         setIsPopupOpen(true);
@@ -14,6 +18,9 @@ export default function Memberships() {
         setSelectedPlan(null);
       };
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    if(roles.length > 1){
+        return <Navigate to="/" replace/>
+    }
     return (
         <div className="subscription-wrapper">
             {

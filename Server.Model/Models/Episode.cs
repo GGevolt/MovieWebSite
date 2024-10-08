@@ -14,5 +14,7 @@ namespace Server.Model.Models
         [ValidateNever]
         public Film Film { get; set; }
         public string VidName { get; set; }
+        [ValidateNever]
+        public virtual ICollection<Comment>? Comments { get; set; }
     }
 }

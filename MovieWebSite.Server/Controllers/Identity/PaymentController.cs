@@ -6,9 +6,14 @@ using Stripe.Events;
 using Stripe;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
-using Server.Model.Models;
 using Stripe.Checkout;
 using Newtonsoft.Json;
+using System.Security.Claims;
+using Server.Utility.Interfaces;
+using Server.Model.AuthModels;
+using Microsoft.EntityFrameworkCore;
+using MovieWebSite.Server.Data;
+using Microsoft.Data.SqlClient;
 
 namespace MovieWebSite.Server.Controllers.Identity
 {
@@ -30,35 +35,82 @@ namespace MovieWebSite.Server.Controllers.Identity
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
         }
 
+        [Authorize]
         [HttpPost("create_checkout_session")]
         public async Task<IActionResult> CreateCheckoutSession([FromBody] CheckOutSessionDTO checkOutSession)
         {
-            var options = new SessionCreateOptions
+            ClaimsPrincipal principals = HttpContext.User as ClaimsPrincipal;
+            var claim = principals.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+            var user = await _userManager.FindByEmailAsync(claim.Value);
+            if (user == null)
             {
-                SuccessUrl = checkOutSession.SuccessUrl,
-                CancelUrl = checkOutSession.FailureUrl,
-                PaymentMethodTypes = new List<string>
+                return BadRequest();
+            }
+            SessionCreateOptions options;
+            if (!string.IsNullOrEmpty(user.CustomerId))
+            {
+                options = new SessionCreateOptions
                 {
-                    "card",
-                },
-                Mode = "subscription",
-                LineItems = new List<SessionLineItemOptions>
-                {
-                    new SessionLineItemOptions
+                    SuccessUrl = checkOutSession.SuccessUrl,
+                    CancelUrl = checkOutSession.FailureUrl,
+                    Customer = user.CustomerId,
+                    PaymentMethodTypes = new List<string>
                     {
-                        Price = checkOutSession.PriceId,
-                        Quantity = 1,
+                        "card",
                     },
-                },
-            };
-
+                    Mode = "subscription",
+                    LineItems = new List<SessionLineItemOptions>
+                    {
+                        new SessionLineItemOptions
+                        {
+                            Price = checkOutSession.PriceId,
+                            Quantity = 1,
+                        },
+                    },
+                };
+            }
+            else
+            {
+                var customerService = new CustomerService();
+                var customerOptions = new CustomerCreateOptions
+                {
+                    Email = user.Email,
+                    Name = user.FullName
+                };
+                try
+                {
+                    var stripeCustomer = await customerService.CreateAsync(customerOptions);
+                    options = new SessionCreateOptions
+                    {
+                        SuccessUrl = checkOutSession.SuccessUrl,
+                        CancelUrl = checkOutSession.FailureUrl,
+                        Customer = stripeCustomer.Id,
+                        PaymentMethodTypes = new List<string>
+                        {
+                            "card",
+                        },
+                        Mode = "subscription",
+                        LineItems = new List<SessionLineItemOptions>
+                        {
+                            new SessionLineItemOptions
+                            {
+                                Price = checkOutSession.PriceId,
+                                Quantity = 1,
+                            },
+                        },
+                    };
+                }
+                catch (StripeException e)
+                {
+                    Debug.WriteLine($"💥Stripe Create Customer exception: {e.StripeError.Message}");
+                    return BadRequest(new { ErrorMessage = e.StripeError.Message });
+                }
+            }
             var service = new SessionService();
             service.Create(options);
             try
             {
                 var session = await service.CreateAsync(options);
-                Debug.WriteLine($"Sesstion id: {session.Id}");
-                Debug.WriteLine($"Public Key: {_settings.PublicKey}");
                 return Ok(new
                 {
                     sessionId = session.Id,
@@ -67,31 +119,49 @@ namespace MovieWebSite.Server.Controllers.Identity
             }
             catch (StripeException e)
             {
-                Debug.WriteLine($"Stripe exception: {e.StripeError.Message}");
-                return BadRequest(new 
+                Debug.WriteLine($"💥Stripe Create Checkout Session exception: {e.StripeError.Message}");
+                return BadRequest(new
                 {
-                    ErrorMessage =  e.StripeError.Message
+                    ErrorMessage = e.StripeError.Message
                 });
             }
         }
 
-        [HttpPost]
-        public ActionResult PaymentIntent([FromBody] PaymentDTO payment)
+        [Authorize]
+        [HttpPost("customer_portal")]
+        public async Task<IActionResult> CustomerPortal([FromBody] CustomerPortalDTO portal)
         {
-            var options = new PaymentIntentCreateOptions
+            try
             {
-                Amount = payment.Amount,
-                Currency = "usd",
-                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                ClaimsPrincipal principals = HttpContext.User as ClaimsPrincipal;
+                var claim = principals.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+                var user = await _userManager.FindByEmailAsync(claim.Value);
+                if (user == null)
                 {
-                    Enabled = true,
-                },
-            };
-            var service = new PaymentIntentService();
-            PaymentIntent intent = service.Create(options);
-            return Json(new { client_secret = intent.ClientSecret });
-        }
+                    return BadRequest();
+                }
+                var options = new Stripe.BillingPortal.SessionCreateOptions
+                {
+                    Customer = user.CustomerId,
+                    ReturnUrl = portal.ReturnUrl,
+                };
+                var service = new Stripe.BillingPortal.SessionService();
+                var session = await service.CreateAsync(options);
+                return Ok(new
+                {
+                    url = session.Url
+                });
+            }
+            catch (StripeException e)
+            {
+                Debug.WriteLine($"💥Stripe Customer Portal exception: {e.StripeError.Message}");
+                return BadRequest(new
+                {
+                    ErrorMessage = e.StripeError.Message
+                });
+            }
 
+        }
 
         [HttpPost("webhook")]
         public async Task<IActionResult> WebHook()
@@ -107,66 +177,258 @@ namespace MovieWebSite.Server.Controllers.Identity
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Something failed {e}");
+                Debug.WriteLine($"💥Something failed {e}");
                 return BadRequest();
             }
             switch (stripeEvent.Type)
             {
-                case "payment_intent.succeeded":
-                    var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
-                    Debug.WriteLine("A successful payment for {0} was made.", paymentIntent.Amount);
+                case "customer.subscription.created":
+                    var subscription = stripeEvent.Data.Object as Subscription;
+                    await PaidSuccessfully(subscription);
                     break;
-                case "payment_method.attached":
-                    var paymentMethod = stripeEvent.Data.Object as PaymentMethod;
-                    Debug.WriteLine("Payment method");
+                case "customer.subscription.updated":
+                    var UpdatedSubscription = stripeEvent.Data.Object as Stripe.Subscription;
+                    await SubscriptionUpdate(UpdatedSubscription);
                     break;
-                case "checkout.session.completed":
-                    // Payment is successful and the subscription is created.
-                    // You should provision the subscription and save the customer ID to your database.
-                    PaidSuccessfully();
+                case "customer.subscription.deleted":
+                    var Endedcustomer = stripeEvent.Data.Object as Customer;
+                    await SubscriptionEnd(Endedcustomer);
                     break;
-                case "invoice.paid":
-                    // Continue to provision the subscription as payments continue to be made.
-                    // Store the status in your database and check when a user accesses your service.
-                    // This approach helps you avoid hitting rate limits.
-                    break;
-                case "invoice.payment_failed":
-                    // The payment failed or the customer does not have a valid payment method.
-                    // The subscription becomes past_due. Notify your customer and send them to the
-                    // customer portal to update their payment information.
-                    FailToPaid();
+                case "customer.created":
+                    var NewCustomer = stripeEvent.Data.Object as Customer;
+                    await AddCustomerToDB(NewCustomer);
                     break;
                 default:
-                    Debug.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+                    Debug.WriteLine("💥Unhandled event type: {0}", stripeEvent.Type);
                     break;
             }
             return Ok();
         }
 
-        private async void PaidSuccessfully()
+        private async Task AddCustomerToDB(Customer customer)
         {
-            var currentUser = await _signInManager.UserManager.GetUserAsync(User);
-            if (currentUser == null) {
-                Debug.WriteLine("Can't find the paided user");
-                return;
-            }
-            var roleResult = await _userManager.AddToRoleAsync(currentUser, "UserT1");
-            if (!roleResult.Succeeded)
+            try
             {
-                Debug.WriteLine("Fail to assign role to paided user");
+                var userFromDb = await _userManager.FindByEmailAsync(customer.Email);
+                if (userFromDb == null)
+                {
+                    throw new Exception("💥User not found by email: " + customer.Email);
+                }
+                userFromDb.CustomerId = customer.Id;
+                var updateUserResult = await _userManager.UpdateAsync(userFromDb);
+                if (!updateUserResult.Succeeded)
+                {
+                    throw new Exception("💥Fail to add Customer Id to user");
+                }
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                throw;
+            }           
         }
-        private async void FailToPaid()
+        private async Task PaidSuccessfully(Subscription subscription)
         {
-            var currentUser = await _signInManager.UserManager.GetUserAsync(User);
-            if (currentUser == null)
+            try
             {
-                Debug.WriteLine("Can't find the fail to paid user");
-                return;
+                var customerId = subscription.CustomerId;
+                var priceId = subscription.Items.Data[0].Price.Id;
+                var subEndTime = subscription.CurrentPeriodEnd;
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.CustomerId == customerId);
+                if (user == null)
+                {
+                    throw new Exception("💥Fail to find the paided user");
+                }
+                switch (priceId)
+                {
+                    case "price_1Q5XdAATmHlXrMYowulmblzP":
+                        var resultT1 = await _userManager.AddToRoleAsync(user, "UserT1");
+                        if (!resultT1.Succeeded)
+                        {
+                            throw new Exception($"💥Failed to add user to role: {resultT1}");
+                        }
+                        break;
+                    case "price_1Q5XemATmHlXrMYoZLybRoux":
+                        var resultT2 = await _userManager.AddToRoleAsync(user, "UserT2");
+                        if (!resultT2.Succeeded)
+                        {
+                            throw new Exception($"💥Failed to add user to role: {resultT2}");
+                        }
+                        break;
+                    default:
+                        throw new Exception($"💥No match priceId, here is the priceId: {priceId}");
+                }
+                user.SubscriptionStatus = subscription.Status;
+                user.PriceId = priceId;
+                user.SubscriptionEndPeriod = subEndTime;
+                var updateUserResult = await _userManager.UpdateAsync(user);
+                if (!updateUserResult.Succeeded)
+                {
+                    throw new Exception("💥Fail to update User when paided successfully!");
+                }
             }
-            var roles = await _userManager.GetRolesAsync(currentUser);
-            if (roles != null && roles.Contains("UserT1")) {
-                await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+            
+        }
+    
+        private async Task SubscriptionEnd(Customer customer)
+        {
+            try
+            {
+                var userFromDb = await _userManager.FindByEmailAsync(customer.Email);
+                if (userFromDb == null)
+                {
+                    throw new Exception("💥User not found by email: " + customer.Email);
+                }
+                var roles = await _userManager.GetRolesAsync(userFromDb);
+                if (roles.Count == 0)
+                {
+                    throw new Exception("💥User don't have any role to delete!");
+                }
+                if (roles.Contains("💥UserT1"))
+                {
+                    var result = await _userManager.RemoveFromRoleAsync(userFromDb, "UserT1");
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception("💥Fail to remove T1 user when subscription ended!");
+                    }
+                }
+                if (roles.Contains("💥UserT2"))
+                {
+                    var result = await _userManager.RemoveFromRoleAsync(userFromDb, "UserT2");
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception("💥Fail to remove T2 user when subscription ended!");
+                    }
+                }
+                userFromDb.SubscriptionEndPeriod = null;
+                userFromDb.PriceId = null;
+                userFromDb.SubscriptionStatus = null;
+                var updateUserResult = await _userManager.UpdateAsync(userFromDb);
+                if (!updateUserResult.Succeeded)
+                {
+                    throw new Exception("💥Fail to update User when subscription ended!");
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+        
+        }
+        private async Task SubscriptionUpdate(Subscription subscription)
+        {
+
+            try
+            {
+                var customerId = subscription.CustomerId;
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.CustomerId == customerId);
+                if (user == null)
+                {
+                    throw new Exception("💥Fail to find the user to upadate");
+                }
+                var isDiff = false;
+                if (user.SubscriptionStatus != subscription.Status)
+                {
+                    user.SubscriptionStatus = subscription.Status;
+                    isDiff = true;
+                }
+                if(user.PriceId != subscription.Items.Data[0].Price.Id)
+                { 
+                    user.PriceId = subscription.Items.Data[0].Price.Id;
+                    isDiff = true;
+                }
+                if(user.SubscriptionEndPeriod != subscription.CurrentPeriodEnd)
+                {
+                    user.SubscriptionEndPeriod = subscription.CurrentPeriodEnd;
+                    isDiff = true;
+                }
+                if (isDiff) {
+                    var UpdateUserResult = await _userManager.UpdateAsync(user);
+                    if (!UpdateUserResult.Succeeded)
+                    {
+                        throw new Exception("💥Fail to update user when subscription updated");
+                    }
+                }  
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+            
+        }
+        [Authorize]
+        [HttpGet("getUserStatus")]
+        public async Task<IActionResult> UpdateUserAfterPayment()
+        {
+            try
+            {
+                var currentUser = await _signInManager.UserManager.GetUserAsync(User);
+                if (currentUser == null)
+                {
+                    throw new Exception("💥Can't find user in get roles!");
+                }
+                var UserRoles = await _userManager.GetRolesAsync(currentUser);
+                if (UserRoles.Count == 0)
+                {
+                    throw new Exception("💥User don't have any role to get!");
+                }
+                switch (currentUser.PriceId)
+                {
+                    case "price_1Q5XdAATmHlXrMYowulmblzP":
+                        if (UserRoles.Contains("💥UserT2"))
+                        {
+                            var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT2");
+                            if (!result.Succeeded)
+                            {
+                                throw new Exception("💥Fail to remove T2 user!");
+                            }
+                        }
+                        if (!UserRoles.Contains("💥UserT1"))
+                        {
+                            var result = await _userManager.AddToRoleAsync(currentUser, "UserT1");
+                            if (!result.Succeeded)
+                            {
+                                throw new Exception("💥Fail to add T1 user to user!");
+                            }
+                        }
+                        var UpdatedUserT1Roles = await _userManager.GetRolesAsync(currentUser);
+                        return Ok(new { roles = UpdatedUserT1Roles, status = currentUser.SubscriptionStatus });
+                    case "price_1Q5XemATmHlXrMYoZLybRoux":
+                        if (UserRoles.Contains("💥UserT1"))
+                        {
+                            var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
+                            if (!result.Succeeded)
+                            {
+                                throw new Exception("💥Fail to remove T1 user!");
+                            }
+                        }
+                        if (!UserRoles.Contains("💥UserT2"))
+                        {
+                            var result = await _userManager.AddToRoleAsync(currentUser, "UserT2");
+                            if (!result.Succeeded)
+                            {
+                                throw new Exception("💥Fail to add T2 user to user!");
+                            }
+                        }
+                        var UpdatedUserT2Roles = await _userManager.GetRolesAsync(currentUser);
+                        return Ok(new { roles = UpdatedUserT2Roles, status = currentUser.SubscriptionStatus });
+                    default:
+                        return Ok(new { roles = UserRoles, status = currentUser.SubscriptionStatus });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return BadRequest($"💥Something has gone wrong! {ex.Message}");
             }
         }
     }

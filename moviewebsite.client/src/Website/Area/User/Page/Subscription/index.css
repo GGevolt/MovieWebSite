@@ -10,7 +10,7 @@
 }
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+    box-shadow: 0 4px 15px rgba(31, 38, 135, 0.37);
 }
 .list-unstyled li {
     margin-bottom: 0.5rem;

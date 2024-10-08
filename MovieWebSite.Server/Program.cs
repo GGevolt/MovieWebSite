@@ -6,7 +6,6 @@ using Swashbuckle.AspNetCore.Filters;
 using MovieWebSite.Server.Data;
 using MovieWebSite.Server.Repository.IRepository;
 using MovieWebSite.Server.Repository;
-using Server.Model.Models;
 using Server.Utility.Services;
 using Server.Utility.Interfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +14,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Server.Model.DTO;
+using Server.Model.AuthModels;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,13 +35,7 @@ builder.Services.Configure<FormOptions>(x =>
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlServerOptionsAction: sqlOptions =>
-    {
-        sqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 5,
-            maxRetryDelay: TimeSpan.FromSeconds(30),
-            errorNumbersToAdd: null);
-    }));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddDbContext<AuthDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuthenticateConnection")));
@@ -61,6 +55,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => {
     options.User.RequireUniqueEmail = true;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 });
+
+
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWorks>();
 builder.Services.AddScoped<ITokenService, TokenService>();

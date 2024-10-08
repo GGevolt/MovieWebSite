@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Server.Model.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,26 +14,47 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 using Server.Model.DTO;
+using Server.Model.AuthModels;
+using MovieWebSite.Server.Data;
+using System.Diagnostics;
 
 namespace MovieWebSite.Server.Controllers.Identity
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController(SignInManager<ApplicationUser> sM, UserManager<ApplicationUser> uM, ITokenService tokenService, IEmailService emailService) : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
-        private readonly SignInManager<ApplicationUser> signInManager = sM;
-        private readonly UserManager<ApplicationUser> userManager = uM;
-        private readonly ITokenService _tokenService= tokenService;
-        private readonly IEmailService _emailService = emailService;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly ITokenService _tokenService;
+        private readonly IEmailService _emailService;
+
+        public AuthenticationController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService)
+        {
+            this.signInManager = signInManager;
+            this.userManager = userManager;
+            _tokenService = tokenService;
+            _emailService = emailService;
+        }
 
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterDTO user)
         {
             try
             {
-                var userExist = await userManager.FindByEmailAsync(user.Email);
-                if (userExist != null) {
-                    return BadRequest(new { message = "This user already exist!" });
+                var emailExist = await userManager.FindByEmailAsync(user.Email);
+                var userNameExist = await userManager.FindByNameAsync(user.UserName);
+                if (emailExist != null && userNameExist != null)
+                {
+                    return BadRequest(new { message = "User with this email and username already exists!" });
+                }
+                else if (emailExist != null)
+                {
+                    return BadRequest(new { message = "This Email address is already associated with another account." });
+                }
+                else if (userNameExist != null)
+                {
+                    return BadRequest(new { message = "This Username is already taken. Please choose a different username." });
                 }
                 ApplicationUser new_user = new ApplicationUser()
                 {
@@ -47,15 +67,15 @@ namespace MovieWebSite.Server.Controllers.Identity
                 var createUserResult = await userManager.CreateAsync(new_user, user.PasswordHash);
                 if (!createUserResult.Succeeded)
                 {
-                    return BadRequest(new { message = "Failed to create account", errors = createUserResult.Errors });
+                    return BadRequest(new { message = "💥Failed to create account", errors = createUserResult.Errors });
                 }
                 var roleResult = await userManager.AddToRoleAsync(new_user, "UserT0");
                 if (!roleResult.Succeeded)
                 {
                     await userManager.DeleteAsync(new_user);
-                    return BadRequest(new { message = "Failed to assign role!", errors = roleResult.Errors });
+                    return BadRequest(new { message = "💥Failed to assign role!", errors = roleResult.Errors });
                 }
-                var token =await userManager.GenerateEmailConfirmationTokenAsync(new_user);
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(new_user);
                 token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
                 var urlComfirmEmail = $"{user.EmailConfirnUrl}/{token}/{new_user.Email}";
                 //var confirmLink = Url.Action(nameof(ConfirmEmail), "Authentication", new {token, email = new_user.Email}, Request.Scheme);
@@ -70,8 +90,9 @@ namespace MovieWebSite.Server.Controllers.Identity
                 await _emailService.SendEmailAsync(emailComponent);
                 return Ok();
             }
-            catch (Exception ex) {
-                return BadRequest(new { message =  ex.Message } );
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
 
@@ -83,19 +104,20 @@ namespace MovieWebSite.Server.Controllers.Identity
                 var user = await userManager.FindByEmailAsync(confirmDTO.Email);
                 if (user == null)
                 {
-                    return NotFound(new { message = "User don't exist to confirm email!", email= confirmDTO.Email });
+                    return NotFound(new { message = "💥User don't exist to confirm email!", email = confirmDTO.Email });
                 }
                 var token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(confirmDTO.Token));
                 var result = await userManager.ConfirmEmailAsync(user, token);
-                if (!result.Succeeded) {
+                if (!result.Succeeded)
+                {
                     await userManager.DeleteAsync(user);
-                    return BadRequest(new { message = "Failed to confirm email!", errors = result.Errors });
+                    return BadRequest(new { message = "💥Failed to confirm email!", errors = result.Errors });
                 }
                 return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "Something have gone wrong with confirm Email" });
+                return BadRequest(new { message = "💥Something have gone wrong with confirm Email" });
             }
         }
 
@@ -105,31 +127,32 @@ namespace MovieWebSite.Server.Controllers.Identity
             try
             {
                 ApplicationUser login_user = await userManager.FindByEmailAsync(loginDTO.Email);
-                if (login_user != null ) {
+                if (login_user != null)
+                {
                     if (!login_user.EmailConfirmed)
                     {
-                        return Unauthorized(new {error="You need to confirm email"});
+                        return Unauthorized(new { error = "💥You need to confirm email" });
                     }
                     var result = await signInManager.PasswordSignInAsync(login_user, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure: false);
                     if (!result.Succeeded)
                     {
-                        return Unauthorized(new { error = "Invalid Password! Try again.", statusCode = 401 });
+                        return Unauthorized(new { error = "💥Invalid Password! Try again.", statusCode = 401 });
                     }
-                 
+
                     login_user.LastLogin = DateTime.Now;
                     var updateResult = await userManager.UpdateAsync(login_user);
                     //string tokenValue = _tokenService.GenarateToken(login_user);
                     var roles = await userManager.GetRolesAsync(login_user);
-                    return Ok(new {  UserRoles = roles, UserName = login_user.UserName });
+                    return Ok(new { UserRoles = roles, UserName = login_user.UserName });
                 }
                 else
                 {
-                    return BadRequest(new { error = "Invalid account! Try again.", statusCode = 400 });
+                    return BadRequest(new { error = "💥Invalid account! Try again.", statusCode = 400 });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = $"Something went wrong: {ex.Message}", statusCode = 500 });
+                return BadRequest(new { error = $"💥Something went wrong: {ex.Message}", statusCode = 500 });
             }
         }
 
@@ -141,15 +164,16 @@ namespace MovieWebSite.Server.Controllers.Identity
             try
             {
                 await signInManager.SignOutAsync();
-                return Ok(new { Message = "Logged out successfully" });
+                return Ok(new { Message = "💥Logged out successfully" });
             }
-            catch (Exception ex) {
-                return BadRequest($"Some thing went wrong: {ex.Message}");
+            catch (Exception ex)
+            {
+                return BadRequest($"💥Some thing went wrong: {ex.Message}");
             }
         }
 
         [HttpGet("info"), Authorize]
-        public async Task<IActionResult> getUserInfo()
+        public async Task<IActionResult> GetUserInfo()
         {
 
             try
@@ -158,14 +182,14 @@ namespace MovieWebSite.Server.Controllers.Identity
 
                 if (currentUser == null)
                 {
-                    return Unauthorized(new { error = "User not authenticated" });
+                    return Unauthorized(new { error = "💥User not authenticated" });
                 }
 
                 return Ok(new { userInfo = currentUser });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = "Something has gone wrong!" });
+                return BadRequest(new { error = "💥Something has gone wrong!" });
             }
         }
 
@@ -174,8 +198,7 @@ namespace MovieWebSite.Server.Controllers.Identity
         {
             try
             {
-                var user_ = HttpContext.User;
-                var principals = new ClaimsPrincipal(user_);
+                ClaimsPrincipal principals = HttpContext.User as ClaimsPrincipal;
                 var result = signInManager.IsSignedIn(principals);
                 if (result)
                 {
@@ -183,15 +206,14 @@ namespace MovieWebSite.Server.Controllers.Identity
                 }
                 else
                 {
-                    return Forbid("Access Denied");
+                    return Forbid("💥Access Denied");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return BadRequest($"Something has gone wrong! {ex.Message}");
+                return BadRequest($"💥Something has gone wrong! {ex.Message}");
             }
         }
-        
     }
 }
 

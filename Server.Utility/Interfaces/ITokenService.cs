@@ -1,4 +1,4 @@
-﻿using Server.Model.Models;
+﻿using Server.Model.AuthModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

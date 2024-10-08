@@ -111,35 +111,70 @@ const confirmEmail = async (formData) => {
     });
   return res;
 };
-const createCheckOutSession = async (selectedPlan)=>{
+const createCheckOutSession = async (selectedPlan) => {
   let res = null;
   const priceKeyIds = {
-    "pro": "price_1Q5XdAATmHlXrMYowulmblzP",
-    "premium": "price_1Q5XemATmHlXrMYoZLybRoux"
-  }
+    pro: "price_1Q5XdAATmHlXrMYowulmblzP",
+    premium: "price_1Q5XemATmHlXrMYoZLybRoux",
+  };
   const successUrl = `${window.location.origin}/user/memberships/success`;
   const failureUrl = `${window.location.origin}/user/memberships/failure`;
-  const formData = { 
-    priceId: priceKeyIds[selectedPlan], 
-    successUrl, 
-    failureUrl 
+  const formData = {
+    priceId: priceKeyIds[selectedPlan],
+    successUrl,
+    failureUrl,
   };
-  await axios.post("/api/payment/create_checkout_session", formData)
-  .then((response) => {
-    res= response.data;
-  })
-  .catch((error) => {
-    console.log("Fail to create check out session: ", error.response.data.ErrorMessage || error);
-  });
+  await axios
+    .post("/api/payment/create_checkout_session", formData)
+    .then((response) => {
+      res = response.data;
+    })
+    .catch((error) => {
+      console.log(
+        "Fail to create check out session: ",
+        error.response.data.ErrorMessage || error
+      );
+    });
   return res;
-}
+};
+const RedirectToCustomerPortal = async () => {
+  const returnUrl = `${window.location.origin}/user`;
+  await api
+    .post("/payment/customer_portal", { returnUrl })
+    .then((response) => {
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      }
+    })
+    .catch((error) => {
+      console.log(
+        "Redirection to customer portal fail: ",
+        error.response.data.error
+      );
+    });
+};
+const getUserStatus = async () => {
+  let res;
+  await api
+    .get("/payment/getUserStatus")
+    .then((response) => {
+      console.log("Sub Status: ", response.data.status || response)
+      res = response.data.roles;
+    })
+    .catch((error) => {
+      console.log("Get User Status error:", error.response);
+    });
+  return res;
+};
 const AuthApi = {
   register,
   signIn,
   signOut,
   getUserInfo,
+  getUserStatus,
   validateUser,
   confirmEmail,
-  createCheckOutSession
+  createCheckOutSession,
+  RedirectToCustomerPortal,
 };
 export default AuthApi;

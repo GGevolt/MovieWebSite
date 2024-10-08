@@ -37,7 +37,7 @@
 .film-card-wrapper:focus {
     outline: none;
 }
-.film-card-wrapper:focus .tv-series-card{
+.film-card-wrapper:hover .tv-series-card{
     box-shadow: rgba(74, 254, 29, 0.4) 5px 5px, rgba(78, 240, 46, 0.3) 10px 10px, rgba(85, 240, 46, 0.2) 15px 15px, rgba(46, 240, 85, 0.1) 20px 20px, rgba(46, 240, 78, 0.05) 25px 25px;
 }
 .film-title {

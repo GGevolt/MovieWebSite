@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieWebSite.Server.Data;
 
@@ -11,9 +12,11 @@ using MovieWebSite.Server.Data;
 namespace MovieWebSite.Server.Migrations.AuthDB
 {
     [DbContext(typeof(AuthDBContext))]
-    partial class AuthDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241003044826_addCustomerId")]
+    partial class addCustomerId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,27 +54,21 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                     b.HasData(
                         new
                         {
-                            Id = "b2f2eddd-a561-4ce3-b85e-088af12f5097",
+                            Id = "62259732-624e-40ad-9b75-47043ab2f8cb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f96b655f-a92b-499f-a861-a2634c0b3bad",
+                            Id = "29ceb310-e519-4079-852c-32b7bd1cef6c",
                             Name = "UserT0",
                             NormalizedName = "USERT0"
                         },
                         new
                         {
-                            Id = "eee72911-37b8-4be0-a4e1-aae25f4ae1ae",
+                            Id = "2697c338-140d-402a-b694-ff44ad681c49",
                             Name = "UserT1",
                             NormalizedName = "USERT1"
-                        },
-                        new
-                        {
-                            Id = "8156313e-da30-400d-a83d-646d4bc71dcf",
-                            Name = "UserT2",
-                            NormalizedName = "USERT2"
                         });
                 });
 
@@ -181,7 +178,7 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Server.Model.AuthModels.ApplicationUser", b =>
+            modelBuilder.Entity("Server.Model.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -197,6 +194,7 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                         .HasColumnType("datetime");
 
                     b.Property<string>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("Dob")
@@ -244,16 +242,7 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PriceId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("SubscriptionEndPeriod")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SubscriptionStatus")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -273,10 +262,6 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("UserName")
-                        .IsUnique()
-                        .HasFilter("[UserName] IS NOT NULL");
-
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -291,7 +276,7 @@ namespace MovieWebSite.Server.Migrations.AuthDB
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Server.Model.AuthModels.ApplicationUser", null)
+                    b.HasOne("Server.Model.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -300,7 +285,7 @@ namespace MovieWebSite.Server.Migrations.AuthDB
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Server.Model.AuthModels.ApplicationUser", null)
+                    b.HasOne("Server.Model.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -315,7 +300,7 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Server.Model.AuthModels.ApplicationUser", null)
+                    b.HasOne("Server.Model.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -324,7 +309,7 @@ namespace MovieWebSite.Server.Migrations.AuthDB
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Server.Model.AuthModels.ApplicationUser", null)
+                    b.HasOne("Server.Model.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
