@@ -25,6 +25,7 @@ import Memberships from "../Area/User/Page/Subscription";
 import SubscriptionSuccess from "../Area/User/Page/Subscription/SubscriptionSuccess";
 import SubscriptionFailure from "../Area/User/Page/Subscription/SubscriptionFailure";
 import WatchFilm from "../Area/User/Page/WatchFilm";
+import SearchFilms from "../Area/User/Page/SearchFilms";
 
 const ROLES = {
   User: "UserT0",
@@ -39,6 +40,7 @@ const router = createBrowserRouter(
       >
         <Route index element={<Home />} />
         <Route path="/user/userinfo" element={<UserInfo />} />
+        <Route path="/user/search" element={<SearchFilms />} />
         <Route path="/user/memberships" element={<Memberships />} />
         <Route
           path="/user/memberships/success"
@@ -53,15 +55,17 @@ const router = createBrowserRouter(
           element={<Detail />}
           loader={async ({ params }) => WebApi.getFilm(params.filmId)}
         />
-        <Route path="/user/watchfilm/:filmId" 
-          element={<WatchFilm />} 
+        <Route
+          path="/user/watchfilm/:filmId"
+          element={<WatchFilm />}
           loader={async ({ params }) => {
             const [episodes, film] = await Promise.all([
               WebApi.getEpisodes(params.filmId),
-              WebApi.getFilm(params.filmId)
+              WebApi.getFilm(params.filmId),
             ]);
             return { episodes, film };
-          }}/>
+          }}
+        />
       </Route>
       <Route
         path="/admin"

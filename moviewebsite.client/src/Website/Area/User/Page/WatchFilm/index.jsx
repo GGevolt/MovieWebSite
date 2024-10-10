@@ -1,16 +1,30 @@
-import { useState, useRef, useEffect } from 'react';
-import { useLoaderData} from "react-router-dom";
-import { Container, Row, Col, Card } from 'react-bootstrap';
-import { PlayFill, PauseFill, VolumeUp, VolumeMute, Fullscreen, SkipForward, SkipBackward, Pip } from 'react-bootstrap-icons';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import './index.css';
-import CommentSection from '../../Components/Form/CommentSection';
+import { useState, useRef, useEffect, useContext } from "react";
+import { useLoaderData, Navigate } from "react-router-dom";
+import { Container, Row, Col, Card } from "react-bootstrap";
+import {
+  PlayFill,
+  PauseFill,
+  VolumeUp,
+  VolumeMute,
+  Fullscreen,
+  SkipForward,
+  SkipBackward,
+  Pip,
+} from "react-bootstrap-icons";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import "./index.css";
+import CommentSection from "../../Components/Form/CommentSection";
+import AuthContext from "../../../AuthContext/Context";
 
 export default function WatchFilm() {
-  const {episodes , film} = useLoaderData();
+  const authContext = useContext(AuthContext);
+  const { roles } = authContext;
+  const { episodes, film } = useLoaderData();
   const [currentEpisode, setCurrentEpisode] = useState(1);
-  const [currentEpisodeId, setCurrentEpisodeId] = useState( Array.isArray(episodes) && episodes.length > 0 ? episodes[0].id : 0);
+  const [currentEpisodeId, setCurrentEpisodeId] = useState(
+    Array.isArray(episodes) && episodes.length > 0 ? episodes[0].id : 0
+  );
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
@@ -66,7 +80,8 @@ export default function WatchFilm() {
   };
 
   const handleProgress = () => {
-    const progress = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+    const progress =
+      (videoRef.current.currentTime / videoRef.current.duration) * 100;
     setProgress(progress);
     setCurrentTime(videoRef.current.currentTime);
   };
@@ -120,14 +135,14 @@ export default function WatchFilm() {
         setIsPictureInPicture(true);
       }
     } catch (error) {
-      console.error('Failed to enter/exit Picture-in-Picture mode:', error);
+      console.error("Failed to enter/exit Picture-in-Picture mode:", error);
     }
   };
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = Math.floor(timeInSeconds % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   const handleVideoClick = () => {
@@ -178,65 +193,68 @@ export default function WatchFilm() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'ArrowRight') {
+    if (e.key === "ArrowRight") {
       skipTime(5);
-    } else if (e.key === 'ArrowLeft') {
+    } else if (e.key === "ArrowLeft") {
       skipTime(-5);
     }
   };
 
   useEffect(() => {
     const video = videoRef.current;
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
-    video.addEventListener('canplay', () => setIsLoading(false));
-    video.addEventListener('waiting', () => setIsLoading(true));
-    video.addEventListener('timeupdate', handleProgress);
-    
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("canplay", () => setIsLoading(false));
+    video.addEventListener("waiting", () => setIsLoading(true));
+    video.addEventListener("timeupdate", handleProgress);
+
     const handleFullscreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
     };
-    
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('keydown', handleKeyDown);
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("keydown", handleKeyDown);
 
     const handlePipChange = () => {
       setIsPictureInPicture(!!document.pictureInPictureElement);
     };
 
-    video.addEventListener('enterpictureinpicture', handlePipChange);
-    video.addEventListener('leavepictureinpicture', handlePipChange);
+    video.addEventListener("enterpictureinpicture", handlePipChange);
+    video.addEventListener("leavepictureinpicture", handlePipChange);
 
-    video.src = Array.isArray(episodes) && episodes.length > 0 ? `/api/video/${episodes[0].vidName}`: "";
+    video.src =
+      Array.isArray(episodes) && episodes.length > 0
+        ? `/api/video/${episodes[0].vidName}`
+        : "";
     video.load();
-    
+
     return () => {
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      video.removeEventListener('canplay', () => setIsLoading(false));
-      video.removeEventListener('waiting', () => setIsLoading(true));
-      video.removeEventListener('timeupdate', handleProgress);
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('keydown', handleKeyDown);
-      video.removeEventListener('enterpictureinpicture', handlePipChange);
-      video.removeEventListener('leavepictureinpicture', handlePipChange);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("canplay", () => setIsLoading(false));
+      video.removeEventListener("waiting", () => setIsLoading(true));
+      video.removeEventListener("timeupdate", handleProgress);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("keydown", handleKeyDown);
+      video.removeEventListener("enterpictureinpicture", handlePipChange);
+      video.removeEventListener("leavepictureinpicture", handlePipChange);
     };
   }, []);
 
+  if (roles.length <= 1) {
+    return <Navigate to={"/"} />;
+  }
   return (
     <div className="movie-player">
       <Container fluid className="py-5">
         <Row className="justify-content-center">
           <Col xs={12} lg={10}>
             <h1 className="movie-title mb-4">{film.title}</h1>
-            <div 
-              className="video-container" 
+            <div
+              className="video-container"
               ref={videoContainerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             >
-              <video
-                ref={videoRef}
-                onClick={handleVideoClick}
-              >
+              <video ref={videoRef} onClick={handleVideoClick}>
                 <source type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
@@ -245,7 +263,11 @@ export default function WatchFilm() {
                   <div className="spinner"></div>
                 </div>
               )}
-              <div className={`video-controls ${isFullScreen ? 'fullscreen' : ''} ${showControls ? 'show' : ''}`}>
+              <div
+                className={`video-controls ${
+                  isFullScreen ? "fullscreen" : ""
+                } ${showControls ? "show" : ""}`}
+              >
                 <Slider
                   min={0}
                   max={100}
@@ -257,14 +279,20 @@ export default function WatchFilm() {
                   <button onClick={togglePlay} className="control-button">
                     {isPlaying ? <PauseFill /> : <PlayFill />}
                   </button>
-                  <button onClick={() => skipTime(-5)} className="control-button">
+                  <button
+                    onClick={() => skipTime(-5)}
+                    className="control-button"
+                  >
                     <SkipBackward />
                   </button>
-                  <button onClick={() => skipTime(5)} className="control-button">
+                  <button
+                    onClick={() => skipTime(5)}
+                    className="control-button"
+                  >
                     <SkipForward />
                   </button>
-                  <div 
-                    className="volume-control" 
+                  <div
+                    className="volume-control"
                     onMouseEnter={() => setShowVolumeControl(true)}
                     onMouseLeave={() => setShowVolumeControl(false)}
                   >
@@ -283,12 +311,12 @@ export default function WatchFilm() {
                     )}
                   </div>
                   <div className="spacer"></div>
-                  <span  className="time-display">
+                  <span className="time-display">
                     {formatTime(currentTime)} / {formatTime(duration)}
                   </span>
                   <div className="speed-control-container">
-                    <select 
-                      value={playbackSpeed} 
+                    <select
+                      value={playbackSpeed}
                       onChange={handleSpeedChange}
                       className="speed-control"
                     >
@@ -299,9 +327,11 @@ export default function WatchFilm() {
                       <option value="2">2x</option>
                     </select>
                   </div>
-                  <button 
-                    onClick={togglePictureInPicture} 
-                    className={`control-button ${isPictureInPicture ? 'active' : ''}`}
+                  <button
+                    onClick={togglePictureInPicture}
+                    className={`control-button ${
+                      isPictureInPicture ? "active" : ""
+                    }`}
                   >
                     <Pip />
                   </button>
@@ -311,8 +341,10 @@ export default function WatchFilm() {
                 </div>
               </div>
               {!isLoading && (
-                <button 
-                  className={`temp-play-button ${showTempPlayButton || !isPlaying ? 'show' : ''}`}
+                <button
+                  className={`temp-play-button ${
+                    showTempPlayButton || !isPlaying ? "show" : ""
+                  }`}
                   onClick={togglePlay}
                 >
                   {isPlaying ? <PauseFill size={48} /> : <PlayFill size={48} />}
@@ -320,17 +352,33 @@ export default function WatchFilm() {
               )}
             </div>
             <div className="mt-5">
-              <h3 className="episodes-title mb-3">{film.type=== "Movie"?  "Parts" :"Episodes"}</h3>
+              <h3 className="episodes-title mb-3">
+                {film.type === "Movie" ? "Parts" : "Episodes"}
+              </h3>
               <div className="episodes-container">
                 <Row className="mx-0">
-                {episodes.map((episode, index) => (
-                    <Col key={index} xs={12} sm={6} md={4} lg={3} className="mb-3 px-2">
-                      <Card 
+                  {episodes.map((episode, index) => (
+                    <Col
+                      key={index}
+                      xs={12}
+                      sm={6}
+                      md={4}
+                      lg={3}
+                      className="mb-3 px-2"
+                    >
+                      <Card
                         onClick={() => handleEpisodeSelect(episode)}
-                        className={`episode-card ${currentEpisode === episode.episodeNumber ? 'active' : ''}`}
+                        className={`episode-card ${
+                          currentEpisode === episode.episodeNumber
+                            ? "active"
+                            : ""
+                        }`}
                       >
                         <Card.Body>
-                          <Card.Title>{film.type=== "Movie"?  "Part " :"Episode "} {episode.episodeNumber}</Card.Title>
+                          <Card.Title>
+                            {film.type === "Movie" ? "Part " : "Episode "}{" "}
+                            {episode.episodeNumber}
+                          </Card.Title>
                         </Card.Body>
                         <div className="episode-progress" />
                       </Card>
@@ -339,8 +387,8 @@ export default function WatchFilm() {
                 </Row>
               </div>
             </div>
-            <CommentSection 
-              episodeId={currentEpisodeId} 
+            <CommentSection
+              episodeId={currentEpisodeId}
               currentTime={currentTime}
               onTimeClick={handleTimeClick}
               videoPlayerRef={videoContainerRef}

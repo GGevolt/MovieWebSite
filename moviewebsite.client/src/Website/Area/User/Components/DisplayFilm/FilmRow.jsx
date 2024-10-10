@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
 import PropTypes from "prop-types";
 import FilmImg from "../Img/FilmImg";
-import "./index.css";
+import "./FilmRow.css";
 import { useNavigate } from "react-router-dom";
 
 const FilmRow = ({ films, filmsRowTitle }) => {

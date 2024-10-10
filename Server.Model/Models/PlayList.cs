@@ -9,15 +9,12 @@ using System.Threading.Tasks;
 
 namespace Server.Model.Models
 {
-    public class Comment
+    public class PlayList
     {
-        [Key]
-        public int Id { get; set; }
-        public required string CommnentText { get; set; }
-        public required string UserName { get; set; }
-        public required int EpisodeId { get; set; }
-        [ForeignKey("EpisodeId")]
+        public string UserName { get; set; }
+        public int FilmId { get; set; }
+        [ForeignKey("FilmId")]
         [ValidateNever]
-        public Episode Episode { get; set; }
+        public Film Film { get; set; }
     }
 }

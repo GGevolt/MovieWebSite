@@ -1,11 +1,13 @@
 import { useState, useContext } from "react";
-import { Form, Col, Row, Button, Spinner } from "react-bootstrap";
+import { Form, Button, FloatingLabel, Spinner } from "react-bootstrap";
+import { Link, Navigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { User, Mail, Key, Calendar, UserCheck } from "lucide-react";
 import { object, string, date } from "yup";
-import styles from "./Register.module.css";
 import AuthContext from "../../../AuthContext/Context";
 import PopUp from "../../Components/Popup";
-import { EnvelopeAt } from "react-bootstrap-icons";
-import { Navigate } from "react-router-dom";
+import styles from "./Register.module.css";
+import deco from "../../../../../assets/Image/deco2.jpeg"
 
 function Register() {
   document.title = "Register";
@@ -26,7 +28,8 @@ function Register() {
   const oneHundredYearsAgo = new Date();
   oneHundredYearsAgo.setFullYear(oneHundredYearsAgo.getFullYear() - 100);
   const minDate = oneHundredYearsAgo.toISOString().split("T")[0];
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({});
+
   const validateSchema = object({
     fullName: string()
       .required("Full Name is missing!")
@@ -61,12 +64,14 @@ function Register() {
       .min(minDate, `Must be from ${minDate} onward!`)
       .max(today, `Must be today or earlier `),
   });
+
   const handleChange = (event) => {
     setUserInfo((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
   };
+
   const handleRegister = async (event) => {
     event.preventDefault();
     try {
@@ -94,19 +99,21 @@ function Register() {
     }
     setUploading(false);
   };
+
   const popUpContent = () => {
     return (
       <div>
-        <h3 className={styles.pop_header}>
-          Check Your Email <EnvelopeAt />
+        <h3 className={styles.popHeader}>
+          Check Your Email <Mail />
         </h3>
-        <p className={styles.pop_content}>
+        <p className={styles.popContent}>
           We&apos;ve sent a confirmation link to your email address. Please
           check your inbox and click the link to verify your account.
         </p>
       </div>
     );
   };
+
   const handleClosePop = () => {
     setIsPopupOpen(false);
     document.location = "/login";
@@ -117,166 +124,194 @@ function Register() {
   }
 
   return (
-    <div className={styles.page}>
-      {
-        <PopUp isOpen={isPopupOpen} handleClose={handleClosePop}>
-          {popUpContent()}
-        </PopUp>
-      }
-      <div className={styles.Container}>
-        <div className={styles.content}>
-          <h1 className={styles.h1}>Create an Account</h1>
-          <br />
-          <Form
-            onSubmit={handleRegister}
-            encType="multipart/form-data"
-            className={styles.Form}
+    <div className={styles.container}>
+      <PopUp isOpen={isPopupOpen} handleClose={handleClosePop}>
+        {popUpContent()}
+      </PopUp>
+      <motion.div
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className={styles.decorationContainer}
+      >
+        <div className={styles.decorationContent}>
+          <h2>Join Our Community</h2>
+          <p>Create an account to access exclusive features and content.</p>
+          <motion.img
+            src={deco}
+            alt="Decorative illustration"
+            className={styles.decorationImage}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration:  0.8, delay: 0.4 }}
+          />
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className={styles.formContainer}
+      >
+        <h1 className={styles.title}>Create an Account</h1>
+        <Form onSubmit={handleRegister} className={styles.form}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Form.Group as={Row} className="mb-3">
-              <Form.Label column sm={2} className={styles.label}>
-                Full Name
-              </Form.Label>
-              <Col sm={10}>
-                <Form.Control
-                  type="text"
-                  placeholder="Full Name"
-                  value={userInfo.fullName}
-                  name="fullName"
-                  onChange={handleChange}
-                  isInvalid={errors.fullName}
-                  className={styles.input}
-                />
-                <Form.Control.Feedback type="invalid" className={styles.error}>
-                  {errors.fullName}
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className="mb-3">
-              <Form.Label column sm={2} className={styles.label}>
-                Gender
-              </Form.Label>
-              <Col sm={4}>
-                <Form.Control
-                  as="select"
-                  value={userInfo.gender}
-                  name="gender"
-                  onChange={handleChange}
-                  isInvalid={errors.gender}
-                  className={styles.input}
-                >
-                  <option value="">Select</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Form.Control>
-                <Form.Control.Feedback type="invalid" className={styles.error}>
-                  {errors.gender}
-                </Form.Control.Feedback>
-              </Col>
-              <Form.Label
-                column
-                className={styles.label}
-                id={styles.date_label}
-              >
-                Date of Birth
-              </Form.Label>
-              <Col sm={4}>
-                <Form.Control
-                  type="date"
-                  value={userInfo.dob || ""}
-                  name="dob"
-                  onChange={handleChange}
-                  max={today}
-                  min={minDate}
-                  isInvalid={errors.dob}
-                  className={styles.input}
-                />
-                <Form.Control.Feedback type="invalid" className={styles.error}>
-                  {errors.dob}
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className="mb-3">
-              <Form.Label column sm={2} className={styles.label}>
-                Username
-              </Form.Label>
-              <Col sm={10}>
-                <Form.Control
-                  type="text"
-                  placeholder="Username"
-                  value={userInfo.username}
-                  name="username"
-                  onChange={handleChange}
-                  isInvalid={errors.username}
-                  className={styles.input}
-                />
-                <Form.Control.Feedback type="invalid" className={styles.error}>
-                  {errors.username}
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className="mb-3">
-              <Form.Label column sm={2} className={styles.label}>
-                Email
-              </Form.Label>
-              <Col sm={10}>
-                <Form.Control
-                  type="string"
-                  placeholder="Email"
-                  value={userInfo.email}
-                  name="email"
-                  onChange={handleChange}
-                  isInvalid={errors.email}
-                  className={styles.input}
-                />
-                <Form.Control.Feedback type="invalid" className={styles.error}>
-                  {errors.email}
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className="mb-3">
-              <Form.Label column sm={2} className={styles.label}>
-                Password
-              </Form.Label>
-              <Col sm={10} className={styles.label}>
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  value={userInfo.password}
-                  name="password"
-                  onChange={handleChange}
-                  isInvalid={errors.password}
-                  className={styles.input}
-                />
-                <Form.Control.Feedback type="invalid" className={styles.error}>
-                  {errors.password}
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className="mb-3">
-              <Form.Label className={styles.label}>
-                Terms and Conditions
-              </Form.Label>
-              <Form.Check
-                type="checkbox"
-                value={agreeToTerm}
-                onChange={(e) => {
-                  setAgreeToTerm(e.target.checked);
-                }}
-                className={styles.check}
-                label="I accept the terms and conditions for signing up to this service, and hereby confirm I have read the privacy policy."
+            <FloatingLabel label="Full Name" className={styles.inputGroup}>
+              <Form.Control
+                type="text"
+                placeholder="Full Name"
+                name="fullName"
+                value={userInfo.fullName}
+                onChange={handleChange}
+                isInvalid={errors.fullName}
               />
-            </Form.Group>
+              <User className={styles.inputIcon} />
+              <Form.Control.Feedback type="invalid">
+                {errors.fullName}
+              </Form.Control.Feedback>
+            </FloatingLabel>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <FloatingLabel label="Username" className={styles.inputGroup}>
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                name="username"
+                value={userInfo.username}
+                onChange={handleChange}
+                isInvalid={errors.username}
+              />
+              <UserCheck className={styles.inputIcon} />
+              <Form.Control.Feedback type="invalid">
+                {errors.username}
+              </Form.Control.Feedback>
+            </FloatingLabel>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <FloatingLabel label="Email" className={styles.inputGroup}>
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                name="email"
+                value={userInfo.email}
+                onChange={handleChange}
+                isInvalid={errors.email}
+              />
+              <Mail className={styles.inputIcon} />
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
+            </FloatingLabel>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <FloatingLabel label="Password" className={styles.inputGroup}>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={userInfo.password}
+                onChange={handleChange}
+                isInvalid={errors.password}
+              />
+              <Key className={styles.inputIcon} />
+              <Form.Control.Feedback type="invalid">
+                {errors.password}
+              </Form.Control.Feedback>
+            </FloatingLabel>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className={styles.inlineInputs}
+          >
+            <FloatingLabel label="Gender" className={styles.inputGroup}>
+              <Form.Control
+                as="select"
+                name="gender"
+                value={userInfo.gender}
+                onChange={handleChange}
+                isInvalid={errors.gender}
+              >
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {errors.gender}
+              </Form.Control.Feedback>
+            </FloatingLabel>
+            <FloatingLabel label="Date of Birth" className={styles.inputGroup}>
+              <Form.Control
+                type="date"
+                name="dob"
+                value={userInfo.dob || ""}
+                onChange={handleChange}
+                max={today}
+                min={minDate}
+                isInvalid={errors.dob}
+              />
+              <Calendar className={styles.inputIcon} />
+              <Form.Control.Feedback type="invalid">
+                {errors.dob}
+              </Form.Control.Feedback>
+            </FloatingLabel>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            <Form.Check
+              type="checkbox"
+              id="agreeToTerm"
+              className={styles.checkBox}
+              checked={agreeToTerm}
+              onChange={(e) => setAgreeToTerm(e.target.checked)}
+              label="I accept the terms and conditions for signing up to this service, and hereby confirm I have read the privacy policy."
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
             <Button
               type="submit"
-              className={styles.btn}
+              className={styles.submitButton}
               disabled={!agreeToTerm || uploading}
             >
-              {uploading ? <Spinner animation="border" /> : "Register"}
+              {uploading ? <Spinner animation="border" size="sm" /> : "Register"}
             </Button>
-          </Form>
-        </div>
-      </div>
+          </motion.div>
+        </Form>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1 }}
+          className={styles.loginText}
+        >
+          Already have an account? <Link to="/login">Sign In</Link>
+        </motion.p>
+      </motion.div>
     </div>
   );
 }
+
 export default Register;

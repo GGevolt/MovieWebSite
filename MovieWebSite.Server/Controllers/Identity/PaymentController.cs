@@ -325,7 +325,6 @@ namespace MovieWebSite.Server.Controllers.Identity
         }
         private async Task SubscriptionUpdate(Subscription subscription)
         {
-
             try
             {
                 var customerId = subscription.CustomerId;
@@ -380,6 +379,27 @@ namespace MovieWebSite.Server.Controllers.Identity
                 if (UserRoles.Count == 0)
                 {
                     throw new Exception("💥User don't have any role to get!");
+                }
+                if(currentUser.SubscriptionStatus != null && (currentUser.SubscriptionStatus.Equals("paused") || currentUser.SubscriptionStatus.Equals("canceled") || currentUser.SubscriptionStatus.Equals("past_due")))
+                {
+                    if (UserRoles.Contains("💥UserT1"))
+                    {
+                        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception("💥Fail to remove T1 user!");
+                        }
+                    }
+                    if (UserRoles.Contains("💥UserT2"))
+                    {
+                        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT2");
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception("💥Fail to remove T2 user!");
+                        }
+                    }
+                    var UpdatedUserT2Roles = await _userManager.GetRolesAsync(currentUser);
+                    return Ok(new { roles = UpdatedUserT2Roles, status = currentUser.SubscriptionStatus });
                 }
                 switch (currentUser.PriceId)
                 {

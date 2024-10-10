@@ -1,81 +1,183 @@
-.Container{
-    border: 1px solid;
-    border-radius: 10px;
-    padding: 30px;
-    background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-    width: 800px;
-}
-.h1{
-    color: #d66b00;
-}
-
-.page{
+.container {
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .decorationContainer {
+    flex: 1;
     display: flex;
     justify-content: center;
-    padding-top: 50px; 
-}
-
-body{
-    background-color: #e3e3e3;
-}
-
-.btn{
-    border-radius: 10px;
-    background-color: #eb8805;
-    border-color: #eb8805;
-    height: 50px;
-    width: 10rem;
-    float: right;
-}
-.btn:hover{
-    background-color: #c16101;
-    border-color: #c16101;
-}
-.btn:disabled{
-    border-color: #eb8805;
-    background-color: #eb8805;
-}
-.btn:active{
-    background-color: #7b3d00 !important;
-    border-color: #c16101 !important;
-}
-
-input[type="checkbox"]:checked {
-    background-color: rgb(30, 225, 0);
-    box-shadow: 0 0 0 3px rgba(81, 255, 0, 0.411);
-}
-.input{
-    background-color: #f9f9f9;
-}
-.input:focus {
-    outline: 0;
-    border-color: #bd8200;
-    background-color: #fcfcfc;
-    box-shadow: 0 0 0 3px rgba(255, 132, 0, 0.523);
-}
-
-.label{
-    color: #f0a500;
-}
-
-.label #date_label{
-    text-align: left;
-    padding-left: 0;
-    padding-right: 0;
-}
-.error{
-    color: red;
-}
-
-.check{
-    padding-left: 2.25rem;
-    color: black;
-}
-.pop_header{
-    color: black;
-}
-.pop_content{
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+  }
+  
+  .decorationContent {
     text-align: center;
-    color: black;
-}
+    color: white;
+  }
+  
+  .decorationContent h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .decorationContent p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .decorationImage {
+    max-width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  .formContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .form {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .inputGroup {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  
+  .inputIcon {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    color: #764ba2;
+  }
+  
+  .inlineInputs {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .inlineInputs .inputGroup {
+    flex: 1;
+  }
+  
+  .checkBox {
+    margin-bottom: 1.5rem;
+  }
+  
+  .submitButton {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #764ba2;
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submitButton:hover:not(:disabled) {
+    background-color: #667eea;
+  }
+  
+  .submitButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .loginText {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  
+  .loginText a {
+    color: #764ba2;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .loginText a:hover {
+    text-decoration: underline;
+  }
+  
+  .popHeader {
+    color: #333;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .popContent {
+    color: #666;
+    text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .decorationContainer,
+    .formContainer {
+      width: 100%;
+    }
+  
+    .decorationContainer {
+      padding: 2rem 1rem;
+    }
+  
+    .decorationContent h2 {
+      font-size: 2rem;
+    }
+  
+    .decorationContent p {
+      font-size: 1rem;
+    }
+  
+    .decorationImage {
+      max-width: 250px;
+    }
+  
+    .inlineInputs {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .formContainer {
+      padding: 1.5rem;
+    }
+  
+    .title {
+      font-size: 2rem;
+    }
+  
+    .form {
+      max-width: 100%;
+    }
+  
+    .decorationImage {
+      max-width: 200px;
+    }
+  }

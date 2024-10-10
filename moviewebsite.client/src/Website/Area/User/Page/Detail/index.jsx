@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styles from "./FilmDetail.module.css";
 import FilmImg from "../../Components/Img/FilmImg";
 import { Play, BookmarkPlusFill } from "react-bootstrap-icons";
@@ -6,9 +6,12 @@ import { Container, Row, Col, Badge } from "react-bootstrap";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import WebApi from "../../../../WebApi";
 import FilmRow from "../../Components/DisplayFilm/FilmRow";
+import AuthContext from "../../../AuthContext/Context";
 
 function Detail() {
   const film = useLoaderData();
+  const authContext = useContext(AuthContext);
+  const { roles } = authContext;
   const [categories, setCategories] = useState([]);
   const [relatedFilms, setRelatedFilms] = useState([]);
   const navigate = useNavigate();
@@ -20,6 +23,13 @@ function Detail() {
   const loadData = async () => {
     setCategories(await WebApi.getFilmCates(film.id));
     setRelatedFilms(await WebApi.getRelatedFilms(film.id));
+  };
+  const hanldeNavigate = (destination) => {
+    if (roles.length <= 1) {
+      navigate("/user/memberships");
+      return;
+    }
+    navigate(destination);
   };
   return (
     <div className={styles.filmDetail}>
@@ -55,7 +65,7 @@ function Detail() {
             <div className={styles.actions}>
               <button
                 className={styles.playButton}
-                onClick={() => navigate(`/user/watchfilm/${film.id}`)}
+                onClick={() => hanldeNavigate(`/user/watchfilm/${film.id}`)}
               >
                 <Play size={20} /> Play
               </button>

@@ -22,5 +22,7 @@ namespace Server.Model.Models
         public virtual ICollection<CategoryFilm> CategoryFilms { get; set; }
         [ValidateNever]
         public virtual ICollection<Episode> Episodes { get; set; }
+        [ValidateNever]
+        public virtual ICollection<PlayList> PlayLists { get; set; }
     }
 }

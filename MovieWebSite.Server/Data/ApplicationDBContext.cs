@@ -10,6 +10,7 @@ namespace MovieWebSite.Server.Data
         public DbSet<CategoryFilm> CategoryFilms { get; set; }
         public DbSet<Episode> Episodes { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<PlayList> PlayLists { get; set; }
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> option) : base(option)
         {
 
@@ -17,6 +18,12 @@ namespace MovieWebSite.Server.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<PlayList>()
+                .HasKey(pl =>new {pl.FilmId});
+            modelBuilder.Entity<PlayList>()
+                .HasOne(pl=> pl.Film)
+                .WithMany(pl=>pl.PlayLists)
+                .HasForeignKey(pl=>pl.FilmId);
             modelBuilder.Entity<CategoryFilm>()
                 .HasKey(cf => new { cf.CategoryId, cf.FilmId });
 

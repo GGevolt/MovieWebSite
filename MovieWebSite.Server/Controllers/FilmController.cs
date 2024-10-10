@@ -3,6 +3,7 @@ using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Server.Model.DTO;
+using System.Diagnostics;
 
 namespace MovieWebSite.Server.Controllers
 {
@@ -29,6 +30,55 @@ namespace MovieWebSite.Server.Controllers
             {
                 Console.WriteLine(ex.ToString());
                 return BadRequest("Error, Fail to get film!");
+            }
+        }
+        [HttpGet("search")]
+        public IActionResult SearchFilms([FromQuery] string? query, [FromQuery] string? categories, [FromQuery] string? type, [FromQuery] string? director)
+        {
+            try
+            {
+                var films = _unitOfWork.FilmRepository.GetAll();
+
+                if (!string.IsNullOrEmpty(query))
+                {
+                    films = films.Where(f => f.Title.Contains(query, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (!string.IsNullOrEmpty(categories))
+                {
+                    var categoryIds = categories.Split(',').Select(int.Parse).ToList();
+                    films = films.Where(f => categoryIds.All(categoryId =>
+                        _unitOfWork.CategoryFilmRepository.GetAll().Any(cf => cf.FilmId == f.Id && cf.CategoryId == categoryId)
+                    ));
+                }
+
+                if (!string.IsNullOrEmpty(type))
+                {
+                    films = films.Where(f => f.Type.Equals(type, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (!string.IsNullOrEmpty(director))
+                {
+                    films = films.Where(f => f.Director.Contains(director, StringComparison.OrdinalIgnoreCase));
+                }
+
+                var result = films.Select(f => new FilmDto
+                {
+                    Id = f.Id,
+                    Title = f.Title,
+                    FilmPath = f.FilmPath,
+                    BlurHash = f.BlurHash,
+                    Synopsis = f.Synopsis,
+                    Director = f.Director,
+                    Type = f.Type
+                }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, "Internal server error.");
             }
         }
         [HttpGet("relatefilms/{filmId}")]
