@@ -334,3 +334,51 @@
 .temp-play-button {
   z-index: 15;
 }
+
+@media (max-width: 576px) {
+  .movie-title {
+    font-size: 2rem;
+  }
+
+  .video-controls {
+    padding: 10px;
+  }
+
+  .control-button {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  .time-display {
+    font-size: 12px;
+  }
+
+  .temp-play-button {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .episodes-container {
+    max-height: 300px;
+  }
+
+  .episode-card .card-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .video-controls.fullscreen {
+    padding: 20px;
+  }
+
+  .video-controls.fullscreen .control-button {
+    font-size: 28px;
+  }
+
+  .video-controls.fullscreen .time-display {
+    font-size: 16px;
+  }
+}

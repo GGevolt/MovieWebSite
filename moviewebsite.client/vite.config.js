@@ -85,6 +85,11 @@ export default defineConfig({
                 target,
                 secure: false,
                 changeOrigin: true,
+            },
+            '^/api/playList': {
+                target,
+                secure: false,
+                changeOrigin: true,
             }
         },
         port: 5173,

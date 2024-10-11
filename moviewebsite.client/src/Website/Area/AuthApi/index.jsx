@@ -158,7 +158,7 @@ const getUserStatus = async () => {
   await api
     .get("/payment/getUserStatus")
     .then((response) => {
-      console.log("Sub Status: ", response.data.status || response)
+      console.log("Sub Status: ", response.data.status || response);
       res = response.data.roles;
     })
     .catch((error) => {
@@ -166,6 +166,30 @@ const getUserStatus = async () => {
     });
   return res;
 };
+const addToPlayList = async (filmId, isAdd, isRemove) => {
+  let res;
+  await api
+    .post("/playList", { filmId, isAdd, isRemove })
+    .then((response) => {
+      res = response.data.isAdded;
+    })
+    .catch((error) => {
+      console.log("add to play list error:", error.response);
+    });
+  return res;
+};
+const getUserPlayList = async ()=>{
+  let res;
+  await api
+    .get("/playList")
+    .then((response) => {
+      res = response.data;
+    })
+    .catch((error) => {
+      console.log("Get play list error:", error.response);
+    });
+  return res;
+}
 const AuthApi = {
   register,
   signIn,
@@ -174,6 +198,8 @@ const AuthApi = {
   getUserStatus,
   validateUser,
   confirmEmail,
+  addToPlayList,
+  getUserPlayList,
   createCheckOutSession,
   RedirectToCustomerPortal,
 };

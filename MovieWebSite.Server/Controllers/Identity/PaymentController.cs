@@ -349,13 +349,38 @@ namespace MovieWebSite.Server.Controllers.Identity
                     user.SubscriptionEndPeriod = subscription.CurrentPeriodEnd;
                     isDiff = true;
                 }
-                if (isDiff) {
+                if (isDiff)
+                {
                     var UpdateUserResult = await _userManager.UpdateAsync(user);
                     if (!UpdateUserResult.Succeeded)
                     {
                         throw new Exception("💥Fail to update user when subscription updated");
                     }
-                }  
+                }
+                if (subscription.Status.Equals("paused") || subscription.Status.Equals("canceled") || subscription.Status.Equals("past_due"))
+                {
+                    var UserRoles = await _userManager.GetRolesAsync(user);
+                    if (UserRoles.Count == 0)
+                    {
+                        throw new Exception("💥User don't have any role to get!");
+                    }
+                    if (UserRoles.Contains("💥UserT1"))
+                    {
+                        var result = await _userManager.RemoveFromRoleAsync(user, "UserT1");
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception("💥Fail to remove T1 user!");
+                        }
+                    }
+                    if (UserRoles.Contains("💥UserT2"))
+                    {
+                        var result = await _userManager.RemoveFromRoleAsync(user, "UserT2");
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception("💥Fail to remove T2 user!");
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -380,27 +405,27 @@ namespace MovieWebSite.Server.Controllers.Identity
                 {
                     throw new Exception("💥User don't have any role to get!");
                 }
-                if(currentUser.SubscriptionStatus != null && (currentUser.SubscriptionStatus.Equals("paused") || currentUser.SubscriptionStatus.Equals("canceled") || currentUser.SubscriptionStatus.Equals("past_due")))
-                {
-                    if (UserRoles.Contains("💥UserT1"))
-                    {
-                        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception("💥Fail to remove T1 user!");
-                        }
-                    }
-                    if (UserRoles.Contains("💥UserT2"))
-                    {
-                        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT2");
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception("💥Fail to remove T2 user!");
-                        }
-                    }
-                    var UpdatedUserT2Roles = await _userManager.GetRolesAsync(currentUser);
-                    return Ok(new { roles = UpdatedUserT2Roles, status = currentUser.SubscriptionStatus });
-                }
+                //if (currentUser.SubscriptionStatus != null && (currentUser.SubscriptionStatus.Equals("paused") || currentUser.SubscriptionStatus.Equals("canceled") || currentUser.SubscriptionStatus.Equals("past_due")))
+                //{
+                //    if (UserRoles.Contains("💥UserT1"))
+                //    {
+                //        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
+                //        if (!result.Succeeded)
+                //        {
+                //            throw new Exception("💥Fail to remove T1 user!");
+                //        }
+                //    }
+                //    if (UserRoles.Contains("💥UserT2"))
+                //    {
+                //        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT2");
+                //        if (!result.Succeeded)
+                //        {
+                //            throw new Exception("💥Fail to remove T2 user!");
+                //        }
+                //    }
+                //    var UpdatedUserT2Roles = await _userManager.GetRolesAsync(currentUser);
+                //    return Ok(new { roles = UpdatedUserT2Roles, status = currentUser.SubscriptionStatus });
+                //}
                 switch (currentUser.PriceId)
                 {
                     case "price_1Q5XdAATmHlXrMYowulmblzP":
@@ -447,8 +472,8 @@ namespace MovieWebSite.Server.Controllers.Identity
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
-                return BadRequest($"💥Something has gone wrong! {ex.Message}");
+                Debug.WriteLine($"💥Something has gone wrong! {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
     }

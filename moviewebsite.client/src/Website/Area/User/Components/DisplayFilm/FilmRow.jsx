@@ -1,15 +1,18 @@
-import { Container, Row, Col, Button } from "react-bootstrap";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { Container, Button } from "react-bootstrap";
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
 import PropTypes from "prop-types";
+import { motion, AnimatePresence } from "framer-motion";
 import FilmImg from "../Img/FilmImg";
-import "./FilmRow.css";
+import styles from "./FilmRow.module.css";
 import { useNavigate } from "react-router-dom";
 
 const FilmRow = ({ films, filmsRowTitle }) => {
   const nav = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(6);
+  const containerRef = useRef(null);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 576) {
@@ -28,6 +31,7 @@ const FilmRow = ({ films, filmsRowTitle }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   const navigate = (direction) => {
     if (direction === "prev") {
       setCurrentPage((prev) => Math.max(0, prev - 1));
@@ -37,65 +41,74 @@ const FilmRow = ({ films, filmsRowTitle }) => {
       );
     }
   };
-  const currentFilms = films.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
+
   return (
-    <Container fluid className="film-container py-4">
-      <h2 className="mb-3">{filmsRowTitle}</h2>
-      <div className="film-row-container">
-        {currentPage !== 0 && (
-          <div className="button-container">
-            <Button
-              variant="dark"
-              className="scroll-button scroll-left"
-              onClick={() => navigate("prev")}
-              aria-label="Previous series"
+    <Container fluid className={styles.filmContainer}>
+      <h2 className={`mb-3 ${styles.rowTitle}`}>{filmsRowTitle}</h2>
+      <div className={styles.filmRowContainer} ref={containerRef}>
+        <AnimatePresence>
+          {currentPage !== 0 && (
+            <motion.div
+              className={`${styles.buttonContainer} ${styles.leftButton}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              <ChevronLeft />
-            </Button>
-          </div>
-        )}
-        <Row className="film-row mx-0">
-          {currentFilms.map((film) => (
-            <Col
-              key={film.id}
-              xs={6}
-              sm={4}
-              md={3}
-              lg={2}
-              className="mb-4 px-2"
-            >
-              <div
-                className="film-card-wrapper"
+              <Button
+                variant="dark"
+                className={`${styles.scrollButton} ${styles.scrollLeft}`}
+                onClick={() => navigate("prev")}
+                aria-label="Previous series"
+              >
+                <ChevronLeft />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <motion.div
+          className={styles.filmRow}
+          initial={{ x: 0 }}
+          animate={{ x: `-${currentPage * 100}%` }}
+          transition={{ type: "tween", ease: "easeInOut", duration: 0.5 }}
+        >
+          {films.map((film) => (
+            <div key={film.id} className={styles.filmCardWrapper}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={styles.tvSeriesCard}
                 onClick={() => nav(`/user/detail/${film.id}`)}
                 role="button"
                 tabIndex={0}
               >
-                <div className="tv-series-card">
-                  <FilmImg
-                    src={`/api/images/${film.filmPath}`}
-                    hash={film.blurHash}
-                  />
-                  <div className="film-title">{film.title}</div>
-                </div>
-              </div>
-            </Col>
+                <FilmImg
+                  src={`/api/images/${film.filmPath}`}
+                  hash={film.blurHash}
+                />
+                <div className={styles.filmTitle}>{film.title}</div>
+              </motion.div>
+            </div>
           ))}
-        </Row>
-        {currentPage !== Math.ceil(films.length / itemsPerPage) - 1 && (
-          <div className="button-container">
-            <Button
-              variant="dark"
-              className="scroll-button scroll-right"
-              onClick={() => navigate("next")}
-              aria-label="Next series"
+        </motion.div>
+        <AnimatePresence>
+          {currentPage !== Math.ceil(films.length / itemsPerPage) - 1 && (
+            <motion.div
+              className={`${styles.buttonContainer} ${styles.rightButton}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              <ChevronRight />
-            </Button>
-          </div>
-        )}
+              <Button
+                variant="dark"
+                className={`${styles.scrollButton} ${styles.scrollRight}`}
+                onClick={() => navigate("next")}
+                aria-label="Next series"
+              >
+                <ChevronRight />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </Container>
   );
@@ -109,7 +122,8 @@ FilmRow.propTypes = {
       synopsis: PropTypes.string,
       director: PropTypes.string,
       type: PropTypes.string,
-      filmImg: PropTypes.string,
+      filmPath: PropTypes.string,
+      blurHash: PropTypes.string,
     })
   ).isRequired,
   filmsRowTitle: PropTypes.string,

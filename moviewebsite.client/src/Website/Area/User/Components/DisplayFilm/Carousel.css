@@ -8,7 +8,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding-left: 2%;
+    padding-left: 3.125rem;
     padding-bottom: 5%;
 }
 .film-image img{

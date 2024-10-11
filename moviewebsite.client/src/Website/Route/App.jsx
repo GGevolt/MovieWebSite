@@ -26,6 +26,7 @@ import SubscriptionSuccess from "../Area/User/Page/Subscription/SubscriptionSucc
 import SubscriptionFailure from "../Area/User/Page/Subscription/SubscriptionFailure";
 import WatchFilm from "../Area/User/Page/WatchFilm";
 import SearchFilms from "../Area/User/Page/SearchFilms";
+import Playlist from "../Area/User/Page/Playlist";
 
 const ROLES = {
   User: "UserT0",
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="/user/userinfo" element={<UserInfo />} />
         <Route path="/user/search" element={<SearchFilms />} />
+        <Route path="/user/playlist" element={<Playlist/>} />
         <Route path="/user/memberships" element={<Memberships />} />
         <Route
           path="/user/memberships/success"

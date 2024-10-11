@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import styles from "./FilmDetail.module.css";
 import FilmImg from "../../Components/Img/FilmImg";
-import { Play, BookmarkPlusFill } from "react-bootstrap-icons";
+import { Play, Clipboard2Check, Clipboard2X } from "react-bootstrap-icons";
 import { Container, Row, Col, Badge } from "react-bootstrap";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import WebApi from "../../../../WebApi";
@@ -11,18 +11,30 @@ import AuthContext from "../../../AuthContext/Context";
 function Detail() {
   const film = useLoaderData();
   const authContext = useContext(AuthContext);
-  const { roles } = authContext;
+  const { roles, addToPlayList } = authContext;
   const [categories, setCategories] = useState([]);
   const [relatedFilms, setRelatedFilms] = useState([]);
+  const [isAdded, setIsAdded] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if (film) {
       loadData();
     }
-  }, [film]);
+  }, []);
   const loadData = async () => {
     setCategories(await WebApi.getFilmCates(film.id));
     setRelatedFilms(await WebApi.getRelatedFilms(film.id));
+    if (roles.includes("UserT2")) {
+      setIsAdded(await addToPlayList(film.id, false, false));
+      console.log(isAdded);
+    }
+  };
+  const handleAddToPlayList = async () => {
+    if (isAdded) {
+      setIsAdded(await addToPlayList(film.id, false, true));
+    } else {
+      setIsAdded(await addToPlayList(film.id, true, false));
+    }
   };
   const hanldeNavigate = (destination) => {
     if (roles.length <= 1) {
@@ -69,9 +81,21 @@ function Detail() {
               >
                 <Play size={20} /> Play
               </button>
-              <button className={styles.infoButton}>
-                <BookmarkPlusFill size={20} /> Add to play list
-              </button>
+              {roles.includes("UserT2") && isAdded ? (
+                <button
+                  className={styles.removeButton}
+                  onClick={() => handleAddToPlayList()}
+                >
+                  <Clipboard2X size={20} /> Remove from playlist
+                </button>
+              ) : (
+                <button
+                  className={styles.addButton}
+                  onClick={() => handleAddToPlayList()}
+                >
+                  <Clipboard2Check size={20} /> Add to play list
+                </button>
+              )}
             </div>
           </Col>
         </Row>

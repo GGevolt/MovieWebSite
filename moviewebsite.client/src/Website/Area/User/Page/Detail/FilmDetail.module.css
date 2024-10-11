@@ -65,7 +65,8 @@
 }
 
 .playButton,
-.infoButton {
+.addButton,
+.removeButton {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,25 +79,35 @@
 }
 
 .playButton {
-  background-color: green;
+  background-color: rgba(4, 222, 255, 0.75);
   color: white;
 }
 
 .playButton:hover {
-  background-color: rgba(108, 255, 4, 0.75);
+  background-color: rgba(0, 139, 160, 0.75);
 }
 
-.infoButton {
-  background-color: rgba(109, 109, 110, 0.7);
+.addButton {
+  background-color: rgba(108, 255, 4, 0.75);
   color: white;
 }
 
-.infoButton:hover {
-  background-color: rgba(109, 109, 110, 0.5);
+.addButton:hover {
+  background-color: rgba(60, 145, 0, 0.75);
+}
+
+.removeButton {
+  background-color: rgba(240, 0, 0, 0.7);
+  color: white;
+}
+
+.removeButton:hover {
+  background-color: rgba(126, 0, 0, 0.5);
 }
 
 .playButton svg,
-.infoButton svg {
+.addButton svg,
+.removeButton svg {
   margin-right: 0.5rem;
 }
 

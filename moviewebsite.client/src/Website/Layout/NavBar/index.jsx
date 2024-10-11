@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Row, Col, NavDropdown, Offcanvas } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { User, LogOut, Menu, ChevronDown } from "lucide-react";
@@ -69,6 +69,11 @@ function NavBar() {
       <NavDropdown.Item as={Link} to="/user/userinfo" onClick={() => setShowOffcanvas(false)}>
         User Info
       </NavDropdown.Item>
+      {roles.includes("UserT2") && 
+        <NavDropdown.Item as={Link} to="/user/playlist" onClick={() => setShowOffcanvas(false)}>
+          Play List
+        </NavDropdown.Item>
+      }
       {roles.length > 1 && (
         <NavDropdown.Item onClick={() => {
           redirectToCustomerPortal();

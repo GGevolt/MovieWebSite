@@ -3,7 +3,6 @@ using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Server.Model.DTO;
-using System.Diagnostics;
 
 namespace MovieWebSite.Server.Controllers
 {
@@ -62,7 +61,7 @@ namespace MovieWebSite.Server.Controllers
                     films = films.Where(f => f.Director.Contains(director, StringComparison.OrdinalIgnoreCase));
                 }
 
-                var result = films.Select(f => new FilmDto
+                var result = films.Select(f => new FilmDTO
                 {
                     Id = f.Id,
                     Title = f.Title,
@@ -100,7 +99,7 @@ namespace MovieWebSite.Server.Controllers
             }
         }
 
-        private List<RelatedFilmDto> GetRelatedFilms(Film parentFilm)
+        private List<FilmDTO> GetRelatedFilms(Film parentFilm)
         {
             var directorMatch = _unitOfWork.FilmRepository.GetAll()
                 .Where(f => f.Director == parentFilm.Director && f.Id != parentFilm.Id);
@@ -137,7 +136,7 @@ namespace MovieWebSite.Server.Controllers
 
             var combinedQuery = directorMatch.Union(titleMatch).Union(genreMatch).Distinct();
 
-            return combinedQuery.Select(f => new RelatedFilmDto
+            return combinedQuery.Select(f => new FilmDTO
             {
                 Id = f.Id,
                 Title = f.Title,
@@ -151,7 +150,7 @@ namespace MovieWebSite.Server.Controllers
 
 
         [HttpPost, Authorize(Roles = "Admin")]
-        public IActionResult CreateUpdate([FromBody] FilmDTO filmDTO)
+        public IActionResult CreateUpdate([FromBody] FilmCateDTO filmDTO)
         {
             try
             {

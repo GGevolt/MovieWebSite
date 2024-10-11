@@ -89,16 +89,25 @@ const AuthState = (props) => {
       }
     }
   };
-  const redirectToCustomerPortal = async ()=>{
+  const redirectToCustomerPortal = async () => {
     setIsUserUpdated(true);
     await AuthApi.RedirectToCustomerPortal();
-  }
-  const getUserStatus =async ()=>{
+  };
+  const getUserStatus = async () => {
     const res = await AuthApi.getUserStatus();
-    if(res){
+    if (res) {
       setRoles(res);
     }
     setIsUserUpdated(false);
+  };
+  const addToPlayList = async (filmId, isAdd, isRemove) => {
+    const res = await AuthApi.addToPlayList(filmId, isAdd, isRemove);
+    return res;
+  };
+  const getUserPlayList = async () =>{
+    const res = await AuthApi.getUserPlayList();
+    console.log(res)
+    return res;
   }
   return (
     <AuthContext.Provider
@@ -113,8 +122,10 @@ const AuthState = (props) => {
         getUserStatus,
         validateUser,
         emailConfirm,
+        addToPlayList,
+        getUserPlayList,
         createCheckoutSession,
-        redirectToCustomerPortal
+        redirectToCustomerPortal,
       }}
     >
       {props.children}
