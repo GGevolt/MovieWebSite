@@ -35,48 +35,5 @@ namespace MovieWebSite.Server.Controllers
             var imageBytes = System.IO.File.ReadAllBytes(imagePath);
             return File(imageBytes, mimeType);
         }
-        [HttpPost, Authorize(Roles = "Admin")]
-        public IActionResult UploadMoviePicture([FromForm] FilmPicDTO filmPicDTO)
-        {
-            try
-            {
-                string wwwRootPath = _webhost.WebRootPath;
-                string imagePath = Path.Combine(wwwRootPath, "img");
-                if (filmPicDTO.ImageFile != null)
-                {
-                    var film = _unitOfWork.FilmRepository.Get(f => f.Id == filmPicDTO.FilmId);
-                    if (!string.IsNullOrEmpty(film.FilmPath))
-                    {
-                        var oldImagePath = Path.Combine(imagePath, film.FilmPath.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            try
-                            {
-                                System.IO.File.Delete(oldImagePath);
-                            }
-                            catch (Exception ex)
-                            {
-                                return StatusCode(500, $"Failed to delete old image: {ex.Message}");
-                            }
-                        }
-                    }
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filmPicDTO.ImageFile.FileName);
-                    using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
-                    {
-                        filmPicDTO.ImageFile.CopyTo(fileStream);
-                    }
-                    string blurhashString = _blurhasher.Encode(Path.Combine(imagePath, fileName));
-                    film.FilmPath = fileName;
-                    film.BlurHash = blurhashString;
-                    _unitOfWork.FilmRepository.Update(film);
-                    _unitOfWork.Save();
-                }
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while uploading the Movie picture:" + ex);
-            }
-        }
     }
 }

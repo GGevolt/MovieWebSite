@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
-import Container from "react-bootstrap/Container";
-import Table from "react-bootstrap/Table";
-import Spinner from "react-bootstrap/Spinner";
+import { useEffect, useState, useContext } from "react";
+import { Container, Table, Spinner, Card } from "react-bootstrap";
 import CategoryCUForm from "../../Components/Form/CategoryCUForm";
 import Pagination from "../../Components/Pagination";
 import DeleteButton from "../../Components/Utility/DeleteButton";
 import WebContext from "../../../../WebContext/Context";
-import "./Management.css";
+import styles from "./CategoryManagement.module.css";
 
 function CategoryManagement() {
   const webContext = useContext(WebContext);
@@ -27,60 +25,70 @@ function CategoryManagement() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
   const loadCategoryData = async () => {
     await getCategories();
     setIsCateLoading(false);
   };
 
-  const categotyTable = (
-    <Table striped bordered responsive hover variant="dark">
-      <thead>
-        <tr>
-          <th>Category</th>
-          <th>Functions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {currentItems.map((category) => (
-          <tr key={category.id}>
-            <td>{category.name}</td>
-            <td>
-              <div className="func">
-                <CategoryCUForm category={category} />
-                <DeleteButton type="category" id={category.id} />
-              </div>
-            </td>
+  const categoryTable = (
+    <div className={styles.tableResponsive}>
+      <Table className={styles.categoryTable}>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Functions</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {currentItems.map((category) => (
+            <tr key={category.id}>
+              <td>{category.name}</td>
+              <td>
+                <div className={styles.functions}>
+                  <CategoryCUForm category={category}/>
+                  <DeleteButton type="category" id={category.id}/>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </div>
   );
 
   return (
-    <div className="body">
-      <Container fluid className="cate-container">
-        <Container className="firstLine">
-          <h1>Manage Category</h1>
-          <CategoryCUForm />
-        </Container>
-        {isCateLoading ? (
-          <Spinner animation="border" />
-        ) : categories.length > 0 ? (
-          <>
-            {categotyTable}
-            <div className="Pag">
-              <Pagination
-                data={categories}
-                onPageChange={handlePageChange}
-                itemsPerPage={itemsPerPage}
-              />
+    <div className={styles.categoryManagement}>
+      <Container fluid>
+        <Card className={styles.contentCard}>
+          <Card.Body>
+            <div className={styles.header}>
+              <h1 className={styles.title}>Manage Categories</h1>
+              <CategoryCUForm/>
             </div>
-          </>
-        ) : (
-          <h4>No categories found.</h4>
-        )}
+            {isCateLoading ? (
+              <div className={styles.spinnerContainer}>
+                <Spinner animation="border" />
+              </div>
+            ) : categories.length > 0 ? (
+              <>
+                {categoryTable}
+                <div className={styles.pagination}>
+                  <Pagination
+                    data={categories}
+                    onPageChange={handlePageChange}
+                    itemsPerPage={itemsPerPage}
+                  />
+                </div>
+              </>
+            ) : (
+              <h4 className={styles.noCategories}>No categories found.</h4>
+            )}
+          </Card.Body>
+        </Card>
       </Container>
     </div>
   );
 }
+
 export default CategoryManagement;

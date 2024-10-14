@@ -2,6 +2,7 @@
     display: flex;
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: black;
   }
   
   .decorationContainer {
@@ -122,13 +123,13 @@
   }
   
   .popHeader {
-    color: #333;
+    color: #ffffff;
     text-align: center;
     margin-bottom: 1rem;
   }
   
   .popContent {
-    color: #666;
+    color: #ffffff;
     text-align: center;
   }
   

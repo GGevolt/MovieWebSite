@@ -78,6 +78,10 @@ namespace MovieWebSite.Server.Controllers
                     }
                     ep.VidName = fileName;
                 }
+                else
+                {
+                    ep.VidName = episodeDTO.vidName;
+                }
                 _unitOfWork.EpisodeRepository.Update(ep);
                 _unitOfWork.Save();
                 return Ok();

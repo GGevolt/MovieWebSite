@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap-icons";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import "./index.css";
+import styles from "./index.module.css";
 import CommentSection from "../../Components/Form/CommentSection";
 import AuthContext from "../../../AuthContext/Context";
 
@@ -237,19 +237,20 @@ export default function WatchFilm() {
       video.removeEventListener("enterpictureinpicture", handlePipChange);
       video.removeEventListener("leavepictureinpicture", handlePipChange);
     };
-  }, []);
+  }, [episodes]);
 
   if (roles.length <= 1) {
-    return <Navigate to={"/"} />;
+    return <Navigate to="/" replace />;
   }
+
   return (
-    <div className="movie-player">
+    <div className={styles.moviePlayer}>
       <Container fluid className="py-5">
         <Row className="justify-content-center">
           <Col xs={12} lg={10}>
-            <h1 className="movie-title mb-4">{film.title}</h1>
+            <h1 className={styles.movieTitle}>{film.title}</h1>
             <div
-              className="video-container"
+              className={styles.videoContainer}
               ref={videoContainerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
@@ -259,44 +260,47 @@ export default function WatchFilm() {
                 Your browser does not support the video tag.
               </video>
               {isLoading && (
-                <div className="loading-indicator">
-                  <div className="spinner"></div>
+                <div className={styles.loadingIndicator}>
+                  <div className={styles.spinner}></div>
                 </div>
               )}
               <div
-                className={`video-controls ${
-                  isFullScreen ? "fullscreen" : ""
-                } ${showControls ? "show" : ""}`}
+                className={`${styles.videoControls} ${
+                  isFullScreen ? styles.fullscreen : ""
+                } ${showControls ? styles.show : ""}`}
               >
                 <Slider
                   min={0}
                   max={100}
                   value={progress}
                   onChange={handleProgressChange}
-                  className="progress-bar"
+                  className={styles.progressBar}
                 />
-                <div className="controls-row">
-                  <button onClick={togglePlay} className="control-button">
+                <div className={styles.controlsRow}>
+                  <button onClick={togglePlay} className={styles.controlButton}>
                     {isPlaying ? <PauseFill /> : <PlayFill />}
                   </button>
                   <button
                     onClick={() => skipTime(-5)}
-                    className="control-button"
+                    className={styles.controlButton}
                   >
                     <SkipBackward />
                   </button>
                   <button
                     onClick={() => skipTime(5)}
-                    className="control-button"
+                    className={styles.controlButton}
                   >
                     <SkipForward />
                   </button>
                   <div
-                    className="volume-control"
+                    className={styles.volumeControl}
                     onMouseEnter={() => setShowVolumeControl(true)}
                     onMouseLeave={() => setShowVolumeControl(false)}
                   >
-                    <button onClick={toggleMute} className="control-button">
+                    <button
+                      onClick={toggleMute}
+                      className={styles.controlButton}
+                    >
                       {isMuted ? <VolumeMute /> : <VolumeUp />}
                     </button>
                     {showVolumeControl && (
@@ -306,19 +310,19 @@ export default function WatchFilm() {
                         step={0.1}
                         value={isMuted ? 0 : volume}
                         onChange={handleVolumeChange}
-                        className="volume-slider"
+                        className={styles.volumeSlider}
                       />
                     )}
                   </div>
-                  <div className="spacer"></div>
-                  <span className="time-display">
+                  <div className={styles.spacer}></div>
+                  <span className={styles.timeDisplay}>
                     {formatTime(currentTime)} / {formatTime(duration)}
                   </span>
-                  <div className="speed-control-container">
+                  <div className={styles.speedControlContainer}>
                     <select
                       value={playbackSpeed}
                       onChange={handleSpeedChange}
-                      className="speed-control"
+                      className={styles.speedControl}
                     >
                       <option value="0.25">0.25x</option>
                       <option value="0.5">0.5x</option>
@@ -329,21 +333,24 @@ export default function WatchFilm() {
                   </div>
                   <button
                     onClick={togglePictureInPicture}
-                    className={`control-button ${
-                      isPictureInPicture ? "active" : ""
+                    className={`${styles.controlButton} ${
+                      isPictureInPicture ? styles.active : ""
                     }`}
                   >
                     <Pip />
                   </button>
-                  <button onClick={toggleFullScreen} className="control-button">
+                  <button
+                    onClick={toggleFullScreen}
+                    className={styles.controlButton}
+                  >
                     <Fullscreen />
                   </button>
                 </div>
               </div>
               {!isLoading && (
                 <button
-                  className={`temp-play-button ${
-                    showTempPlayButton || !isPlaying ? "show" : ""
+                  className={`${styles.tempPlayButton} ${
+                    showTempPlayButton || !isPlaying ? styles.show : ""
                   }`}
                   onClick={togglePlay}
                 >
@@ -352,10 +359,10 @@ export default function WatchFilm() {
               )}
             </div>
             <div className="mt-5">
-              <h3 className="episodes-title mb-3">
+              <h3 className={styles.episodesTitle}>
                 {film.type === "Movie" ? "Parts" : "Episodes"}
               </h3>
-              <div className="episodes-container">
+              <div className={styles.episodesContainer}>
                 <Row className="mx-0">
                   {episodes.map((episode, index) => (
                     <Col
@@ -368,19 +375,19 @@ export default function WatchFilm() {
                     >
                       <Card
                         onClick={() => handleEpisodeSelect(episode)}
-                        className={`episode-card ${
+                        className={`${styles.episodeCard} ${
                           currentEpisode === episode.episodeNumber
-                            ? "active"
+                            ? styles.active
                             : ""
                         }`}
                       >
-                        <Card.Body>
-                          <Card.Title>
+                        <Card.Body className={styles.cardBody}>
+                          <Card.Title className={styles.cardTitle}>
                             {film.type === "Movie" ? "Part " : "Episode "}{" "}
                             {episode.episodeNumber}
                           </Card.Title>
                         </Card.Body>
-                        <div className="episode-progress" />
+                        <div className={styles.episodeProgress} />
                       </Card>
                     </Col>
                   ))}

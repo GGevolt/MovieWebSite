@@ -1,13 +1,13 @@
-.subscription-failure-wrapper {
+.subscriptionSuccessWrapper {
     min-height: 100vh;
     display: flex;
     align-items: center;
     background-color: #121212;
     position: relative;
     overflow: hidden;
-  }
+}
   
-.failure-card {
+.successCard {
     background-color: #1e1e1e;
     border: none;
     border-radius: 15px;
@@ -17,90 +17,85 @@
     color: #ffffff;
 }
 
-.failure-icon {
+.successIcon {
     font-size: 5rem;
-    color: #FF6B6B;
+    color: #4CAF50;
 }
 
-h1 {
+.title {
     font-weight: 700;
     color: #ffffff;
 }
 
-.lead {
+.leadText {
     font-size: 1.2rem;
     color: #b3b3b3;
 }
 
-.options-grid {
+.featuresGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-top: 2rem;
 }
 
-.option-item {
-    padding-top: 0.9375rem;
+.featureItem {
     text-align: center;
 }
-.option-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 7px 14px rgba(78, 205, 196, 0.3), 0 3px 6px rgba(69, 183, 209, 0.2);
-}
 
-.option-icon {
+.featureIcon {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
-    color: #4ECDC4;
+    color: #00bcd4;
 }
 
-.return-home-btn {
-    background: linear-gradient(45deg, #4ECDC4, #45B7D1);
+.startWatchingBtn {
+    background: linear-gradient(45deg, #ff4081, #ff9100);
     border: none;
     padding: 10px 30px;
     font-size: 1.2rem;
     transition: all 0.3s ease;
 }
 
-.return-home-btn:hover {
+.startWatchingBtn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 7px 14px rgba(78, 205, 196, 0.3), 0 3px 6px rgba(69, 183, 209, 0.2);
+    box-shadow: 0 7px 14px rgba(255, 64, 129, 0.3), 0 3px 6px rgba(255, 145, 0, 0.2);
 }
 
-.decoration-circle {
+.decorationCircle {
     position: absolute;
     border-radius: 50%;
     opacity: 0.1;
     z-index: -1;
 }
 
-.circle-1 {
+.circle1 {
     width: 300px;
     height: 300px;
-    background-color: #FF6B6B;
+    background-color: #ff4081;
     top: -100px;
     left: -100px;
 }
 
-.circle-2 {
+.circle2 {
     width: 200px;
     height: 200px;
-    background-color: #4ECDC4;
+    background-color: #00bcd4;
     bottom: -50px;
     right: -50px;
 }
 
-.circle-3 {
+.circle3 {
     width: 150px;
     height: 150px;
-    background-color: #45B7D1;
+    background-color: #ff9100;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
 @media (max-width: 768px) {
-    .options-grid {
-      grid-template-columns: 1fr;
+    .featuresGrid {
+        grid-template-columns: 1fr;
     }
 }

@@ -1,11 +1,11 @@
-.movie-player {
+.moviePlayer {
   background-color: #141414;
   min-height: 100vh;
   color: #ffffff;
   font-family: Arial, sans-serif;
 }
 
-.movie-title {
+.movieTitle {
   font-size: 3rem;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
@@ -14,7 +14,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.video-container {
+.videoContainer {
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
@@ -23,7 +23,7 @@
   box-shadow: 0 15px 30px rgba(0,0,0,0.4);
 }
 
-.video-container video {
+.videoContainer video {
   position: absolute;
   top: 0;
   left: 0;
@@ -32,7 +32,7 @@
   object-fit: cover;
 }
 
-.video-controls {
+.videoControls {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -43,17 +43,17 @@
   transition: opacity 0.3s ease;
 }
 
-.video-controls.show {
+.videoControls.show {
   opacity: 1;
 }
 
-.controls-row {
+.controlsRow {
   display: flex;
   align-items: center;
   margin-top: 10px;
 }
 
-.control-button {
+.controlButton {
   background: none;
   border: none;
   color: white;
@@ -63,11 +63,11 @@
   padding: 0;
 }
 
-.control-button.active {
+.controlButton.active {
   color: #e50914;
 }
 
-.time-display {
+.timeDisplay {
   color: white;
   font-size: 14px;
   margin-right: 15px;
@@ -77,39 +77,39 @@
   flex-grow: 1;
 }
 
-.progress-bar {
+.progressBar {
   height: 4px;
   margin-bottom: 10px;
 }
 
-.progress-bar .rc-slider-rail {
+.progressBar :global(.rc-slider-rail) {
   background-color: rgba(255,255,255,0.3);
 }
 
-.progress-bar .rc-slider-track {
+.progressBar :global(.rc-slider-track) {
   background-color: #e50914;
 }
 
-.progress-bar .rc-slider-handle {
+.progressBar :global(.rc-slider-handle) {
   border: none;
   background-color: #e50914;
   box-shadow: none;
   width: 10px;
   height: 10px;
-  margin-top: 0px;
+  margin-top: -3px;
 }
 
-.progress-bar .rc-slider-handle:focus {
+.progressBar :global(.rc-slider-handle:focus) {
   box-shadow: none;
 }
 
-.volume-control {
+.volumeControl {
   display: flex;
   align-items: center;
   position: relative;
 }
 
-.volume-slider {
+.volumeSlider {
   width: 0;
   overflow: hidden;
   transition: width 0.3s ease;
@@ -119,19 +119,19 @@
   transform: translateY(-50%);
 }
 
-.volume-control:hover .volume-slider {
+.volumeControl:hover .volumeSlider {
   width: 80px;
 }
 
-.volume-slider .rc-slider-rail {
+.volumeSlider :global(.rc-slider-rail) {
   background-color: rgba(255,255,255,0.3);
 }
 
-.volume-slider .rc-slider-track {
+.volumeSlider :global(.rc-slider-track) {
   background-color: #ffffff;
 }
 
-.volume-slider .rc-slider-handle {
+.volumeSlider :global(.rc-slider-handle) {
   border: none;
   background-color: #ffffff;
   box-shadow: none;
@@ -140,11 +140,11 @@
   margin-top: -2px;
 }
 
-.volume-slider .rc-slider-handle:focus {
+.volumeSlider :global(.rc-slider-handle:focus) {
   box-shadow: none;
 }
 
-.speed-control {
+.speedControl {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
@@ -154,7 +154,7 @@
   cursor: pointer;
 }
 
-.temp-play-button {
+.tempPlayButton {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -175,12 +175,12 @@
   transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
-.temp-play-button.show {
+.tempPlayButton.show {
   opacity: 1;
   visibility: visible;
 }
 
-.episodes-title {
+.episodesTitle {
   font-size: 2rem;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
   background: linear-gradient(to right, #ff8c00, #ff0080);
@@ -188,7 +188,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.episodes-container {
+.episodesContainer {
   max-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -198,20 +198,20 @@
   box-shadow: inset 0 0 15px rgba(0,0,0,0.7);
 }
 
-.episodes-container::-webkit-scrollbar {
+.episodesContainer::-webkit-scrollbar {
   width: 10px;
 }
 
-.episodes-container::-webkit-scrollbar-track {
+.episodesContainer::-webkit-scrollbar-track {
   background: rgba(0,0,0,0.3);
 }
 
-.episodes-container::-webkit-scrollbar-thumb {
+.episodesContainer::-webkit-scrollbar-thumb {
   background: #e50914;
   border-radius: 5px;
 }
 
-.episode-card {
+.episodeCard {
   background-color: rgba(40,40,40,0.7);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -220,72 +220,71 @@
   overflow: hidden;
 }
 
-.episode-card:hover {
+.episodeCard:hover {
   transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(229,9,20,0.3);
 }
 
-.episode-card.active {
+.episodeCard.active {
   background-color: #e50914;
 }
 
-.episode-card .card-body {
+.episodeCard .cardBody {
   padding: 15px;
 }
 
-.episode-card .card-title {
+.episodeCard .cardTitle {
   font-size: 1.2rem;
   margin-bottom: 0;
   color: #ffffff;
   font-weight: bold;
 }
 
-.episode-card.active .card-title {
+.episodeCard.active .cardTitle {
   color: #ffffff;
 }
 
-.episode-progress {
+.episodeProgress {
   height: 4px;
   background: linear-gradient(90deg, #e50914 0%, #b20710 100%);
   transition: width 0.3s ease;
   width: 0;
 }
 
-.episode-card.active .episode-progress {
+.episodeCard.active .episodeProgress {
   width: 100%;
 }
 
-/* Fullscreen styles */
-.video-container:fullscreen {
+.videoContainer:fullscreen {
   padding-bottom: 0;
   height: 100%;
 }
 
-.video-container:fullscreen video {
+.videoContainer:fullscreen video {
   height: 100%;
 }
 
-.video-controls.fullscreen {
+.videoControls.fullscreen {
   padding: 30px;
 }
 
-.video-controls.fullscreen .progress-bar {
+.videoControls.fullscreen .progressBar {
   height: 6px;
 }
 
-.video-controls.fullscreen .control-button {
+.videoControls.fullscreen .controlButton {
   font-size: 32px;
 }
 
-.video-controls.fullscreen .time-display {
+.videoControls.fullscreen .timeDisplay {
   font-size: 18px;
 }
 
-.video-controls.fullscreen .volume-slider {
+.videoControls.fullscreen .volumeSlider {
   width: 80px;
 }
 
-.loading-indicator {
+.loadingIndicator {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -306,12 +305,12 @@
   to { transform: rotate(360deg); }
 }
 
-.speed-control-container {
+.speedControlContainer {
   position: relative;
   margin-right: 15px;
 }
 
-.speed-control {
+.speedControl {
   appearance: none;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
@@ -322,63 +321,63 @@
   border-radius: 4px;
 }
 
-.speed-control:hover {
+.speedControl:hover {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.speed-control option {
+.speedControl option {
   background-color: #141414;
   color: white;
 }
 
-.temp-play-button {
+.tempPlayButton {
   z-index: 15;
 }
 
 @media (max-width: 576px) {
-  .movie-title {
+  .movieTitle {
     font-size: 2rem;
   }
 
-  .video-controls {
+  .videoControls {
     padding: 10px;
   }
 
-  .control-button {
+  .controlButton {
     font-size: 20px;
     margin-right: 10px;
   }
 
-  .time-display {
+  .timeDisplay {
     font-size: 12px;
   }
 
-  .temp-play-button {
+  .tempPlayButton {
     width: 60px;
     height: 60px;
   }
 }
 
 @media (max-width: 768px) {
-  .episodes-container {
+  .episodesContainer {
     max-height: 300px;
   }
 
-  .episode-card .card-title {
+  .episodeCard .cardTitle {
     font-size: 1rem;
   }
 }
 
 @media (max-width: 992px) {
-  .video-controls.fullscreen {
+  .videoControls.fullscreen {
     padding: 20px;
   }
 
-  .video-controls.fullscreen .control-button {
+  .videoControls.fullscreen .controlButton {
     font-size: 28px;
   }
 
-  .video-controls.fullscreen .time-display {
+  .videoControls.fullscreen .timeDisplay {
     font-size: 16px;
   }
 }

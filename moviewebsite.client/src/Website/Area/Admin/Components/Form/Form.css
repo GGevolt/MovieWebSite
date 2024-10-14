@@ -80,3 +80,95 @@
 .exclude-vid{
     color: blue;
 }
+
+.upload-card{
+    padding: 10px;
+    box-shadow: 0 0 5px #fffdfd;
+    overflow: hidden;
+}
+.upload-card .top{
+    text-align: center;
+    font-weight: bold;
+}
+.upload-card .btn-primary{
+    margin-top: 5px;
+}
+.upload-card .drag-area{
+    height: 18.75rem;
+    width: 31.25rem;
+    background-color: hsl(210, 37%, 97%);
+    color: hsl(211, 76%, 62%);
+    border: 2px dashed hsl(211, 91%, 42%);
+    border-radius: 5px;
+    display: flex;
+    padding: 0 20px;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+    margin-top: 10px;
+}
+.upload-card .drag-area p{
+    color: #219949;
+}
+.upload-card .drag-area .visible{
+    font-size: 18px;
+}
+
+.upload-card .select{
+    color: hsl(236, 92%, 24%);
+    margin-left: 5px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.upload-card .select :hover{
+    opacity: 0.6;
+}
+.upload-card .container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+.upload-card .container .image{
+    width: 200px;
+    margin-right: 5px;
+    height: 200px;
+    position: relative;
+    margin-bottom: 8px;
+}
+.upload-card .container .image img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+.upload-card .container .image span{
+    position: absolute;
+    top: -6px;
+    right: 9px;
+    font-size: 25px;
+    cursor: pointer;
+    color: blue;
+}
+.upload-card .container .image span:hover{
+    color: red;
+}
+.upload-card input,
+.upload-card .drag-area .op-drop,
+.upload-card .drag-area .dragover .visible{
+    display: none;
+}
+.delete{
+    z-index: 999;
+    color: hsl(0, 0%, 0%);
+}
+.vid-up-section{
+    display: flex;
+    justify-content: center;   
+}

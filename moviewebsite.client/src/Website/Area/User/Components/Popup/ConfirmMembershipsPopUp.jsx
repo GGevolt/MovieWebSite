@@ -16,7 +16,7 @@ function ConfirmMembershipsPopUp({ isOpen, handleClose, selectedPlan }) {
     }
     return (
         <Popup open={isOpen} closeOnDocumentClick onClose={handleClose}>
-            <Card className={`bg-dark text-light border-primary ${style.confirmation_card}`}>
+            <Card className={`bg-dark text-light border-primary ${style.card}`}>
                 <a className="close-pop" onClick={handleClose}>
                 <MessageCircleX className={style.close_btn}/>
                 </a>

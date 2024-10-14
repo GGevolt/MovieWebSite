@@ -3,15 +3,19 @@ using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Server.Model.DTO;
+using System.Diagnostics;
+using Server.Utility.Interfaces;
+using System.Text.Json;
 
 namespace MovieWebSite.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FilmController(IUnitOfWork unitOfWork, IWebHostEnvironment webhost) : ControllerBase
+    public class FilmController(IUnitOfWork unitOfWork, IWebHostEnvironment webhost, IBlurhasher blurhasher) : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IWebHostEnvironment _webhost = webhost;
+        private readonly IBlurhasher _blurhasher = blurhasher;
 
         [HttpGet]
         public IActionResult GetFilms()
@@ -150,24 +154,39 @@ namespace MovieWebSite.Server.Controllers
 
 
         [HttpPost, Authorize(Roles = "Admin")]
-        public IActionResult CreateUpdate([FromBody] FilmCateDTO filmDTO)
+        public async Task<IActionResult> CreateUpdate([FromForm] string filmCateDTO, IFormFile? imageFile)
         {
             try
             {
-                if (filmDTO.Film.Id == 0)
+                var options = new JsonSerializerOptions
                 {
-                    _unitOfWork.FilmRepository.Add(filmDTO.Film);
+                    PropertyNameCaseInsensitive = true
+                };
+                var filmCateData = JsonSerializer.Deserialize<FilmCateDTO>(filmCateDTO, options);
+
+                if (filmCateData == null || filmCateData.Film == null)
+                {
+                    return BadRequest("Invalid film data");
+                }
+                if (filmCateData.Film.Id == 0)
+                {
+                    _unitOfWork.FilmRepository.Add(filmCateData.Film);
                     _unitOfWork.Save();
-                    if (filmDTO.SelectedCategories != null && filmDTO.SelectedCategories.Count > 0)
+                    if (imageFile != null)
                     {
-                        foreach (int categoryId in filmDTO.SelectedCategories)
+                        await UplaodImage(filmCateData.Film, imageFile);
+                    }
+
+                    if (filmCateData.SelectedCategories != null && filmCateData.SelectedCategories.Count > 0)
+                    {
+                        foreach (int categoryId in filmCateData.SelectedCategories)
                         {
                             var category = _unitOfWork.CategoryRepository.Get(c => c.Id == categoryId);
                             if (category != null)
                             {
                                 var categoryFilm = new CategoryFilm
                                 {
-                                    FilmId = filmDTO.Film.Id,
+                                    FilmId = filmCateData.Film.Id,
                                     CategoryId = category.Id
                                 };
                                 _unitOfWork.CategoryFilmRepository.Add(categoryFilm);
@@ -178,23 +197,27 @@ namespace MovieWebSite.Server.Controllers
                 }
                 else
                 {
-                    _unitOfWork.FilmRepository.Update(filmDTO.Film);
+                    _unitOfWork.FilmRepository.Update(filmCateData.Film);
                     _unitOfWork.Save();
-                    var PastCategoriyFilms = _unitOfWork.CategoryFilmRepository.GetAll().Where(cf => cf.FilmId == filmDTO.Film.Id).ToList();
+                    if (imageFile != null)
+                    {
+                        await UplaodImage(filmCateData.Film, imageFile);
+                    }
+                    var PastCategoriyFilms = _unitOfWork.CategoryFilmRepository.GetAll().Where(cf => cf.FilmId == filmCateData.Film.Id).ToList();
                     foreach (var categoryFilm in PastCategoriyFilms)
                     {
                         _unitOfWork.CategoryFilmRepository.Remove(categoryFilm);
                     }
-                    if (filmDTO.SelectedCategories != null && filmDTO.SelectedCategories.Count > 0)
+                    if (filmCateData.SelectedCategories != null && filmCateData.SelectedCategories.Count > 0)
                     {
-                        foreach (int categoryId in filmDTO.SelectedCategories)
+                        foreach (int categoryId in filmCateData.SelectedCategories)
                         {
                             var category = _unitOfWork.CategoryRepository.Get(c => c.Id == categoryId);
                             if (category != null)
                             {
                                 var categoryFilm = new CategoryFilm
                                 {
-                                    FilmId = filmDTO.Film.Id,
+                                    FilmId = filmCateData.Film.Id,
                                     CategoryId = category.Id
                                 };
                                 _unitOfWork.CategoryFilmRepository.Add(categoryFilm);
@@ -207,8 +230,44 @@ namespace MovieWebSite.Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                return StatusCode(500, "Internal server error.");
+                Debug.WriteLine("💥 Film error", ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        private async Task UplaodImage(Film film, IFormFile imageFile)
+        {
+            try
+            {
+                string wwwRootPath = _webhost.WebRootPath;
+                string imagePath = Path.Combine(wwwRootPath, "img");
+                string fileName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
+                string filePath = Path.Combine(imagePath, fileName);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                if (!string.IsNullOrEmpty(film.FilmPath))
+                {
+                    string oldImagePath = Path.Combine(imagePath, film.FilmPath.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(fileStream);
+                }
+
+                film.FilmPath = fileName;
+                film.BlurHash = _blurhasher.Encode(filePath);
+                _unitOfWork.FilmRepository.Update(film);
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("💥An error occurred while uploading the Movie picture:" + ex.Message);
             }
         }
 

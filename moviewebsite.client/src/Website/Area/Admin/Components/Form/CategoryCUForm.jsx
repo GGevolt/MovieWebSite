@@ -1,8 +1,8 @@
 import { Form, Container, Button, FloatingLabel } from "react-bootstrap";
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import Popup from "reactjs-popup";
-import { XCircleFill } from "react-bootstrap-icons";
+import { XCircleFill, PencilFill } from "react-bootstrap-icons";
 import "./Form.css";
 import PropTypes from "prop-types";
 import { object, string } from "yup";
@@ -81,7 +81,7 @@ function CategoryCUForm({ category }) {
   return (
     <>
       <Button variant="outline-success" onClick={() => setOpen((o) => !o)}>
-        {id === 0 ? "Create category" : "Update"}
+        <PencilFill className="me-2"/> {id === 0 ? "Create category" : "Update"}
       </Button>
       <Popup
         open={openForm}

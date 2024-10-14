@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import WebApi from "../../../../WebApi";
 import AdminContext from "../../AminContext/Context";
@@ -20,7 +20,7 @@ function LoadFilmCategories({ filmId }) {
   return filmCates?.map((cate, i) => (
     <p key={cate.id}>
       {cate.name}
-      {filmCates.length === i + 1 ? "." : ","}
+      {filmCates.length === i + 1 ? "." : ",\u00A0"}
     </p>
   ));
 }

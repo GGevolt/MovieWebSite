@@ -1,0 +1,172 @@
+.body {
+  background-color: #000000;
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 0.9375rem 0;
+}
+
+.firstLine {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9375rem 0;
+  max-width: 100%;
+}
+
+.filmContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+.filmCard {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  display: grid;
+  grid-template-rows: 80px 1fr auto;
+  grid-template-columns: 260px 1fr 1fr;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.filmTitle {
+  grid-area: 1 / 1 / 2 / 4;
+  font-weight: bold;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.filmContent {
+  grid-area: 2 / 1 / 3 / 4;
+  display: flex;
+}
+
+.filmImage {
+  width: 240px;
+  height: 360px;
+  margin-right: 20px;
+}
+
+.filmImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.filmDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.filmInfo {
+  margin-bottom: 20px;
+}
+
+.filmInfoDirector,
+.filmInfoCategories,
+.filmInfoType {
+  margin-bottom: 10px;
+}
+
+.filmInfoCategories {
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 5px;
+}
+
+.filmFunctions .filmFunctionsContent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.funcBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.funcBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+  background-color: #4a4a4a;
+}
+
+.filmSynopsis {
+  grid-area: 3 / 1 / 4 / 4;
+  padding-top: 15px;
+}
+
+.filmSynopsis h5 {
+  margin-bottom: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+@media (max-width: 768px) {
+  .firstLine {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .filmCard {
+    grid-template-rows: auto auto auto auto;
+    grid-template-columns: 1fr;
+  }
+
+  .filmTitle {
+    grid-area: 1 / 1 / 2 / 2;
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+
+  .filmContent {
+    grid-area: 2 / 1 / 3 / 2;
+    flex-direction: column;
+  }
+
+  .filmImage {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .filmDetails {
+    width: 100%;
+  }
+
+  .filmFunctions .filmFunctionsContent {
+    flex-direction: column;
+  }
+
+  .funcBtn {
+    width: 100%;
+  }
+
+  .filmSynopsis {
+    grid-area: 4 / 1 / 5 / 2;
+  }
+}
