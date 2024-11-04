@@ -82,14 +82,18 @@ const getUserInfo = async () => {
   return res;
 };
 const validateUser = async () => {
-  let res = false;
+  let res = { isValid: false, roles: [] };
   await axios
     .get("/api/authentication/validate")
-    .then(() => {
-      res = true;
+    .then((response) => {
+      res.isValid = true;
+      if (response.data.roles) {
+        res.roles = response.data.roles;
+      }
     })
-    .catch(() => {
-      res = false;
+    .catch((error) => {
+      console.log("Validation error:", error.response?.data || error.message);
+      res.isValid = false;
     });
   return res;
 };
@@ -113,14 +117,10 @@ const confirmEmail = async (formData) => {
 };
 const createCheckOutSession = async (selectedPlan) => {
   let res = null;
-  const priceKeyIds = {
-    pro: "price_1Q5XdAATmHlXrMYowulmblzP",
-    premium: "price_1Q5XemATmHlXrMYoZLybRoux",
-  };
   const successUrl = `${window.location.origin}/user/memberships/success`;
   const failureUrl = `${window.location.origin}/user/memberships/failure`;
   const formData = {
-    priceId: priceKeyIds[selectedPlan],
+    plan: selectedPlan,
     successUrl,
     failureUrl,
   };
@@ -154,42 +154,37 @@ const RedirectToCustomerPortal = async () => {
     });
 };
 const getUserStatus = async () => {
-  let res;
-  await api
-    .get("/payment/getUserStatus")
-    .then((response) => {
-      console.log("Sub Status: ", response.data.status || response);
-      res = response.data.roles;
-    })
-    .catch((error) => {
-      console.log("Get User Status error:", error.response);
-    });
-  return res;
+  const response = await api.get("/payment/getUserStatus").catch((error) => {
+    console.log("Get User Status error:", error.response);
+  });
+  return response.data.roles;
 };
-const addToPlayList = async (filmId, isAdd, isRemove) => {
-  let res;
-  await api
-    .post("/playList", { filmId, isAdd, isRemove })
-    .then((response) => {
-      res = response.data.isAdded;
+const userFilmLogic = async ({
+  filmId,
+  isAddPlayList = false,
+  isRemoveFromPlayList = false,
+  filmRatting = -1,
+  isViewed = false,
+}) => {
+  const response = await api
+    .post("/userFilm", {
+      filmId,
+      isAddPlayList,
+      isRemoveFromPlayList,
+      filmRatting,
+      isViewed,
     })
     .catch((error) => {
       console.log("add to play list error:", error.response);
     });
-  return res;
+  return response.data;
 };
-const getUserPlayList = async ()=>{
-  let res;
-  await api
-    .get("/playList")
-    .then((response) => {
-      res = response.data;
-    })
-    .catch((error) => {
-      console.log("Get play list error:", error.response);
-    });
-  return res;
-}
+const getUserPlayList = async () => {
+  const response = await api.get("/userFilm/getplaylist").catch((error) => {
+    console.log("Get play list error:", error.response);
+  });
+  return response.data;
+};
 const AuthApi = {
   register,
   signIn,
@@ -198,7 +193,7 @@ const AuthApi = {
   getUserStatus,
   validateUser,
   confirmEmail,
-  addToPlayList,
+  userFilmLogic,
   getUserPlayList,
   createCheckOutSession,
   RedirectToCustomerPortal,

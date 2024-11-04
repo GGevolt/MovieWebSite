@@ -55,6 +55,17 @@ const getRelatedFilms = async (id) => {
     });
   return response.data;
 };
+const getFilmsScore = async (id) => {
+  const response = await axios
+    .get(`/api/userFilm/filmscore/${id}`)
+    .catch((error) => {
+      console.error(
+        "There has been a problem with get operation of get related films:",
+        error
+      );
+    });
+  return response.data.score;
+}
 const WebApi = {
   getEpisodes,
   getCategories,
@@ -62,5 +73,6 @@ const WebApi = {
   getFilmCates,
   getFilms,
   getRelatedFilms,
+  getFilmsScore
 };
 export default WebApi;

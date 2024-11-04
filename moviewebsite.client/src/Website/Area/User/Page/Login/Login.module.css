@@ -73,6 +73,7 @@
 
 .rememberMe {
   margin-bottom: 1.5rem;
+  color: #000000;
 }
 
 .submitButton {
@@ -95,6 +96,7 @@
 .signupText {
   margin-top: 1.5rem;
   text-align: center;
+  color: #000000;
 }
 
 .signupText a {

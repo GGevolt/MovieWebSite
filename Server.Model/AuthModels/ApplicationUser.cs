@@ -17,6 +17,7 @@ namespace Server.Model.AuthModels
         public string? CustomerId { get; set; }
         public string? PriceId { get; set; }
         public string? SubscriptionStatus { get; set; }
+        public DateTime? SubscriptionStartPeriod { get; set; }
         public DateTime? SubscriptionEndPeriod { get; set; }
     }
 }

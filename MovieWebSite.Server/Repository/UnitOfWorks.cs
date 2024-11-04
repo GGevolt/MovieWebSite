@@ -11,7 +11,7 @@ namespace MovieWebSite.Server.Repository
         public ICategoryRepository CategoryRepository { get; private set; }
         public ICategoryFilmRepository CategoryFilmRepository { get; private set; }
         public ICommnentRepository CommnentRepository { get; private set; }
-        public IPlayListRepository PlayListRepository { get; private set; }
+        public IUserFilmRepository UserFilmRepository { get; private set; }
 
         public UnitOfWorks(ApplicationDBContext dBContext)
         {
@@ -21,7 +21,7 @@ namespace MovieWebSite.Server.Repository
             CategoryRepository = new CategoryRepository(dBContext);
             CategoryFilmRepository = new CategoryFilmRepository(dBContext);
             CommnentRepository = new CommentRepository(dBContext);
-            PlayListRepository = new PlayListRepository(dBContext);
+            UserFilmRepository = new UserFilmRepository(dBContext);
         }
 
         public void Save()

@@ -23,6 +23,6 @@ namespace Server.Model.Models
         [ValidateNever]
         public virtual ICollection<Episode> Episodes { get; set; }
         [ValidateNever]
-        public virtual ICollection<PlayList> PlayLists { get; set; }
+        public virtual ICollection<UserFilm> UserFilms { get; set; }
     }
 }

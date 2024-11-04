@@ -10,5 +10,7 @@ namespace Server.Model.DTO
     {
         public string PublicKey { get; set; }
         public string WebHookSecret { get; set; }
+        public string ProPriceId { get; set; }
+        public string PremiumPriceId { get; set; }
     }
 }

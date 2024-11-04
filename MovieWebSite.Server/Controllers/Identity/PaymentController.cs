@@ -39,6 +39,20 @@ namespace MovieWebSite.Server.Controllers.Identity
         [HttpPost("create_checkout_session")]
         public async Task<IActionResult> CreateCheckoutSession([FromBody] CheckOutSessionDTO checkOutSession)
         {
+            string priceId = "";
+            if (checkOutSession.Plan.Equals("pro"))
+            {
+                priceId = _settings.ProPriceId;
+            }
+            else if (checkOutSession.Plan.Equals("premium"))
+            {
+                priceId = _settings.PremiumPriceId;
+            }
+            else
+            {
+                Debug.WriteLine($"💥Can't find the correct plan to create checkout session!");
+                return BadRequest();
+            }
             ClaimsPrincipal principals = HttpContext.User as ClaimsPrincipal;
             var claim = principals.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(claim.Value);
@@ -63,7 +77,7 @@ namespace MovieWebSite.Server.Controllers.Identity
                     {
                         new SessionLineItemOptions
                         {
-                            Price = checkOutSession.PriceId,
+                            Price = priceId,
                             Quantity = 1,
                         },
                     },
@@ -94,7 +108,7 @@ namespace MovieWebSite.Server.Controllers.Identity
                         {
                             new SessionLineItemOptions
                             {
-                                Price = checkOutSession.PriceId,
+                                Price = priceId,
                                 Quantity = 1,
                             },
                         },
@@ -233,34 +247,34 @@ namespace MovieWebSite.Server.Controllers.Identity
             {
                 var customerId = subscription.CustomerId;
                 var priceId = subscription.Items.Data[0].Price.Id;
-                var subEndTime = subscription.CurrentPeriodEnd;
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.CustomerId == customerId);
                 if (user == null)
                 {
                     throw new Exception("💥Fail to find the paided user");
                 }
-                switch (priceId)
+                if (priceId.Equals(_settings.ProPriceId))
                 {
-                    case "price_1Q5XdAATmHlXrMYowulmblzP":
-                        var resultT1 = await _userManager.AddToRoleAsync(user, "UserT1");
-                        if (!resultT1.Succeeded)
-                        {
-                            throw new Exception($"💥Failed to add user to role: {resultT1}");
-                        }
-                        break;
-                    case "price_1Q5XemATmHlXrMYoZLybRoux":
-                        var resultT2 = await _userManager.AddToRoleAsync(user, "UserT2");
-                        if (!resultT2.Succeeded)
-                        {
-                            throw new Exception($"💥Failed to add user to role: {resultT2}");
-                        }
-                        break;
-                    default:
-                        throw new Exception($"💥No match priceId, here is the priceId: {priceId}");
+                    var resultT1 = await _userManager.AddToRoleAsync(user, "UserT1");
+                    if (!resultT1.Succeeded)
+                    {
+                        throw new Exception($"💥Failed to add user to role: {resultT1}");
+                    }
+                }
+                else if (priceId.Equals(_settings.PremiumPriceId))
+                {
+                    var resultT2 = await _userManager.AddToRoleAsync(user, "UserT2");
+                    if (!resultT2.Succeeded)
+                    {
+                        throw new Exception($"💥Failed to add user to role: {resultT2}");
+                    }
+                }
+                else {
+                    throw new Exception($"💥No match priceId, here is the priceId: {priceId}");
                 }
                 user.SubscriptionStatus = subscription.Status;
                 user.PriceId = priceId;
-                user.SubscriptionEndPeriod = subEndTime;
+                user.SubscriptionEndPeriod = subscription.CurrentPeriodEnd;
+                user.SubscriptionStartPeriod = subscription.CurrentPeriodStart;
                 var updateUserResult = await _userManager.UpdateAsync(user);
                 if (!updateUserResult.Succeeded)
                 {
@@ -349,6 +363,11 @@ namespace MovieWebSite.Server.Controllers.Identity
                     user.SubscriptionEndPeriod = subscription.CurrentPeriodEnd;
                     isDiff = true;
                 }
+                if(user.SubscriptionStartPeriod != subscription.CurrentPeriodStart)
+                {
+                    user.SubscriptionStartPeriod = subscription.CurrentPeriodStart;
+                    isDiff = true;
+                }
                 if (isDiff)
                 {
                     var UpdateUserResult = await _userManager.UpdateAsync(user);
@@ -357,30 +376,7 @@ namespace MovieWebSite.Server.Controllers.Identity
                         throw new Exception("💥Fail to update user when subscription updated");
                     }
                 }
-                if (subscription.Status.Equals("paused") || subscription.Status.Equals("canceled") || subscription.Status.Equals("past_due"))
-                {
-                    var UserRoles = await _userManager.GetRolesAsync(user);
-                    if (UserRoles.Count == 0)
-                    {
-                        throw new Exception("💥User don't have any role to get!");
-                    }
-                    if (UserRoles.Contains("💥UserT1"))
-                    {
-                        var result = await _userManager.RemoveFromRoleAsync(user, "UserT1");
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception("💥Fail to remove T1 user!");
-                        }
-                    }
-                    if (UserRoles.Contains("💥UserT2"))
-                    {
-                        var result = await _userManager.RemoveFromRoleAsync(user, "UserT2");
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception("💥Fail to remove T2 user!");
-                        }
-                    }
-                }
+                
             }
             catch (Exception ex)
             {
@@ -405,69 +401,50 @@ namespace MovieWebSite.Server.Controllers.Identity
                 {
                     throw new Exception("💥User don't have any role to get!");
                 }
-                //if (currentUser.SubscriptionStatus != null && (currentUser.SubscriptionStatus.Equals("paused") || currentUser.SubscriptionStatus.Equals("canceled") || currentUser.SubscriptionStatus.Equals("past_due")))
-                //{
-                //    if (UserRoles.Contains("💥UserT1"))
-                //    {
-                //        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
-                //        if (!result.Succeeded)
-                //        {
-                //            throw new Exception("💥Fail to remove T1 user!");
-                //        }
-                //    }
-                //    if (UserRoles.Contains("💥UserT2"))
-                //    {
-                //        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT2");
-                //        if (!result.Succeeded)
-                //        {
-                //            throw new Exception("💥Fail to remove T2 user!");
-                //        }
-                //    }
-                //    var UpdatedUserT2Roles = await _userManager.GetRolesAsync(currentUser);
-                //    return Ok(new { roles = UpdatedUserT2Roles, status = currentUser.SubscriptionStatus });
-                //}
-                switch (currentUser.PriceId)
+                if (currentUser.PriceId.Equals(_settings.ProPriceId))
                 {
-                    case "price_1Q5XdAATmHlXrMYowulmblzP":
-                        if (UserRoles.Contains("💥UserT2"))
+                    if (UserRoles.Contains("💥UserT2"))
+                    {
+                        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT2");
+                        if (!result.Succeeded)
                         {
-                            var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT2");
-                            if (!result.Succeeded)
-                            {
-                                throw new Exception("💥Fail to remove T2 user!");
-                            }
+                            throw new Exception("💥Fail to remove T2 user!");
                         }
-                        if (!UserRoles.Contains("💥UserT1"))
+                    }
+                    if (!UserRoles.Contains("💥UserT1"))
+                    {
+                        var result = await _userManager.AddToRoleAsync(currentUser, "UserT1");
+                        if (!result.Succeeded)
                         {
-                            var result = await _userManager.AddToRoleAsync(currentUser, "UserT1");
-                            if (!result.Succeeded)
-                            {
-                                throw new Exception("💥Fail to add T1 user to user!");
-                            }
+                            throw new Exception("💥Fail to add T1 user to user!");
                         }
-                        var UpdatedUserT1Roles = await _userManager.GetRolesAsync(currentUser);
-                        return Ok(new { roles = UpdatedUserT1Roles, status = currentUser.SubscriptionStatus });
-                    case "price_1Q5XemATmHlXrMYoZLybRoux":
-                        if (UserRoles.Contains("💥UserT1"))
+                    }
+                    var UpdatedUserT1Roles = await _userManager.GetRolesAsync(currentUser);
+                    return Ok(new { roles = UpdatedUserT1Roles });
+                }else if (currentUser.PriceId.Equals(_settings.PremiumPriceId))
+                {
+                    if (UserRoles.Contains("💥UserT1"))
+                    {
+                        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
+                        if (!result.Succeeded)
                         {
-                            var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
-                            if (!result.Succeeded)
-                            {
-                                throw new Exception("💥Fail to remove T1 user!");
-                            }
+                            throw new Exception("💥Fail to remove T1 user!");
                         }
-                        if (!UserRoles.Contains("💥UserT2"))
+                    }
+                    if (!UserRoles.Contains("💥UserT2"))
+                    {
+                        var result = await _userManager.AddToRoleAsync(currentUser, "UserT2");
+                        if (!result.Succeeded)
                         {
-                            var result = await _userManager.AddToRoleAsync(currentUser, "UserT2");
-                            if (!result.Succeeded)
-                            {
-                                throw new Exception("💥Fail to add T2 user to user!");
-                            }
+                            throw new Exception("💥Fail to add T2 user to user!");
                         }
-                        var UpdatedUserT2Roles = await _userManager.GetRolesAsync(currentUser);
-                        return Ok(new { roles = UpdatedUserT2Roles, status = currentUser.SubscriptionStatus });
-                    default:
-                        return Ok(new { roles = UserRoles, status = currentUser.SubscriptionStatus });
+                    }
+                    var UpdatedUserT2Roles = await _userManager.GetRolesAsync(currentUser);
+                    return Ok(new { roles = UpdatedUserT2Roles });
+                }
+                else
+                {
+                    return Ok(new { roles = UserRoles });
                 }
             }
             catch (Exception ex)

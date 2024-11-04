@@ -64,7 +64,11 @@ const AuthState = (props) => {
   };
   const validateUser = async () => {
     const res = await AuthApi.validateUser();
-    if (!res) {
+    if (res.isValid){
+      if (res.roles.length > 0) {
+        setRoles(res.roles);
+      }
+    }else {
       setIsLoggedIn(false);
       setRoles([]);
       setUserName({});
@@ -100,13 +104,8 @@ const AuthState = (props) => {
     }
     setIsUserUpdated(false);
   };
-  const addToPlayList = async (filmId, isAdd, isRemove) => {
-    const res = await AuthApi.addToPlayList(filmId, isAdd, isRemove);
-    return res;
-  };
   const getUserPlayList = async () =>{
     const res = await AuthApi.getUserPlayList();
-    console.log(res)
     return res;
   }
   return (
@@ -122,7 +121,6 @@ const AuthState = (props) => {
         getUserStatus,
         validateUser,
         emailConfirm,
-        addToPlayList,
         getUserPlayList,
         createCheckoutSession,
         redirectToCustomerPortal,

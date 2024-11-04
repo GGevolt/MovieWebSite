@@ -7,7 +7,7 @@
         ICategoryRepository CategoryRepository { get; }
         IFilmRepository FilmRepository { get; }
         ICommnentRepository CommnentRepository { get; }
-        IPlayListRepository PlayListRepository { get; }
+        IUserFilmRepository UserFilmRepository { get; }
         void Save();
     }
 }

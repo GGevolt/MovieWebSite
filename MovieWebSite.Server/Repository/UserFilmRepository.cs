@@ -4,16 +4,16 @@ using Server.Model.Models;
 
 namespace MovieWebSite.Server.Repository
 {
-    internal class PlayListRepository : Repository<PlayList>, IPlayListRepository
+    internal class UserFilmRepository : Repository<UserFilm>, IUserFilmRepository
     {
         private readonly ApplicationDBContext _dbContext;
-        public PlayListRepository(ApplicationDBContext dBContext) : base(dBContext)
+        public UserFilmRepository(ApplicationDBContext dBContext) : base(dBContext)
         {
             _dbContext = dBContext;
         }
-        public void Update(PlayList playList)
+        public void Update(UserFilm userFilm)
         {
-            _dbContext.Update(playList);
+            _dbContext.Update(userFilm);
         }
     }
 }

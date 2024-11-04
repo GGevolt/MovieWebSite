@@ -55,7 +55,15 @@ const router = createBrowserRouter(
         <Route
           path="/user/detail/:filmId"
           element={<Detail />}
-          loader={async ({ params }) => WebApi.getFilm(params.filmId)}
+          loader={async ({ params }) => {
+            const [ film, relatedFilms, filmCates, filmScore ] = await Promise.all([
+              WebApi.getFilm(params.filmId),
+              WebApi.getRelatedFilms(params.filmId),
+              WebApi.getFilmCates(params.filmId),
+              WebApi.getFilmsScore(params.filmId)
+            ]);
+            return { film, relatedFilms, filmCates, filmScore };
+          }}
         />
         <Route
           path="/user/watchfilm/:filmId"

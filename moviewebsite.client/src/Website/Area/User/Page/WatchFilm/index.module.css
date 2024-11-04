@@ -334,6 +334,28 @@
   z-index: 15;
 }
 
+.noEpisodesMessage {
+  background-color: rgba(40,40,40,0.7);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+  margin-top: 30px;
+}
+
+.noEpisodesMessage h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #ff8c00, #ff0080);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.noEpisodesMessage p {
+  font-size: 1.2rem;
+  color: #cccccc;
+}
+
 @media (max-width: 576px) {
   .movieTitle {
     font-size: 2rem;

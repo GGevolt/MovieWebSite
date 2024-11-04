@@ -17,6 +17,8 @@ using Server.Model.DTO;
 using Server.Model.AuthModels;
 using MovieWebSite.Server.Data;
 using System.Diagnostics;
+using Stripe;
+using Microsoft.Extensions.Options;
 
 namespace MovieWebSite.Server.Controllers.Identity
 {
@@ -28,13 +30,15 @@ namespace MovieWebSite.Server.Controllers.Identity
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
+        private readonly StripeSettingDTO _settings;
 
-        public AuthenticationController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService)
+        public AuthenticationController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, IOptions<StripeSettingDTO> settings)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             _tokenService = tokenService;
             _emailService = emailService;
+            _settings = settings.Value;
         }
 
         [HttpPost("register")]
@@ -185,7 +189,31 @@ namespace MovieWebSite.Server.Controllers.Identity
                     return Unauthorized(new { error = "💥User not authenticated" });
                 }
 
-                return Ok(new { userInfo = currentUser });
+                UserInfoDTO userInfoDTO = new UserInfoDTO();
+                userInfoDTO.Dob = currentUser.Dob;
+                userInfoDTO.Email = currentUser.Email;
+                userInfoDTO.UserName = currentUser.UserName;
+                userInfoDTO.Gender = currentUser.Gender;
+                userInfoDTO.FullName = currentUser.FullName;
+                userInfoDTO.AccountCreatedDate = currentUser.CreatedDate;
+                if (currentUser.SubscriptionEndPeriod != null)
+                {
+                    if(currentUser.PriceId != null && currentUser.PriceId.Equals(_settings.ProPriceId))
+                    {
+                        userInfoDTO.SubscriptionPlan = "Pro";
+                    }
+                    else if (currentUser.PriceId != null && currentUser.PriceId.Equals(_settings.PremiumPriceId))
+                    {
+                        userInfoDTO.SubscriptionPlan = "Premium";
+                    }
+                    else
+                    {
+                        throw new Exception("💥Can't find user plan in get user info!");
+                    }
+                    userInfoDTO.SubscriptionEndPeriod = currentUser.SubscriptionEndPeriod;
+
+                }
+                return Ok(new { userInfo = userInfoDTO });
             }
             catch (Exception ex)
             {
@@ -194,7 +222,7 @@ namespace MovieWebSite.Server.Controllers.Identity
         }
 
         [HttpGet("validate")]
-        public IActionResult ValidateCurrentUser()
+        public async Task<IActionResult> ValidateCurrentUser()
         {
             try
             {
@@ -202,6 +230,40 @@ namespace MovieWebSite.Server.Controllers.Identity
                 var result = signInManager.IsSignedIn(principals);
                 if (result)
                 {
+                    var userId = principals.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    var user = await userManager.FindByIdAsync(userId);
+                    if ((user.SubscriptionStatus.Equals("paused") || user.SubscriptionStatus.Equals("canceled") || user.SubscriptionStatus.Equals("past_due")) && user.SubscriptionEndPeriod != null)
+                    {
+                        var UserRoles = await userManager.GetRolesAsync(user);
+                        if (UserRoles.Count == 0)
+                        {
+                            throw new Exception("💥User don't have any role to get!");
+                        }
+                        if (UserRoles.Contains("💥UserT1"))
+                        {
+                            var RemoveT1Result = await userManager.RemoveFromRoleAsync(user, "UserT1");
+                            if (!RemoveT1Result.Succeeded)
+                            {
+                                throw new Exception("💥Fail to remove T1 user!");
+                            }
+                        }
+                        if (UserRoles.Contains("💥UserT2"))
+                        {
+                            var RemoveT2Result = await userManager.RemoveFromRoleAsync(user, "UserT2");
+                            if (!RemoveT2Result.Succeeded)
+                            {
+                                throw new Exception("💥Fail to remove T2 user!");
+                            }
+                        }
+                        user.SubscriptionEndPeriod = null;
+                        var updateUserResult = await userManager.UpdateAsync(user);
+                        if (!updateUserResult.Succeeded)
+                        {
+                            throw new Exception("💥Fail to update User in !");
+                        }
+                        var updateUserRoles = await userManager.GetRolesAsync(user);
+                        return Ok(new { roles = updateUserRoles });
+                    }
                     return Ok();
                 }
                 else

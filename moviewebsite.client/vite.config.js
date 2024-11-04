@@ -86,7 +86,12 @@ export default defineConfig({
                 secure: false,
                 changeOrigin: true,
             },
-            '^/api/playList': {
+            '^/api/userFilm': {
+                target,
+                secure: false,
+                changeOrigin: true,
+            },
+            '^/api/dashBoard': {
                 target,
                 secure: false,
                 changeOrigin: true,

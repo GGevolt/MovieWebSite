@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 
 namespace Server.Model.Models
 {
-    public class PlayList
+    public class UserFilm
     {
-        public string UserName { get; set; }
+        public string UserId { get; set; }
+        public DateTime? ViewedOn { get; set; }
+        public int? Rating { get; set; }
+        public DateTime? AddPlaylistOn { get; set; }
         public int FilmId { get; set; }
         [ForeignKey("FilmId")]
         [ValidateNever]

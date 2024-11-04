@@ -14,6 +14,6 @@ namespace Server.Model.DTO
         [Required]
         public string FailureUrl { get; set; }
         [Required]
-        public string PriceId { get; set; }
+        public string Plan { get; set; }
     }
 }
