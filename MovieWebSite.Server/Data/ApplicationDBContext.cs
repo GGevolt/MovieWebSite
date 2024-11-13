@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Server.Model.AuthModels;
 using Server.Model.Models;
 
 namespace MovieWebSite.Server.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<Film> Films { get; set; }
@@ -18,14 +21,48 @@ namespace MovieWebSite.Server.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ApplicationUser>().HasIndex(u => u.UserName).IsUnique();
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole
+                {
+                    Name = "UserT0",
+                    NormalizedName = "USERT0"
+                },
+                new IdentityRole
+                {
+                    Name = "UserT1",
+                    NormalizedName = "USERT1"
+                },
+                new IdentityRole
+                {
+                    Name = "UserT2",
+                    NormalizedName = "USERT2"
+                },
+            };
+            foreach (var role in roles)
+            {
+                modelBuilder.Entity<IdentityRole>()
+                    .HasData(role);
+            }
 
             modelBuilder.Entity<UserFilm>()
-                .HasKey(pl =>new {pl.FilmId});
+                .HasKey(uf => new { uf.UserId, uf.FilmId });
 
             modelBuilder.Entity<UserFilm>()
-                .HasOne(pl=> pl.Film)
-                .WithMany(pl=>pl.UserFilms)
-                .HasForeignKey(pl=>pl.FilmId);
+                .HasOne(uf => uf.User)
+                .WithMany(u => u.UserFilms)
+                .HasForeignKey(uf => uf.UserId);
+
+            modelBuilder.Entity<UserFilm>()
+                .HasOne(uf => uf.Film)
+                .WithMany(f => f.UserFilms)
+                .HasForeignKey(uf => uf.FilmId);
 
             modelBuilder.Entity<CategoryFilm>()
                 .HasKey(cf => new { cf.CategoryId, cf.FilmId });

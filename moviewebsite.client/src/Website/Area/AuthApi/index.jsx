@@ -153,12 +153,6 @@ const RedirectToCustomerPortal = async () => {
       );
     });
 };
-const getUserStatus = async () => {
-  const response = await api.get("/payment/getUserStatus").catch((error) => {
-    console.log("Get User Status error:", error.response);
-  });
-  return response.data.roles;
-};
 const userFilmLogic = async ({
   filmId,
   isAddPlayList = false,
@@ -190,7 +184,6 @@ const AuthApi = {
   signIn,
   signOut,
   getUserInfo,
-  getUserStatus,
   validateUser,
   confirmEmail,
   userFilmLogic,

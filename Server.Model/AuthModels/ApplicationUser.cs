@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Server.Model.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,9 +16,11 @@ namespace Server.Model.AuthModels
         [Column(TypeName = "datetime")]
         public DateTime LastLogin { get; set; } = DateTime.Now;
         public string? CustomerId { get; set; }
+        public string? SubscriptionId { get; set; }
         public string? PriceId { get; set; }
         public string? SubscriptionStatus { get; set; }
         public DateTime? SubscriptionStartPeriod { get; set; }
         public DateTime? SubscriptionEndPeriod { get; set; }
+        public virtual ICollection<UserFilm> UserFilms { get; set; }
     }
 }

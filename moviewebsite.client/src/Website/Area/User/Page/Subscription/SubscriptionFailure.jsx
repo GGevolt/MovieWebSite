@@ -6,21 +6,10 @@ import {
   ExclamationTriangleFill,
 } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../../AuthContext/Context";
-import { useContext, useEffect } from "react";
 import styles from "./SubscriptionFailure.module.css";
 
 export default function SubscriptionFailure() {
   const navigate = useNavigate();
-  const authContext = useContext(AuthContext);
-  const { isUserUpdated, getUserStatus } = authContext;
-
-  useEffect(() => {
-    if (isUserUpdated) {
-      getUserStatus();
-    }
-  }, [isUserUpdated, getUserStatus]);
-
   return (
     <div className={styles.subscriptionFailureWrapper}>
       <Container className="py-5">

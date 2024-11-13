@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieWebSite.Server.Data;
 
@@ -11,9 +12,11 @@ using MovieWebSite.Server.Data;
 namespace MovieWebSite.Server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241111065644_addIdentity")]
+    partial class addIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,25 +54,25 @@ namespace MovieWebSite.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "735fcaf4-69f8-4896-bb61-775d0c11c95c",
+                            Id = "d8aa8996-12e5-4c14-97ce-490d1e7fe040",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a705cd89-ef19-4c3b-9e06-bc9dda259f14",
+                            Id = "cd3a2877-eb91-40d4-82f9-169f196f5020",
                             Name = "UserT0",
                             NormalizedName = "USERT0"
                         },
                         new
                         {
-                            Id = "3ad1691d-a596-442e-b2b8-34b8b920ba16",
+                            Id = "0e131168-beb0-4aa9-9774-2beb9a1eb0b1",
                             Name = "UserT1",
                             NormalizedName = "USERT1"
                         },
                         new
                         {
-                            Id = "f6a8eeba-571f-420a-ab77-1117b9900529",
+                            Id = "911548bd-28f4-42fb-a5c8-7942af9e05b1",
                             Name = "UserT2",
                             NormalizedName = "USERT2"
                         });
@@ -252,9 +255,6 @@ namespace MovieWebSite.Server.Migrations
 
                     b.Property<DateTime?>("SubscriptionEndPeriod")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("SubscriptionId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("SubscriptionStartPeriod")
                         .HasColumnType("datetime2");
@@ -1614,9 +1614,6 @@ namespace MovieWebSite.Server.Migrations
 
             modelBuilder.Entity("Server.Model.Models.UserFilm", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("FilmId")
                         .HasColumnType("int");
 
@@ -1626,12 +1623,14 @@ namespace MovieWebSite.Server.Migrations
                     b.Property<int?>("Rating")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ViewedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId", "FilmId");
-
-                    b.HasIndex("FilmId");
+                    b.HasKey("FilmId");
 
                     b.ToTable("UserFilms");
                 });
@@ -1736,20 +1735,7 @@ namespace MovieWebSite.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Server.Model.AuthModels.ApplicationUser", "User")
-                        .WithMany("UserFilms")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Film");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Server.Model.AuthModels.ApplicationUser", b =>
-                {
-                    b.Navigation("UserFilms");
                 });
 
             modelBuilder.Entity("Server.Model.Models.Category", b =>

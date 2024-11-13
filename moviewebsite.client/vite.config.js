@@ -95,6 +95,11 @@ export default defineConfig({
                 target,
                 secure: false,
                 changeOrigin: true,
+            },
+            '^/api/account': {
+                target,
+                secure: false,
+                changeOrigin: true,
             }
         },
         port: 5173,

@@ -27,7 +27,7 @@ namespace MovieWebSite.Server.Controllers
                     throw new Exception("💥Can't find user in get play list!");
                 }
                 var playListFilmId = _unitOfWork.UserFilmRepository.GetAll(ul => ul.UserId == user.Id && ul.AddPlaylistOn != null).Select(ul => ul.FilmId);
-                var playListFilms = _unitOfWork.FilmRepository.GetAll(f=> playListFilmId.Contains(f.Id));
+                var playListFilms = _unitOfWork.FilmRepository.GetAll(f => playListFilmId.Contains(f.Id));
                 var result = playListFilms.Select(f => new FilmDTO
                 {
                     Id = f.Id,
@@ -49,16 +49,16 @@ namespace MovieWebSite.Server.Controllers
         [HttpGet("filmscore/{filmId}")]
         public IActionResult GetFilmScore(int filmId)
         {
-            var filmRatings =  _unitOfWork.UserFilmRepository.GetAll(uf=> uf.FilmId == filmId && uf.Rating != null).Select(uf => uf.Rating.Value);
+            var filmRatings = _unitOfWork.UserFilmRepository.GetAll(uf => uf.FilmId == filmId && uf.Rating != null).Select(uf => uf.Rating.Value);
             if (!filmRatings.Any())
             {
                 return Ok(new { score = -1 });
             }
             double averageScore = filmRatings.Average();
-            return Ok(new {score = averageScore });
+            return Ok(new { score = averageScore });
         }
 
-        [HttpPost, Authorize(Roles = "UserT2, UserT1")]
+        [HttpPost]
         public async Task<IActionResult> UserFilmLogic(UserFilmDTO userFilmDTO)
         {
             try
@@ -66,34 +66,32 @@ namespace MovieWebSite.Server.Controllers
                 var user = await _signInManager.UserManager.GetUserAsync(User);
                 if (user == null)
                 {
-                    throw new Exception("💥Can't find user in get user film!");
+                    throw new Exception("Can't find user in get user film!");
                 }
+
                 bool isPlayListAdded = false;
                 var filmRating = userFilmDTO.FilmRatting;
                 var existingUserFilm = _unitOfWork.UserFilmRepository.Get(ul => ul.UserId == user.Id && ul.FilmId == userFilmDTO.FilmId);
+
                 if (existingUserFilm != null)
                 {
                     if (userFilmDTO.IsRemoveFromPlayList)
                     {
                         existingUserFilm.AddPlaylistOn = null;
-                        _unitOfWork.UserFilmRepository.Update(existingUserFilm);
-                        _unitOfWork.Save();
-                    }else if (userFilmDTO.IsAddPlayList)
+                    }
+                    else if (userFilmDTO.IsAddPlayList)
                     {
                         existingUserFilm.AddPlaylistOn = DateTime.Now;
-                        _unitOfWork.UserFilmRepository.Update(existingUserFilm);
-                        _unitOfWork.Save();
                         isPlayListAdded = true;
-                    }else if (existingUserFilm.AddPlaylistOn != null)
+                    }
+                    else if (existingUserFilm.AddPlaylistOn != null)
                     {
                         isPlayListAdded = true;
                     }
-                    
-                    if ( userFilmDTO.FilmRatting  > -1 && existingUserFilm.Rating != userFilmDTO.FilmRatting)
+
+                    if (userFilmDTO.FilmRatting > -1 && existingUserFilm.Rating != userFilmDTO.FilmRatting)
                     {
                         existingUserFilm.Rating = userFilmDTO.FilmRatting;
-                        _unitOfWork.UserFilmRepository.Update(existingUserFilm);
-                        _unitOfWork.Save();
                     }
                     else if (existingUserFilm.Rating != null)
                     {
@@ -103,41 +101,33 @@ namespace MovieWebSite.Server.Controllers
                     if (userFilmDTO.IsViewed)
                     {
                         existingUserFilm.ViewedOn = DateTime.Now;
-                        _unitOfWork.UserFilmRepository.Update(existingUserFilm);
-                        _unitOfWork.Save();
                     }
 
-                    return Ok(new { PlayListAdded = isPlayListAdded, Rating = filmRating });
+                    _unitOfWork.UserFilmRepository.Update(existingUserFilm);
                 }
-                UserFilm userFilm = new UserFilm()
+                else
                 {
-                    UserId = user.Id,
-                    FilmId = userFilmDTO.FilmId
-                };
-                if (userFilmDTO.IsAddPlayList)
-                {
-                    userFilm.AddPlaylistOn = DateTime.Now;
+                    UserFilm userFilm = new UserFilm()
+                    {
+                        UserId = user.Id,
+                        FilmId = userFilmDTO.FilmId,
+                        AddPlaylistOn = userFilmDTO.IsAddPlayList ? DateTime.Now : null,
+                        Rating = userFilmDTO.FilmRatting > -1 ? userFilmDTO.FilmRatting : null,
+                        ViewedOn = userFilmDTO.IsViewed ? DateTime.Now : null
+                    };
+
                     _unitOfWork.UserFilmRepository.Add(userFilm);
-                    _unitOfWork.Save();
+                    isPlayListAdded = userFilmDTO.IsAddPlayList;
                 }
-                else if(userFilmDTO.FilmRatting > -1)
-                {
-                    userFilm.Rating = userFilmDTO.FilmRatting;
-                    _unitOfWork.UserFilmRepository.Add(userFilm);
-                    _unitOfWork.Save();
-                }
-                else if (userFilmDTO.IsViewed)
-                {
-                    userFilm.ViewedOn = DateTime.Now;
-                    _unitOfWork.UserFilmRepository.Add(userFilm);
-                    _unitOfWork.Save();
-                }
+
+                _unitOfWork.Save();
+
                 return Ok(new { PlayListAdded = isPlayListAdded, Rating = filmRating });
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"💥Something has gone wrong! {ex.Message}");
-                return BadRequest(ex.Message);
+                var innerException = ex.InnerException != null ? $" Inner exception: {ex.InnerException.Message}" : "";
+                return BadRequest($"An error occurred while processing your request: {ex.Message}{innerException}");
             }
         }
     }

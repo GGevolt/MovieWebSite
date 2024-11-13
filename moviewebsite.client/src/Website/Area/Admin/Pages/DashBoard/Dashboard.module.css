@@ -1,0 +1,48 @@
+.dashboard {
+  background-color: #121212;
+  color: #ffffff;
+  min-height: 100vh;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.title {
+  margin-bottom: 2rem;
+  color: #ffffff;
+  text-align: center;
+}
+
+.chart {
+  background-color: #1e1e1e;
+  margin-bottom: 2rem;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart :global(.card-title) {
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.chart :global(.card-body) {
+  padding: 1.5rem;
+}
+
+.noData {
+  color: #ffffff;
+  text-align: center;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .chart :global(.card-body) {
+    padding: 1rem;
+  }
+}

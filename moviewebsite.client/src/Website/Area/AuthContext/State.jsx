@@ -8,7 +8,6 @@ import { loadStripe } from "@stripe/stripe-js";
 const AuthState = (props) => {
   const initialState = {
     isLoggedIn: {},
-    isUserUpdated: {},
     roles: [],
     userName: {},
   };
@@ -29,11 +28,7 @@ const AuthState = (props) => {
   const setIsLoggedIn = (status) => {
     dispatch({ type: "ISLOGIN", payload: status });
   };
-
-  const setIsUserUpdated = (status) => {
-    dispatch({ type: "IS_USER_UPDATED", payload: status });
-  };
-
+  
   const setUserName = (values) => {
     dispatch({ type: "SET_USERNAME", payload: values });
   };
@@ -82,7 +77,6 @@ const AuthState = (props) => {
   const createCheckoutSession = async (selectedPlan) => {
     const data = await AuthApi.createCheckOutSession(selectedPlan);
     if (data) {
-      setIsUserUpdated(true);
       const stripe = await loadStripe(data.publicKey);
       const result = stripe.redirectToCheckout({
         sessionId: data.sessionId,
@@ -94,15 +88,7 @@ const AuthState = (props) => {
     }
   };
   const redirectToCustomerPortal = async () => {
-    setIsUserUpdated(true);
     await AuthApi.RedirectToCustomerPortal();
-  };
-  const getUserStatus = async () => {
-    const res = await AuthApi.getUserStatus();
-    if (res) {
-      setRoles(res);
-    }
-    setIsUserUpdated(false);
   };
   const getUserPlayList = async () =>{
     const res = await AuthApi.getUserPlayList();
@@ -114,11 +100,9 @@ const AuthState = (props) => {
         isLoggedIn: state.isLoggedIn,
         roles: state.roles,
         userName: state.userName,
-        isUserUpdated: state.isUserUpdated,
         signIn,
         register,
         signOut,
-        getUserStatus,
         validateUser,
         emailConfirm,
         getUserPlayList,

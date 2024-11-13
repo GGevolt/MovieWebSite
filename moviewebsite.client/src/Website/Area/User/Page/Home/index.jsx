@@ -2,21 +2,15 @@ import { useEffect, useContext } from "react";
 import { Container } from "react-bootstrap";
 import FilmRow from "../../Components/DisplayFilm/FilmRow";
 import WebContext from "../../../../WebContext/Context";
-import AuthContext from "../../../AuthContext/Context";
 import CarouselDisplay from "../../Components/DisplayFilm/CarouselDisplay";
 
 function Home() {
   document.title = "Home";
-  const authContext = useContext(AuthContext);
-  const { isUserUpdated, getUserStatus } = authContext;
   const webContext = useContext(WebContext);
   const { getFilms, films } = webContext;
   useEffect(() => {
     if (!(Array.isArray(films) && films.length > 0)) {
       getFilms();
-    }
-    if (isUserUpdated) {
-      getUserStatus();
     }
   }, []);
   const splitFilmsByType = (films) => {

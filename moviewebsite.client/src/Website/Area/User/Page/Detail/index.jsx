@@ -26,7 +26,7 @@ function Detail() {
   }, [film]);
 
   const loadData = async () => {
-    if (roles.includes("UserT2")) {
+    if (roles.includes("UserT2") || roles.includes("UserT1")) {
       const res = await AuthApi.userFilmLogic({filmId: film.id});
       setIsAdded(res.playListAdded);
       setRating(res.rating);

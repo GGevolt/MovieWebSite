@@ -8,6 +8,7 @@ import {
 import CategoryManagement from "../Area/Admin/Pages/Management/CategoryManagement";
 import FilmManagement from "../Area/Admin/Pages/Management/FilmManagement";
 import VideoManagement from "../Area/Admin/Pages/Management/VideoManagement";
+import AccountManagement from "../Area/Admin/Pages/Management/AccountManagement";
 import WebApi from "../WebApi";
 import AdminState from "../Area/Admin/AminContext/State";
 import AuthState from "../Area/AuthContext/State";
@@ -27,6 +28,7 @@ import SubscriptionFailure from "../Area/User/Page/Subscription/SubscriptionFail
 import WatchFilm from "../Area/User/Page/WatchFilm";
 import SearchFilms from "../Area/User/Page/SearchFilms";
 import Playlist from "../Area/User/Page/Playlist";
+import Dashboard from "../Area/Admin/Pages/DashBoard";
 
 const ROLES = {
   User: "UserT0",
@@ -81,12 +83,10 @@ const router = createBrowserRouter(
         path="/admin"
         element={<ProtectedRoutes allowRoles={[ROLES.Admin]} />}
       >
-        <Route index element={<FilmManagement />} />
-        <Route
-          path="/admin/category-Management"
-          element={<CategoryManagement />}
-        />
+        <Route index element={<Dashboard />} />
+        <Route path="/admin/category-Management" element={<CategoryManagement />}/>
         <Route path="/admin/film-Management" element={<FilmManagement />} />
+        <Route path="/admin/account-Management" element={<AccountManagement />} />
         <Route
           path="/admin/video-Management/:filmId"
           element={<VideoManagement />}

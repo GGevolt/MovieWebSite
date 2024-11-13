@@ -131,12 +131,17 @@ function NavBar() {
             </Nav.Link>
           </Col>
           <Col xs="auto">
-            <Nav.Link as={Link} to="/Admin/Category-Management">
+            <Nav.Link as={Link} to="/admin/category-Management">
               Category
             </Nav.Link>
           </Col>
           <Col xs="auto">
-            <Nav.Link as={Link} to="/Admin/Film-Management">
+            <Nav.Link as={Link} to="/admin/account-Management">
+              Account
+            </Nav.Link>
+          </Col>
+          <Col xs="auto">
+            <Nav.Link as={Link} to="/admin/film-Management">
               Film
             </Nav.Link>
           </Col>
@@ -194,8 +199,9 @@ function NavBar() {
         roles.includes("Admin") ? (
           <>
             <Nav.Link as={Link} to="/" onClick={() => setShowOffcanvas(false)}>Home</Nav.Link>
-            <Nav.Link as={Link} to="/Admin/Category-Management" onClick={() => setShowOffcanvas(false)}>Category</Nav.Link>
-            <Nav.Link as={Link} to="/Admin/Film-Management" onClick={() => setShowOffcanvas(false)}>Film</Nav.Link>
+            <Nav.Link as={Link} to="/admin/category-Management" onClick={() => setShowOffcanvas(false)}>Category</Nav.Link>
+            <Nav.Link as={Link} to="/admin/film-Management" onClick={() => setShowOffcanvas(false)}>Film</Nav.Link>
+            <Nav.Link as={Link} to="/admin/account-Management" onClick={() => setShowOffcanvas(false)}>Account</Nav.Link>
             {renderUserMenu(true)}
             <Nav.Link onClick={handleLogOut}>Logout</Nav.Link>
           </>

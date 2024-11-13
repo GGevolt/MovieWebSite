@@ -4,16 +4,25 @@ import AdminContext from "./Context";
 import WebContext from "../../../WebContext/Context";
 import AdminReducer from "./Reducer";
 import PropTypes from "prop-types";
+import adminApi from "../AdminApi/adminApi";
 const AdminState = (props) => {
   const webContext = useContext(WebContext);
   const { getCategories, getFilms } = webContext;
   const initialState = {
     isCateUpdated: false,
+    userList: [],
   };
-  const typeList = ["category", "film", "episode"];
+  const typeList = ["category", "film", "episode", "account"];
   const [state, dispatch] = useReducer(AdminReducer, initialState);
+  const getUsers = async () => {
+    const response = await adminApi.getUsers();
+    dispatch({
+      type: "GET_USERS",
+      payload: response,
+    });
+  };
   const Delete = async (type, id) => {
-    if (typeList.includes(type) && id > 0) {
+    if (typeList.includes(type) && id !==null) {
       await api.Delete(type, id);
       switch (type) {
         case "category":
@@ -21,6 +30,9 @@ const AdminState = (props) => {
           break;
         case "film":
           await getFilms();
+          break;
+        case "account":
+          await getUsers();
           break;
         default:
           break;
@@ -37,8 +49,10 @@ const AdminState = (props) => {
     <AdminContext.Provider
       value={{
         isCateUpdated: state.isCateUpdated,
+        userList: state.userList,
         Delete,
         onFilmCateUpdate,
+        getUsers
       }}
     >
       {props.children}

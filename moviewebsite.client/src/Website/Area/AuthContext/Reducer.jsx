@@ -1,4 +1,4 @@
-import { ISLOGIN, SET_ROLES, SET_USERNAME, IS_USER_UPDATED } from "./type";
+import { ISLOGIN, SET_ROLES, SET_USERNAME } from "./type";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default (state, action) => {
@@ -7,11 +7,6 @@ export default (state, action) => {
       return {
         ...state,
         isLoggedIn: action.payload,
-      };
-      case IS_USER_UPDATED:
-      return {
-        ...state,
-        isUserUpdated: action.payload,
       };
     case SET_ROLES:
       return {

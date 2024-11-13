@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieWebSite.Server.Data;
 
@@ -11,9 +12,11 @@ using MovieWebSite.Server.Data;
 namespace MovieWebSite.Server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241111070804_fixuserfilm")]
+    partial class fixuserfilm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,25 +54,25 @@ namespace MovieWebSite.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "735fcaf4-69f8-4896-bb61-775d0c11c95c",
+                            Id = "db381c5a-6085-49ac-8c07-b3e6b36988e0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a705cd89-ef19-4c3b-9e06-bc9dda259f14",
+                            Id = "5a6555d5-6f5e-4932-8f5d-7255ae6cdcb4",
                             Name = "UserT0",
                             NormalizedName = "USERT0"
                         },
                         new
                         {
-                            Id = "3ad1691d-a596-442e-b2b8-34b8b920ba16",
+                            Id = "b3d79ebd-f806-48e4-806f-c2a0740d9e87",
                             Name = "UserT1",
                             NormalizedName = "USERT1"
                         },
                         new
                         {
-                            Id = "f6a8eeba-571f-420a-ab77-1117b9900529",
+                            Id = "52d32d41-2fcd-480d-ac43-206a87a3c2c4",
                             Name = "UserT2",
                             NormalizedName = "USERT2"
                         });
@@ -252,9 +255,6 @@ namespace MovieWebSite.Server.Migrations
 
                     b.Property<DateTime?>("SubscriptionEndPeriod")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("SubscriptionId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("SubscriptionStartPeriod")
                         .HasColumnType("datetime2");

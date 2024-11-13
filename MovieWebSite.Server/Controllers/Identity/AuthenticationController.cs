@@ -227,53 +227,99 @@ namespace MovieWebSite.Server.Controllers.Identity
             try
             {
                 ClaimsPrincipal principals = HttpContext.User as ClaimsPrincipal;
-                var result = signInManager.IsSignedIn(principals);
-                if (result)
+                if (principals == null)
                 {
-                    var userId = principals.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    var user = await userManager.FindByIdAsync(userId);
-                    if ((user.SubscriptionStatus.Equals("paused") || user.SubscriptionStatus.Equals("canceled") || user.SubscriptionStatus.Equals("past_due")) && user.SubscriptionEndPeriod != null)
+                    return Unauthorized("User not authenticated");
+                }
+
+                var result = signInManager.IsSignedIn(principals);
+                if (!result)
+                {
+                    return Forbid("Access Denied");
+                }
+
+                var userId = principals.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return BadRequest("User ID not found in claims");
+                }
+
+                var user = await userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                var userRoles = await userManager.GetRolesAsync(user);
+                if (userRoles.Count == 0)
+                {
+                    return BadRequest("User doesn't have any roles");
+                }
+
+                if (user.SubscriptionEndPeriod != null)
+                {
+                    if (user.SubscriptionStatus == "paused" || user.SubscriptionStatus == "canceled" || user.SubscriptionStatus == "past_due")
                     {
-                        var UserRoles = await userManager.GetRolesAsync(user);
-                        if (UserRoles.Count == 0)
+                        foreach (var role in userRoles.ToList())
                         {
-                            throw new Exception("💥User don't have any role to get!");
-                        }
-                        if (UserRoles.Contains("💥UserT1"))
-                        {
-                            var RemoveT1Result = await userManager.RemoveFromRoleAsync(user, "UserT1");
-                            if (!RemoveT1Result.Succeeded)
+                            if (role == "UserT1" || role == "UserT2")
                             {
-                                throw new Exception("💥Fail to remove T1 user!");
+                                var removeResult = await userManager.RemoveFromRoleAsync(user, role);
+                                if (!removeResult.Succeeded)
+                                {
+                                    return BadRequest($"Failed to remove {role} role: {string.Join(", ", removeResult.Errors.Select(e => e.Description))}");
+                                }
                             }
                         }
-                        if (UserRoles.Contains("💥UserT2"))
-                        {
-                            var RemoveT2Result = await userManager.RemoveFromRoleAsync(user, "UserT2");
-                            if (!RemoveT2Result.Succeeded)
-                            {
-                                throw new Exception("💥Fail to remove T2 user!");
-                            }
-                        }
+
                         user.SubscriptionEndPeriod = null;
+                        user.SubscriptionStatus = null;
+                        user.PriceId = null;
                         var updateUserResult = await userManager.UpdateAsync(user);
                         if (!updateUserResult.Succeeded)
                         {
-                            throw new Exception("💥Fail to update User in !");
+                            return BadRequest($"Failed to update user: {string.Join(", ", updateUserResult.Errors.Select(e => e.Description))}");
                         }
-                        var updateUserRoles = await userManager.GetRolesAsync(user);
-                        return Ok(new { roles = updateUserRoles });
+
+                        var updatedUserRoles = await userManager.GetRolesAsync(user);
+                        return Ok(new { roles = updatedUserRoles });
                     }
-                    return Ok();
+
+                    if (user.PriceId != null)
+                    {
+                        string targetRole = user.PriceId.Equals(_settings.ProPriceId) ? "UserT1" : "UserT2";
+                        string removeRole = targetRole == "UserT1" ? "UserT2" : "UserT1";
+
+                        if (userRoles.Contains(removeRole))
+                        {
+                            var removeResult = await userManager.RemoveFromRoleAsync(user, removeRole);
+                            if (!removeResult.Succeeded)
+                            {
+                                return BadRequest($"Failed to remove {removeRole} role: {string.Join(", ", removeResult.Errors.Select(e => e.Description))}");
+                            }
+                        }
+
+                        if (!userRoles.Contains(targetRole))
+                        {
+                            var addResult = await userManager.AddToRoleAsync(user, targetRole);
+                            if (!addResult.Succeeded)
+                            {
+                                return BadRequest($"Failed to add {targetRole} role: {string.Join(", ", addResult.Errors.Select(e => e.Description))}");
+                            }
+                        }
+
+                        var updatedRoles = await userManager.GetRolesAsync(user);
+                        return Ok(new { roles = updatedRoles });
+                    }
+
+                    return Ok(new { roles = userRoles });
                 }
-                else
-                {
-                    return Forbid("💥Access Denied");
-                }
+
+                return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest($"💥Something has gone wrong! {ex.Message}");
+                return BadRequest($"Something has gone wrong with validate user: {ex.Message}");
             }
         }
     }

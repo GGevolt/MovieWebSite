@@ -176,6 +176,56 @@ namespace MovieWebSite.Server.Controllers.Identity
             }
 
         }
+        [HttpGet("cancel/{userId}")]
+        public async Task<IActionResult> CancelSubScription(string UserId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(UserId);
+                if (user == null || user.SubscriptionId == null)
+                {
+                    return BadRequest("Can't find user or Subscription Id");
+                }
+                var service = new SubscriptionService();
+                service.Cancel(user.SubscriptionId);
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Count == 0)
+                {
+                    throw new Exception("💥User don't have any role to delete!");
+                }
+                if (roles.Contains("UserT1"))
+                {
+                    var result = await _userManager.RemoveFromRoleAsync(user, "UserT1");
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception("💥Fail to remove T1 user when subscription ended!");
+                    }
+                }
+                if (roles.Contains("UserT2"))
+                {
+                    var result = await _userManager.RemoveFromRoleAsync(user, "UserT2");
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception("💥Fail to remove T2 user when subscription ended!");
+                    }
+                }
+                user.SubscriptionEndPeriod = null;
+                user.PriceId = null;
+                user.SubscriptionStatus = null;
+                user.SubscriptionStartPeriod = null;
+                user.SubscriptionId = null;
+                var updateUserResult = await _userManager.UpdateAsync(user);
+                if (!updateUserResult.Succeeded)
+                {
+                    throw new Exception("💥Fail to update User when cancel subscription!");
+                }
+                return Ok();
+            }
+            catch (Exception ex) {
+                Debug.WriteLine($"💥Stripe cancel subscription exception: {ex.Message}");
+                return BadRequest();
+            }
+        }
 
         [HttpPost("webhook")]
         public async Task<IActionResult> WebHook()
@@ -189,9 +239,9 @@ namespace MovieWebSite.Server.Controllers.Identity
                     _settings.WebHookSecret
                 );
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Debug.WriteLine($"💥Something failed {e}");
+                Debug.WriteLine($"💥Something failed {ex}");
                 return BadRequest();
             }
             switch (stripeEvent.Type)
@@ -205,7 +255,7 @@ namespace MovieWebSite.Server.Controllers.Identity
                     await SubscriptionUpdate(UpdatedSubscription);
                     break;
                 case "customer.subscription.deleted":
-                    var Endedcustomer = stripeEvent.Data.Object as Customer;
+                    var Endedcustomer = stripeEvent.Data.Object as Stripe.Subscription;
                     await SubscriptionEnd(Endedcustomer);
                     break;
                 case "customer.created":
@@ -271,6 +321,7 @@ namespace MovieWebSite.Server.Controllers.Identity
                 else {
                     throw new Exception($"💥No match priceId, here is the priceId: {priceId}");
                 }
+                user.SubscriptionId = subscription.Id;
                 user.SubscriptionStatus = subscription.Status;
                 user.PriceId = priceId;
                 user.SubscriptionEndPeriod = subscription.CurrentPeriodEnd;
@@ -289,50 +340,52 @@ namespace MovieWebSite.Server.Controllers.Identity
             
         }
     
-        private async Task SubscriptionEnd(Customer customer)
+        private async Task SubscriptionEnd(Subscription subscription)
         {
             try
             {
-                var userFromDb = await _userManager.FindByEmailAsync(customer.Email);
-                if (userFromDb == null)
+                var customerId = subscription.CustomerId;
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.CustomerId == customerId);
+                if (user == null)
                 {
-                    throw new Exception("💥User not found by email: " + customer.Email);
+                    throw new Exception("💥Cannot find user to cancel subscription!");
                 }
-                var roles = await _userManager.GetRolesAsync(userFromDb);
+                if(user.SubscriptionId == null || user.SubscriptionEndPeriod == null) { return; }
+                var roles = await _userManager.GetRolesAsync(user);
                 if (roles.Count == 0)
                 {
                     throw new Exception("💥User don't have any role to delete!");
                 }
-                if (roles.Contains("💥UserT1"))
+                if (roles.Contains("UserT1"))
                 {
-                    var result = await _userManager.RemoveFromRoleAsync(userFromDb, "UserT1");
+                    var result = await _userManager.RemoveFromRoleAsync(user, "UserT1");
                     if (!result.Succeeded)
                     {
                         throw new Exception("💥Fail to remove T1 user when subscription ended!");
                     }
                 }
-                if (roles.Contains("💥UserT2"))
+                if (roles.Contains("UserT2"))
                 {
-                    var result = await _userManager.RemoveFromRoleAsync(userFromDb, "UserT2");
+                    var result = await _userManager.RemoveFromRoleAsync(user, "UserT2");
                     if (!result.Succeeded)
                     {
                         throw new Exception("💥Fail to remove T2 user when subscription ended!");
                     }
                 }
-                userFromDb.SubscriptionEndPeriod = null;
-                userFromDb.PriceId = null;
-                userFromDb.SubscriptionStatus = null;
-                var updateUserResult = await _userManager.UpdateAsync(userFromDb);
+                user.SubscriptionEndPeriod = null;
+                user.PriceId = null;
+                user.SubscriptionStatus = null;
+                user.SubscriptionStartPeriod = null;
+                user.SubscriptionId = null;
+                var updateUserResult = await _userManager.UpdateAsync(user);
                 if (!updateUserResult.Succeeded)
                 {
                     throw new Exception("💥Fail to update User when subscription ended!");
                 }
-
             }
             catch (Exception ex)
             {
-
-                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("💥Fail to Delete subscription info: ",ex);
                 throw;
             }
         
@@ -353,7 +406,12 @@ namespace MovieWebSite.Server.Controllers.Identity
                     user.SubscriptionStatus = subscription.Status;
                     isDiff = true;
                 }
-                if(user.PriceId != subscription.Items.Data[0].Price.Id)
+                if (user.SubscriptionId != subscription.Id)
+                {
+                    user.SubscriptionId = subscription.Id;
+                    isDiff = true;
+                }
+                if (user.PriceId != subscription.Items.Data[0].Price.Id)
                 { 
                     user.PriceId = subscription.Items.Data[0].Price.Id;
                     isDiff = true;
@@ -384,74 +442,6 @@ namespace MovieWebSite.Server.Controllers.Identity
                 throw;
             }
             
-        }
-        [Authorize]
-        [HttpGet("getUserStatus")]
-        public async Task<IActionResult> UpdateUserAfterPayment()
-        {
-            try
-            {
-                var currentUser = await _signInManager.UserManager.GetUserAsync(User);
-                if (currentUser == null)
-                {
-                    throw new Exception("💥Can't find user in get roles!");
-                }
-                var UserRoles = await _userManager.GetRolesAsync(currentUser);
-                if (UserRoles.Count == 0)
-                {
-                    throw new Exception("💥User don't have any role to get!");
-                }
-                if (currentUser.PriceId.Equals(_settings.ProPriceId))
-                {
-                    if (UserRoles.Contains("💥UserT2"))
-                    {
-                        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT2");
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception("💥Fail to remove T2 user!");
-                        }
-                    }
-                    if (!UserRoles.Contains("💥UserT1"))
-                    {
-                        var result = await _userManager.AddToRoleAsync(currentUser, "UserT1");
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception("💥Fail to add T1 user to user!");
-                        }
-                    }
-                    var UpdatedUserT1Roles = await _userManager.GetRolesAsync(currentUser);
-                    return Ok(new { roles = UpdatedUserT1Roles });
-                }else if (currentUser.PriceId.Equals(_settings.PremiumPriceId))
-                {
-                    if (UserRoles.Contains("💥UserT1"))
-                    {
-                        var result = await _userManager.RemoveFromRoleAsync(currentUser, "UserT1");
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception("💥Fail to remove T1 user!");
-                        }
-                    }
-                    if (!UserRoles.Contains("💥UserT2"))
-                    {
-                        var result = await _userManager.AddToRoleAsync(currentUser, "UserT2");
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception("💥Fail to add T2 user to user!");
-                        }
-                    }
-                    var UpdatedUserT2Roles = await _userManager.GetRolesAsync(currentUser);
-                    return Ok(new { roles = UpdatedUserT2Roles });
-                }
-                else
-                {
-                    return Ok(new { roles = UserRoles });
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"💥Something has gone wrong! {ex.Message}");
-                return BadRequest(ex.Message);
-            }
         }
     }
 }

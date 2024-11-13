@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Server.Model.AuthModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,9 @@ namespace Server.Model.Models
     public class UserFilm
     {
         public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        [ValidateNever]
+        public ApplicationUser User { get; set; }
         public DateTime? ViewedOn { get; set; }
         public int? Rating { get; set; }
         public DateTime? AddPlaylistOn { get; set; }

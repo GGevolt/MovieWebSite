@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MovieWebSite.Server.Migrations.AuthDB
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace MovieWebSite.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class seadNewDB : Migration
+    public partial class addIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,11 +32,16 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Dob = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     LastLogin = table.Column<DateTime>(type: "datetime", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PriceId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubscriptionStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubscriptionStartPeriod = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SubscriptionEndPeriod = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -161,6 +168,17 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "0e131168-beb0-4aa9-9774-2beb9a1eb0b1", null, "UserT1", "USERT1" },
+                    { "911548bd-28f4-42fb-a5c8-7942af9e05b1", null, "UserT2", "USERT2" },
+                    { "cd3a2877-eb91-40d4-82f9-169f196f5020", null, "UserT0", "USERT0" },
+                    { "d8aa8996-12e5-4c14-97ce-490d1e7fe040", null, "Admin", "ADMIN" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -192,6 +210,13 @@ namespace MovieWebSite.Server.Migrations.AuthDB
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UserName",
+                table: "AspNetUsers",
+                column: "UserName",
+                unique: true,
+                filter: "[UserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
