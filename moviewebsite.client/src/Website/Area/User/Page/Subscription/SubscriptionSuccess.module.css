@@ -1,0 +1,101 @@
+.subscriptionSuccessWrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-color: #121212;
+    position: relative;
+    overflow: hidden;
+}
+  
+.successCard {
+    background-color: #1e1e1e;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+.successIcon {
+    font-size: 5rem;
+    color: #4CAF50;
+}
+
+.title {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.leadText {
+    font-size: 1.2rem;
+    color: #b3b3b3;
+}
+
+.featuresGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 2rem;
+}
+
+.featureItem {
+    text-align: center;
+}
+
+.featureIcon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #00bcd4;
+}
+
+.startWatchingBtn {
+    background: linear-gradient(45deg, #ff4081, #ff9100);
+    border: none;
+    padding: 10px 30px;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.startWatchingBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(255, 64, 129, 0.3), 0 3px 6px rgba(255, 145, 0, 0.2);
+}
+
+.decorationCircle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+.circle1 {
+    width: 300px;
+    height: 300px;
+    background-color: #ff4081;
+    top: -100px;
+    left: -100px;
+}
+
+.circle2 {
+    width: 200px;
+    height: 200px;
+    background-color: #00bcd4;
+    bottom: -50px;
+    right: -50px;
+}
+
+.circle3 {
+    width: 150px;
+    height: 150px;
+    background-color: #ff9100;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@media (max-width: 768px) {
+    .featuresGrid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -13,7 +13,8 @@ namespace Server.Model.Models
         [Key]
         public int Id { get; set; }
         public required string Title { get; set; }
-        public string? FilmImg { get; set; }
+        public string? FilmPath { get; set; }
+        public string? BlurHash { get; set; }
         public required string Synopsis { get; set; }
         public required string Director { get; set; }
         public required string Type { get; set; }
@@ -21,5 +22,7 @@ namespace Server.Model.Models
         public virtual ICollection<CategoryFilm> CategoryFilms { get; set; }
         [ValidateNever]
         public virtual ICollection<Episode> Episodes { get; set; }
+        [ValidateNever]
+        public virtual ICollection<UserFilm> UserFilms { get; set; }
     }
 }

@@ -1,1 +1,0 @@
-export const FILMCATE_UPDATE = "FILMCATE_UPDATE";

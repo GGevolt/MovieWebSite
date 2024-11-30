@@ -43,11 +43,45 @@ const getFilmCates = async (id) => {
   });
   return response.data;
 };
+
+const getRelatedFilms = async (id) => {
+  const response = await axios
+    .get(`/api/film/relatefilms/${id}`)
+    .catch((error) => {
+      console.error(
+        "There has been a problem with get operation of get related films:",
+        error
+      );
+    });
+  return response.data;
+};
+const getFilmsScore = async (id) => {
+  const response = await axios
+    .get(`/api/userFilm/filmscore/${id}`)
+    .catch((error) => {
+      console.error(
+        "There has been a problem with get operation of get related films:",
+        error
+      );
+    });
+  return response.data.score;
+};
+const getUserPlayList = async (username) => {
+  const response = await axios
+    .get(`/api/userFilm/getplaylist/${username}`)
+    .catch((error) => {
+      console.log("Get play list error:", error.response);
+    });
+  return response.data;
+};
 const WebApi = {
   getEpisodes,
   getCategories,
   getFilm,
   getFilmCates,
   getFilms,
+  getRelatedFilms,
+  getFilmsScore,
+  getUserPlayList,
 };
 export default WebApi;

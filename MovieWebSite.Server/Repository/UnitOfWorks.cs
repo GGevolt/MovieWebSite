@@ -10,6 +10,8 @@ namespace MovieWebSite.Server.Repository
         public IFilmRepository FilmRepository { get; private set; }
         public ICategoryRepository CategoryRepository { get; private set; }
         public ICategoryFilmRepository CategoryFilmRepository { get; private set; }
+        public ICommnentRepository CommnentRepository { get; private set; }
+        public IUserFilmRepository UserFilmRepository { get; private set; }
 
         public UnitOfWorks(ApplicationDBContext dBContext)
         {
@@ -18,6 +20,8 @@ namespace MovieWebSite.Server.Repository
             FilmRepository = new FilmRepository(dBContext);
             CategoryRepository = new CategoryRepository(dBContext);
             CategoryFilmRepository = new CategoryFilmRepository(dBContext);
+            CommnentRepository = new CommentRepository(dBContext);
+            UserFilmRepository = new UserFilmRepository(dBContext);
         }
 
         public void Save()

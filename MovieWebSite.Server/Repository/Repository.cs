@@ -39,7 +39,7 @@ namespace MovieWebSite.Server.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperty = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperty = null, string? moreProperty = null)
         {
 
             IQueryable<T> query = dbSet;
@@ -50,6 +50,10 @@ namespace MovieWebSite.Server.Repository
             if (!string.IsNullOrEmpty(includeProperty))
             {
                 query = query.Include(includeProperty);
+            }
+            if (!string.IsNullOrEmpty(moreProperty))
+            {
+                query = query.Include(moreProperty);
             }
             return query.ToList();
         }

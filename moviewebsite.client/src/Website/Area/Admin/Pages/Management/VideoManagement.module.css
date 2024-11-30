@@ -1,0 +1,214 @@
+.videoManagement {
+  background-color: #1a1a1a;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  margin-bottom: 1rem;
+}
+
+.sidebar {
+  margin-bottom: 2rem;
+}
+
+.filmCard {
+  border: none;
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+  transition: box-shadow 0.3s ease;
+  background-color: #2a2a2a;
+}
+
+.filmCard:hover {
+  box-shadow: 0 6px 12px rgba(255, 254, 254, 0.64);
+}
+
+.poster {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.filmTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+}
+
+.filmInfo {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #b0b0b0;
+}
+
+.infoLabel {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  color: #e0e0e0;
+}
+
+.mainCard {
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+  border: none;
+  background-color: #2a2a2a;
+}
+
+.episodeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.episodeTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+.addButton {
+  background-color: #2ecc71;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.addButton:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.episodeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.episodeCard {
+  background-color: #3a3a3a;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.episodeCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(255, 254, 254, 0.64);
+}
+
+.episodeNumber {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 0.5rem;
+}
+
+.editButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: transparent;
+  border: none;
+  color: #b0b0b0;
+  padding: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.editButton:hover {
+  color: #4a90e2;
+  transform: scale(1.1);
+}
+
+.formOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.formCard {
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+  background-color: #2a2a2a;
+}
+
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3a3a3a;
+  border-bottom: 1px solid #4a4a4a;
+}
+
+.closeButton {
+  background-color: transparent;
+  border: none;
+  color: #b0b0b0;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  color: #ff6b6b;
+  transform: scale(1.1);
+}
+
+@media (max-width: 992px) {
+  .sidebar {
+    margin-bottom: 2rem;
+  }
+
+  .episodeGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .episodeGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}

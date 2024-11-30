@@ -1,0 +1,142 @@
+.filmContainer {
+    overflow-x: hidden;
+    padding: 2rem 1rem;
+  }
+  
+  .rowTitle {
+    padding-left: 0.5rem;
+  }
+  
+  .filmRowContainer {
+    position: relative;
+  }
+  
+  .filmRow {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 1.25rem 0;
+    margin: 0 -0.5rem;
+  }
+  
+  .filmCardWrapper {
+    flex: 0 0 calc(100% / 6);
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+  
+  .tvSeriesCard {
+    position: relative;
+    height: 20rem;
+    background-color: #2a2a2a;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .tvSeriesCard:hover {
+    transform: scale(1.05);
+    box-shadow: rgba(74, 254, 29, 0.4) 5px 5px, rgba(78, 240, 46, 0.3) 10px 10px, rgba(85, 240, 46, 0.2) 15px 15px, rgba(46, 240, 85, 0.1) 20px 20px, rgba(46, 240, 78, 0.05) 25px 25px;
+  }
+  
+  .tvSeriesCard img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .filmTitle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem;
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .tvSeriesCard:hover .filmTitle,
+  .tvSeriesCard:focus .filmTitle {
+    opacity: 1;
+  }
+  
+  .buttonContainer {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+  
+  .leftButton {
+    left: 0.5rem;
+  }
+  
+  .rightButton {
+    right: 0.5rem;
+  }
+  
+  .scrollButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .scrollButton:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .scrollButton:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  
+  .scrollLeft {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+  
+  .scrollRight {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+  
+  @media (max-width: 1199px) {
+    .filmCardWrapper {
+      flex: 0 0 20%;
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .filmCardWrapper {
+      flex: 0 0 25%;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .filmCardWrapper {
+      flex: 0 0 33.333%;
+    }
+  }
+  
+  @media (max-width: 575px) {
+    .filmCardWrapper {
+      flex: 0 0 50%;
+      padding: 0 0.5rem;
+    }
+  
+    .tvSeriesCard {
+      height: 16rem; 
+    }
+  
+    .scrollButton {
+      height: 4rem;
+    }
+  }

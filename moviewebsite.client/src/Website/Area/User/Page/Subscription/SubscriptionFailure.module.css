@@ -1,0 +1,107 @@
+.subscriptionFailureWrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-color: #121212;
+    position: relative;
+    overflow: hidden;
+}
+  
+.failureCard {
+    background-color: #1e1e1e;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+.failureIcon {
+    font-size: 5rem;
+    color: #FF6B6B;
+}
+
+.title {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.leadText {
+    font-size: 1.2rem;
+    color: #b3b3b3;
+}
+
+.optionsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 2rem;
+}
+
+.optionItem {
+    padding-top: 0.9375rem;
+    text-align: center;
+}
+
+.optionItem:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(78, 205, 196, 0.3), 0 3px 6px rgba(69, 183, 209, 0.2);
+}
+
+.optionIcon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #4ECDC4;
+}
+
+.returnHomeBtn {
+    background: linear-gradient(45deg, #4ECDC4, #45B7D1);
+    border: none;
+    padding: 10px 30px;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.returnHomeBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(78, 205, 196, 0.3), 0 3px 6px rgba(69, 183, 209, 0.2);
+}
+
+.decorationCircle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+.circle1 {
+    width: 300px;
+    height: 300px;
+    background-color: #FF6B6B;
+    top: -100px;
+    left: -100px;
+}
+
+.circle2 {
+    width: 200px;
+    height: 200px;
+    background-color: #4ECDC4;
+    bottom: -50px;
+    right: -50px;
+}
+
+.circle3 {
+    width: 150px;
+    height: 150px;
+    background-color: #45B7D1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@media (max-width: 768px) {
+    .optionsGrid {
+      grid-template-columns: 1fr;
+    }
+}

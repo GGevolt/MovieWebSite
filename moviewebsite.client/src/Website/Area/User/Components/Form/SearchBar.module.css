@@ -1,0 +1,75 @@
+.searchContainer {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: #61dafb;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+  border: 1px solid #61dafb;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #f0f0f0;
+}
+
+.searchInput::placeholder {
+  color: #a0a0a0;
+}
+
+.searchInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(97, 218, 251, 0.5);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #2a2a2a;
+  border: 1px solid #61dafb;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #f0f0f0;
+}
+
+.dropdownItem:hover {
+  background-color: rgba(97, 218, 251, 0.1);
+}
+
+.filmThumbnail {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+  margin-right: 0.5rem;
+  border-radius: 4px;
+}
+
+@media (max-width: 991px) {
+  .searchContainer {
+    max-width: 100%;
+  }
+}
