@@ -8,7 +8,7 @@ using Server.Model.DTO;
 using Server.Model.Models;
 using System.Diagnostics;
 
-namespace MovieWebSite.Server.Controllers
+namespace MovieWebSite.Server.Controllers.Identity
 {
     [ApiController]
     [Route("api/[controller]")]

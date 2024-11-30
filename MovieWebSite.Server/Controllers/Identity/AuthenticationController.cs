@@ -28,15 +28,13 @@ namespace MovieWebSite.Server.Controllers.Identity
     {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
         private readonly StripeSettingDTO _settings;
 
-        public AuthenticationController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, IOptions<StripeSettingDTO> settings)
+        public AuthenticationController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IEmailService emailService, IOptions<StripeSettingDTO> settings)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
-            _tokenService = tokenService;
             _emailService = emailService;
             _settings = settings.Value;
         }
