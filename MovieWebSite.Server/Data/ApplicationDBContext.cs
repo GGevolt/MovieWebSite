@@ -22,6 +22,33 @@ namespace MovieWebSite.Server.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ApplicationUser>().HasIndex(u => u.UserName).IsUnique();
+
+            modelBuilder.Entity<UserFilm>()
+                .HasKey(uf => new { uf.UserId, uf.FilmId });
+
+            modelBuilder.Entity<UserFilm>()
+                .HasOne(uf => uf.User)
+                .WithMany(u => u.UserFilms)
+                .HasForeignKey(uf => uf.UserId);
+
+            modelBuilder.Entity<UserFilm>()
+                .HasOne(uf => uf.Film)
+                .WithMany(f => f.UserFilms)
+                .HasForeignKey(uf => uf.FilmId);
+
+            modelBuilder.Entity<CategoryFilm>()
+                .HasKey(cf => new { cf.CategoryId, cf.FilmId });
+
+            modelBuilder.Entity<CategoryFilm>()
+                .HasOne(cf => cf.Category)
+                .WithMany(c => c.CategoryFilms)
+                .HasForeignKey(cf => cf.CategoryId);
+
+            modelBuilder.Entity<CategoryFilm>()
+                .HasOne(cf => cf.Film)
+                .WithMany(f => f.CategoryFilms)
+                .HasForeignKey(cf => cf.FilmId);
+
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole
@@ -50,32 +77,6 @@ namespace MovieWebSite.Server.Data
                 modelBuilder.Entity<IdentityRole>()
                     .HasData(role);
             }
-
-            modelBuilder.Entity<UserFilm>()
-                .HasKey(uf => new { uf.UserId, uf.FilmId });
-
-            modelBuilder.Entity<UserFilm>()
-                .HasOne(uf => uf.User)
-                .WithMany(u => u.UserFilms)
-                .HasForeignKey(uf => uf.UserId);
-
-            modelBuilder.Entity<UserFilm>()
-                .HasOne(uf => uf.Film)
-                .WithMany(f => f.UserFilms)
-                .HasForeignKey(uf => uf.FilmId);
-
-            modelBuilder.Entity<CategoryFilm>()
-                .HasKey(cf => new { cf.CategoryId, cf.FilmId });
-
-            modelBuilder.Entity<CategoryFilm>()
-                .HasOne(cf => cf.Category)
-                .WithMany(c => c.CategoryFilms)
-                .HasForeignKey(cf => cf.CategoryId);
-
-            modelBuilder.Entity<CategoryFilm>()
-                .HasOne(cf => cf.Film)
-                .WithMany(f => f.CategoryFilms)
-                .HasForeignKey(cf => cf.FilmId);
 
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Action" },

@@ -1,17 +1,15 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, useLoaderData, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shuffle } from 'lucide-react';
 import styles from './Playlist.module.css';
-import AuthContext from '../../../AuthContext/Context';
 import FilmImg from '../../Components/Img/FilmImg';
 
 function Playlist() {
-    const authContext = useContext(AuthContext);
-    const { getUserPlayList, roles } = authContext;
-    const [playlist, setPlaylist] = useState([]);
     const [loading, setLoading] = useState(true);
+    const params = useParams()
+    const playlist = useLoaderData();
     const navigate = useNavigate();
   
     useEffect(() => {
@@ -19,7 +17,9 @@ function Playlist() {
     }, []);
   
     const fetchPlaylist = async () => {
-      setPlaylist(await getUserPlayList());
+      if(playlist === undefined){
+        navigate("/")
+      }
       setLoading(false);
     };
   
@@ -45,10 +45,6 @@ function Playlist() {
       );
     }
   
-    if (!roles.includes("UserT2")) {
-      return <Navigate to="/" />;
-    }
-  
     return (
       <Container fluid className={styles.playlistContainer}>
         <motion.h1
@@ -57,7 +53,7 @@ function Playlist() {
           transition={{ duration: 0.5 }}
           className={styles.title}
         >
-          Your Playlist
+          {params.username} Playlist
         </motion.h1>
         <motion.div
           initial={{ opacity: 0 }}
@@ -76,7 +72,7 @@ function Playlist() {
           </Button>
         </motion.div>
         {playlist.length === 0 ? (
-          <p className={styles.emptyMessage}>Your playlist is empty.</p>
+          <p className={styles.emptyMessage}>{params.username} playlist is empty.</p>
         ) : (
           <motion.div
             initial={{ opacity: 0 }}

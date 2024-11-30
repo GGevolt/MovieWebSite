@@ -44,7 +44,6 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="/user/userinfo" element={<UserInfo />} />
         <Route path="/user/search" element={<SearchFilms />} />
-        <Route path="/user/playlist" element={<Playlist/>} />
         <Route path="/user/memberships" element={<Memberships />} />
         <Route
           path="/user/memberships/success"
@@ -58,12 +57,13 @@ const router = createBrowserRouter(
           path="/user/detail/:filmId"
           element={<Detail />}
           loader={async ({ params }) => {
-            const [ film, relatedFilms, filmCates, filmScore ] = await Promise.all([
-              WebApi.getFilm(params.filmId),
-              WebApi.getRelatedFilms(params.filmId),
-              WebApi.getFilmCates(params.filmId),
-              WebApi.getFilmsScore(params.filmId)
-            ]);
+            const [film, relatedFilms, filmCates, filmScore] =
+              await Promise.all([
+                WebApi.getFilm(params.filmId),
+                WebApi.getRelatedFilms(params.filmId),
+                WebApi.getFilmCates(params.filmId),
+                WebApi.getFilmsScore(params.filmId),
+              ]);
             return { film, relatedFilms, filmCates, filmScore };
           }}
         />
@@ -84,9 +84,15 @@ const router = createBrowserRouter(
         element={<ProtectedRoutes allowRoles={[ROLES.Admin]} />}
       >
         <Route index element={<Dashboard />} />
-        <Route path="/admin/category-Management" element={<CategoryManagement />}/>
+        <Route
+          path="/admin/category-Management"
+          element={<CategoryManagement />}
+        />
         <Route path="/admin/film-Management" element={<FilmManagement />} />
-        <Route path="/admin/account-Management" element={<AccountManagement />} />
+        <Route
+          path="/admin/account-Management"
+          element={<AccountManagement />}
+        />
         <Route
           path="/admin/video-Management/:filmId"
           element={<VideoManagement />}
@@ -97,6 +103,11 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/emailconfirm/:token/:email" element={<EmailConfirm />} />
+      <Route
+        path="/playlist/:username"
+        element={<Playlist />}
+        loader={async ({ params }) => WebApi.getUserPlayList(params.username)}
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

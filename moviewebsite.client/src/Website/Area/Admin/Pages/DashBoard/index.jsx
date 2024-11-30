@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import { BarChart, PieChart, LineChart } from "@mui/x-charts";
+import { BarChart, PieChart } from "@mui/x-charts";
 import adminApi from "../../AdminApi/adminApi";
 import styles from "./Dashboard.module.css";
 
 export default function Dashboard() {
   const [subscriptionStatus, setSubscriptionStatus] = useState([]);
-  const [revenue, setRevenue] = useState([]);
   const [contentPopularity, setContentPopularity] = useState([]);
   const [userDemographics, setUserDemographics] = useState([]);
   const [genrePopularity, setGenrePopularity] = useState([]);
@@ -14,7 +13,6 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       setSubscriptionStatus(await adminApi.getSubscriptionStatusData());
-      setRevenue(await adminApi.getRevenue());
       setContentPopularity(await adminApi.getContentPopularity());
       setUserDemographics(await adminApi.getUserDemographics());
       setGenrePopularity(await adminApi.getGenrePopularity());
@@ -79,29 +77,18 @@ export default function Dashboard() {
         </Col>
         <Col xs={12} md={6}>
           {renderChart(
-            "Revenue",
-            revenue.length > 0 ? (
-              <LineChart
-                xAxis={[
-                  {
-                    data: revenue.map((item) => new Date(item.date)),
-                    scaleType: "time",
-                    tickLabelStyle: {
-                      fill: "#ffffff",
-                    },
-                  },
-                ]}
-                yAxis={[
-                  {
-                    tickLabelStyle: {
-                      fill: "#ffffff",
-                    },
-                  },
-                ]}
+            "User Demographics",
+            userDemographics.length > 0 ? (
+              <PieChart
                 series={[
                   {
-                    data: revenue.map((item) => item.revenue),
-                    label: "Revenue",
+                    data: userDemographics.map((item) => ({
+                      id: item.ageGroup,
+                      value: item.count,
+                      label: `${item.ageGroup} year old`,
+                    })),
+                    highlightScope: { faded: "global", highlighted: "item" },
+                    faded: { innerRadius: 30, additionalRadius: -30 },
                   },
                 ]}
                 height={300}
@@ -147,10 +134,6 @@ export default function Dashboard() {
                     data: contentPopularity.map((item) => item.viewCount),
                     label: "Views",
                   },
-                  {
-                    data: contentPopularity.map((item) => item.averageRating),
-                    label: "Avg Rating",
-                  },
                 ]}
                 height={400}
                 {...chartProps}
@@ -161,37 +144,13 @@ export default function Dashboard() {
                     },
                   },
                 }}
-              />
-            ) : (
-              <p className={styles.noData}>No data available</p>
-            )
-          )}
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={12} md={6}>
-          {renderChart(
-            "User Demographics",
-            userDemographics.length > 0 ? (
-              <PieChart
-                series={[
-                  {
-                    data: userDemographics.map((item) => ({
-                      id: item.ageGroup,
-                      value: item.count,
-                      label: `${item.ageGroup} year old`,
-                    })),
-                    highlightScope: { faded: "global", highlighted: "item" },
-                    faded: { innerRadius: 30, additionalRadius: -30 },
-                  },
-                ]}
-                height={300}
-                {...chartProps}
-                slotProps={{
-                  legend: {
-                    labelStyle: {
-                      fill: "#ffffff",
-                    },
+                tooltip={{
+                  trigger: "item",
+                  formatter: (params) => {
+                    const item = contentPopularity[params.dataIndex];
+                    return `${item.title}<br/>Views: ${
+                      item.viewCount
+                    }<br/>Avg Rating: ${item.averageRating.toFixed(2)}`;
                   },
                 }}
               />
@@ -200,7 +159,9 @@ export default function Dashboard() {
             )
           )}
         </Col>
-        <Col xs={12} md={6}>
+      </Row>
+      <Row>
+        <Col xs={12}>
           {renderChart(
             "Genre Popularity",
             genrePopularity.length > 0 ? (

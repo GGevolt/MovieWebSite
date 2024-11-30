@@ -28,13 +28,6 @@ const getSubscriptionStatusData = async () => {
   return response.data;
 };
 
-const getRevenue = async () => {
-  const response = await api.get("/dashBoard/revenue").catch((error) => {
-    console.log("Getting revenue error:", error.response);
-  });
-  return response.data;
-};
-
 const getContentPopularity = async () => {
   const response = await api
     .get("/dashBoard/content-popularity")
@@ -73,7 +66,7 @@ const cancelSubscription = async (userId) => {
   await api.get(`/payment/cancel/${userId}`).catch((error) => {
     console.log("Cancel subscription error:", error.response);
   });
-}
+};
 
 const adminApi = {
   Delete,
@@ -81,8 +74,7 @@ const adminApi = {
   getUserDemographics,
   getGenrePopularity,
   getSubscriptionStatusData,
-  getRevenue,
   getUsers,
-  cancelSubscription
+  cancelSubscription,
 };
 export default adminApi;

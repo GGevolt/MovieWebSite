@@ -12,7 +12,8 @@ namespace MovieWebSite.Server.Controllers
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         [HttpGet("{EpisodeId}")]
         public IActionResult GetEpisodeComment(int EpisodeId) {
-            return Ok(_unitOfWork.CommnentRepository.GetAll(e => e.EpisodeId == EpisodeId));
+            var comments = _unitOfWork.CommnentRepository.GetAll(e => e.EpisodeId == EpisodeId);
+            return Ok(comments);
         }
         [HttpPost]
         public IActionResult PostComment(Comment comment) {

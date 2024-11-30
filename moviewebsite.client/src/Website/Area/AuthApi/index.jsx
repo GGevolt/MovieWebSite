@@ -173,12 +173,6 @@ const userFilmLogic = async ({
     });
   return response.data;
 };
-const getUserPlayList = async () => {
-  const response = await api.get("/userFilm/getplaylist").catch((error) => {
-    console.log("Get play list error:", error.response);
-  });
-  return response.data;
-};
 const AuthApi = {
   register,
   signIn,
@@ -187,7 +181,6 @@ const AuthApi = {
   validateUser,
   confirmEmail,
   userFilmLogic,
-  getUserPlayList,
   createCheckOutSession,
   RedirectToCustomerPortal,
 };

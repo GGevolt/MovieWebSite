@@ -11,11 +11,9 @@ namespace MovieWebSite.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ImagesController(IUnitOfWork unitOfWork, IWebHostEnvironment webhost, IBlurhasher blurhasher) : ControllerBase
+    public class ImagesController(IWebHostEnvironment webhost) : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IWebHostEnvironment _webhost = webhost;
-        private  readonly IBlurhasher _blurhasher = blurhasher;
         [HttpGet("{imageName}")]
         public IActionResult GetImage(string imageName)
         {

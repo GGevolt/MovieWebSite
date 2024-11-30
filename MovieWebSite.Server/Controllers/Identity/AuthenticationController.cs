@@ -50,7 +50,14 @@ namespace MovieWebSite.Server.Controllers.Identity
                 var userNameExist = await userManager.FindByNameAsync(user.UserName);
                 if (emailExist != null && userNameExist != null)
                 {
-                    return BadRequest(new { message = "User with this email and username already exists!" });
+                    if (emailExist == userNameExist && emailExist.EmailConfirmed == false)
+                    {
+                        await userManager.DeleteAsync(emailExist);
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = "User with this email and username already exists!" });
+                    }
                 }
                 else if (emailExist != null)
                 {
@@ -82,7 +89,6 @@ namespace MovieWebSite.Server.Controllers.Identity
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(new_user);
                 token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
                 var urlComfirmEmail = $"{user.EmailConfirnUrl}/{token}/{new_user.Email}";
-                //var confirmLink = Url.Action(nameof(ConfirmEmail), "Authentication", new {token, email = new_user.Email}, Request.Scheme);
                 var emailSubject = "Confirm your email with Sodoki.";
                 var emailBody = $"You can confirm your account by <a href='{HtmlEncoder.Default.Encode(urlComfirmEmail)}'>clicking here</a>. Hope you have nice day :)";
                 var emailComponent = new EmailComponent

@@ -12,16 +12,17 @@ namespace MovieWebSite.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserFilmController(IUnitOfWork unitOfWork, SignInManager<ApplicationUser> signInManager) : Controller
+    public class UserFilmController(IUnitOfWork unitOfWork, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
-        [HttpGet("getplaylist"), Authorize(Roles = "UserT2")]
-        public async Task<IActionResult> GetUserPlayList()
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        [HttpGet("getplaylist/{username}")]
+        public async Task<IActionResult> GetUserPlayList(string username)
         {
             try
             {
-                var user = await _signInManager.UserManager.GetUserAsync(User);
+                var user = await _userManager.FindByNameAsync(username);
                 if (user == null)
                 {
                     throw new Exception("💥Can't find user in get play list!");

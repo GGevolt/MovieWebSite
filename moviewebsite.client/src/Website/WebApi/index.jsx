@@ -65,7 +65,15 @@ const getFilmsScore = async (id) => {
       );
     });
   return response.data.score;
-}
+};
+const getUserPlayList = async (username) => {
+  const response = await axios
+    .get(`/api/userFilm/getplaylist/${username}`)
+    .catch((error) => {
+      console.log("Get play list error:", error.response);
+    });
+  return response.data;
+};
 const WebApi = {
   getEpisodes,
   getCategories,
@@ -73,6 +81,7 @@ const WebApi = {
   getFilmCates,
   getFilms,
   getRelatedFilms,
-  getFilmsScore
+  getFilmsScore,
+  getUserPlayList,
 };
 export default WebApi;

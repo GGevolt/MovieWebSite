@@ -14,7 +14,8 @@ namespace MovieWebSite.Server.Controllers
         [HttpGet]
         public IActionResult GetCategories()
         {
-            return Ok(_unitOfWork.CategoryRepository.GetAll());
+            var categories = _unitOfWork.CategoryRepository.GetAll();
+            return Ok(categories);
         }
 
         [HttpPost, Authorize(Roles = "Admin")]

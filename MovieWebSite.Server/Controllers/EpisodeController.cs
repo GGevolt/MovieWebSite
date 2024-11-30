@@ -21,7 +21,8 @@ namespace MovieWebSite.Server.Controllers
         {
             try
             {
-                return Ok(_unitOfWork.EpisodeRepository.GetAll(e => e.FilmId == id).OrderBy(e=>e.EpisodeNumber).ToList());
+                var episodes = _unitOfWork.EpisodeRepository.GetAll(e => e.FilmId == id).OrderBy(e => e.EpisodeNumber).ToList();
+                return Ok(episodes);
             }
             catch (Exception ex)
             {

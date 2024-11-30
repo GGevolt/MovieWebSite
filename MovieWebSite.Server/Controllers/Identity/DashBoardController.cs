@@ -45,39 +45,6 @@ namespace MovieWebSite.Server.Controllers.Identity
             }
         }
 
-        [HttpGet("revenue")]
-        public IActionResult GetRevenue()
-        {
-            try
-            {
-                var users = _userManager.Users
-                    .Where(u => u.SubscriptionStartPeriod.HasValue)
-                    .Select(u => new
-                    {
-                        Year = u.SubscriptionStartPeriod.Value.Year,
-                        Month = u.SubscriptionStartPeriod.Value.Month,
-                        PriceId = u.PriceId
-                    })
-                    .ToList();
-
-                var revenue = users
-                    .GroupBy(u => new { u.Year, u.Month })
-                    .Select(g => new
-                    {
-                        Date = new DateTime(g.Key.Year, g.Key.Month, 1),
-                        Revenue = g.Sum(u => u.PriceId == _settings.ProPriceId ? 19.99m : 15m)
-                    })
-                    .OrderBy(x => x.Date)
-                    .ToList();
-
-                return Ok(revenue);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred while fetching revenue data: {ex.Message}");
-            }
-        }
-
         [HttpGet("content-popularity")]
         public IActionResult GetContentPopularity()
         {

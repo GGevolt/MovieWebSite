@@ -20,7 +20,8 @@ namespace MovieWebSite.Server.Controllers
         [HttpGet]
         public IActionResult GetFilms()
         {
-            return Ok(_unitOfWork.FilmRepository.GetAll());
+            var films = _unitOfWork.FilmRepository.GetAll();
+            return Ok(films);
         }
         [HttpGet("{id}")]
         public IActionResult GetFilm(int id)
