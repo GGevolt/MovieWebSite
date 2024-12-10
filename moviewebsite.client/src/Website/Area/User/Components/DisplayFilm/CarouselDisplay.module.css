@@ -1,0 +1,57 @@
+.filmCarouselContainer {
+    max-width: 100vw;
+    margin: 0 auto;
+    background-color: #000000;
+    color: white;
+  }
+  
+  .carouselItem {
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .row {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .filmInfo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 3.125rem;
+    padding-bottom: 5%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  }
+  
+  .filmImage {
+    height: 80vh;
+    width: 100%;
+  }
+  
+  .filmImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  @media (max-width: 768px) {
+    .filmImage {
+      height: 50vh;
+    }
+  
+    .filmInfo {
+      padding: 1rem;
+    }
+  }
+  
+  
