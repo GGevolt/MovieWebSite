@@ -5,6 +5,7 @@ import adminApi from "../../AdminApi/adminApi";
 import styles from "./Dashboard.module.css";
 
 export default function Dashboard() {
+  document.title = "Admin";
   const [subscriptionStatus, setSubscriptionStatus] = useState([]);
   const [contentPopularity, setContentPopularity] = useState([]);
   const [userDemographics, setUserDemographics] = useState([]);

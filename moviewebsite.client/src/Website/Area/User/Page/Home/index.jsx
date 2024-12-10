@@ -5,7 +5,7 @@ import WebContext from "../../../../WebContext/Context";
 import CarouselDisplay from "../../Components/DisplayFilm/CarouselDisplay";
 
 function Home() {
-  document.title = "Home";
+  document.title = "Sodoki";
   const webContext = useContext(WebContext);
   const { getFilms, films } = webContext;
   useEffect(() => {

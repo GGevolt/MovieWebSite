@@ -24,13 +24,13 @@ namespace MovieWebSite.Server.Controllers.Identity
         private readonly IConfiguration _configuration;
         private readonly StripeSettingDTO _settings;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailService _emailService;
 
-        public PaymentController(IConfiguration configuration, IOptions<StripeSettingDTO> settings, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public PaymentController(IConfiguration configuration, IOptions<StripeSettingDTO> settings, UserManager<ApplicationUser> userManager, IEmailService emailService)
         {
             _settings = settings.Value;
             _userManager = userManager;
-            _signInManager = signInManager;
+            _emailService = emailService;
             _configuration = configuration;
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
         }
@@ -332,6 +332,14 @@ namespace MovieWebSite.Server.Controllers.Identity
                 {
                     throw new Exception("💥Fail to update User when paided successfully!");
                 }
+                string plan = priceId == _settings.ProPriceId ? "Pro" : "Premium";
+                var emailComponent = new EmailComponent
+                {
+                    To = user.Email,
+                    Subject = "Subscribe to Sodoki",
+                    Body = $"You have succesfully subscribe to {plan} plan on Sodoki./n Thank you for subscribe to our services. If you have any question, please contact this email."
+                };
+                await _emailService.SendEmailAsync(emailComponent);
             }
             catch (Exception ex)
             {
