@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using MovieWebSite.Server.Repository.IRepository;
-using Server.Model.DTO;
-using Server.Utility.Interfaces;
-using Server.Utility.Services;
-using System.IO;
+﻿using Microsoft.AspNetCore.Mvc;
 
 
 namespace MovieWebSite.Server.Controllers

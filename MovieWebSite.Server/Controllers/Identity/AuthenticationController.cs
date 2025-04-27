@@ -8,17 +8,17 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Server.Utility.Interfaces;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
-using Server.Model.DTO;
-using Server.Model.AuthModels;
 using MovieWebSite.Server.Data;
 using System.Diagnostics;
 using Stripe;
 using Microsoft.Extensions.Options;
+using MovieWebSite.Server.AuthModels;
+using MovieWebSite.Server.Interfaces;
+using MovieWebSite.Server.DTO;
 
 namespace MovieWebSite.Server.Controllers.Identity
 {

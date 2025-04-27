@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
-using Server.Model.DTO;
 using System.Diagnostics;
-using Server.Utility.Interfaces;
 using System.Text.Json;
+using MovieWebSite.Server.Interfaces;
+using MovieWebSite.Server.DTO;
+using MovieWebSite.Server.Models;
 
 namespace MovieWebSite.Server.Controllers
 {

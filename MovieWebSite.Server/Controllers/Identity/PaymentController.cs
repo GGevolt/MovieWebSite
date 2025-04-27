@@ -1,19 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Server.Model.DTO;
-using Stripe.Events;
 using Stripe;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Stripe.Checkout;
 using Newtonsoft.Json;
 using System.Security.Claims;
-using Server.Utility.Interfaces;
-using Server.Model.AuthModels;
 using Microsoft.EntityFrameworkCore;
-using MovieWebSite.Server.Data;
-using Microsoft.Data.SqlClient;
+using MovieWebSite.Server.DTO;
+using MovieWebSite.Server.AuthModels;
 
 namespace MovieWebSite.Server.Controllers.Identity
 {

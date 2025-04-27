@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
+using MovieWebSite.Server.Models;
 
 namespace MovieWebSite.Server.Controllers
 {

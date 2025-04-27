@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Server.Model.AuthModels;
-using Server.Model.DTO;
+using MovieWebSite.Server.AuthModels;
+using MovieWebSite.Server.DTO;
 using Stripe;
 using System.Diagnostics;
 

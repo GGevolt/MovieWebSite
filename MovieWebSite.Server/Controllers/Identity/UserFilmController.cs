@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MovieWebSite.Server.AuthModels;
+using MovieWebSite.Server.DTO;
 using MovieWebSite.Server.Migrations;
+using MovieWebSite.Server.Models;
 using MovieWebSite.Server.Repository.IRepository;
-using Server.Model.AuthModels;
-using Server.Model.DTO;
-using Server.Model.Models;
 using System.Diagnostics;
 
 namespace MovieWebSite.Server.Controllers.Identity

@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MovieWebSite.Server.AuthModels;
+using MovieWebSite.Server.DTO;
 using MovieWebSite.Server.Repository;
 using MovieWebSite.Server.Repository.IRepository;
-using Server.Model.AuthModels;
-using Server.Model.DTO;
 
 
 namespace MovieWebSite.Server.Controllers.Identity

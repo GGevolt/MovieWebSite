@@ -1,10 +1,8 @@
-﻿using Server.Utility.Interfaces;
-using System;
-using System;
-using Blurhash;
+﻿using Blurhash;
 using System.Drawing;
+using MovieWebSite.Server.Interfaces;
 
-namespace Server.Utility.Services
+namespace MovieWebSite.Server.Services
 {
     public class Blurhasher : IBlurhasher
     {
@@ -26,7 +24,7 @@ namespace Server.Utility.Services
                     );
                 }
             }
-            return Blurhash.Core.Encode(pixels, 3, 1);
+            return Core.Encode(pixels, 3, 1);
         }
     }
 }

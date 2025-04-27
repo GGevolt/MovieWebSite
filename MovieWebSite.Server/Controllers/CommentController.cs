@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MovieWebSite.Server.Models;
 using MovieWebSite.Server.Repository.IRepository;
-using Server.Model.Models;
 using System.Diagnostics;
 
 namespace MovieWebSite.Server.Controllers

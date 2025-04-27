@@ -1,4 +1,4 @@
-﻿using Server.Model.Models;
+﻿using MovieWebSite.Server.Models;
 
 namespace MovieWebSite.Server.Repository.IRepository
 {

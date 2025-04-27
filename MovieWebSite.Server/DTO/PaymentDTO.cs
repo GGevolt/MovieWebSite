@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Utility.Interfaces
+namespace MovieWebSite.Server.DTO
 {
-    public interface IBlurhasher
+    public class PaymentDTO
     {
-        public string Encode(string imagePath);
+        public int Amount { get; set; }
     }
 }

@@ -29,8 +29,8 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     }
 }
 
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7040';
+// Use the VITE_API_BASE_URL from the .env file
+const target = env.VITE_API_BASE_URL || 'https://localhost:7040';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -71,7 +71,8 @@ export default defineConfig({
                 target,
                 secure: false,
                 changeOrigin: true,
-            },'^/api/authentication': {
+            },
+            '^/api/authentication': {
                 target,
                 secure: false,
                 changeOrigin: true,
@@ -108,4 +109,4 @@ export default defineConfig({
             cert: fs.readFileSync(certFilePath),
         }
     }
-})
+});

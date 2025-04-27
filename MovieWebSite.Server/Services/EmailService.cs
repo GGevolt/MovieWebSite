@@ -3,10 +3,10 @@ using MailKit.Security;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
-using Server.Utility.Interfaces;
-using Server.Model.DTO;
+using MovieWebSite.Server.Interfaces;
+using MovieWebSite.Server.DTO;
 
-namespace Server.Utility.Services
+namespace MovieWebSite.Server.Services
 {
     public class EmailService : IEmailService
     {

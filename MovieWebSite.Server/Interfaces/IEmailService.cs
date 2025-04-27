@@ -1,11 +1,11 @@
-﻿using Server.Model.DTO;
+﻿using MovieWebSite.Server.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Utility.Interfaces
+namespace MovieWebSite.Server.Interfaces
 {
     public interface IEmailService
     {

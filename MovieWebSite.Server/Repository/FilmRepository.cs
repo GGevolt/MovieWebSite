@@ -1,6 +1,6 @@
 ﻿using MovieWebSite.Server.Data;
-using Server.Model.Models;
 using MovieWebSite.Server.Repository.IRepository;
+using MovieWebSite.Server.Models;
 
 namespace MovieWebSite.Server.Repository
 {

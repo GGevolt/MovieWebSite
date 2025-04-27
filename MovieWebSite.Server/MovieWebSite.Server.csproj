@@ -10,8 +10,35 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\dist\assets\DailyMotion-DG3h8Kr0.js" />
+    <Content Remove="wwwroot\dist\assets\deco1-CBQXo-KB.jpg" />
+    <Content Remove="wwwroot\dist\assets\deco2-Bp365bJF.jpeg" />
+    <Content Remove="wwwroot\dist\assets\Facebook-OAB4fqrL.js" />
+    <Content Remove="wwwroot\dist\assets\FilePlayer-CxgUL9LI.js" />
+    <Content Remove="wwwroot\dist\assets\index-DsWaUqVs.css" />
+    <Content Remove="wwwroot\dist\assets\index-qS6ADN6Q.js" />
+    <Content Remove="wwwroot\dist\assets\Kaltura-CMMX9a7U.js" />
+    <Content Remove="wwwroot\dist\assets\logo-qSBbOe0W.png" />
+    <Content Remove="wwwroot\dist\assets\Mixcloud-Dh6QPAg4.js" />
+    <Content Remove="wwwroot\dist\assets\Mux-CYg2TseK.js" />
+    <Content Remove="wwwroot\dist\assets\Preview-DtSkQIS0.js" />
+    <Content Remove="wwwroot\dist\assets\SoundCloud-LKPKgceO.js" />
+    <Content Remove="wwwroot\dist\assets\Streamable-BYhVTQQw.js" />
+    <Content Remove="wwwroot\dist\assets\Twitch-C0W1lDuy.js" />
+    <Content Remove="wwwroot\dist\assets\Vidyard-C_ljFYeW.js" />
+    <Content Remove="wwwroot\dist\assets\Vimeo-CRm8_apE.js" />
+    <Content Remove="wwwroot\dist\assets\Wistia-DjZeMZh3.js" />
+    <Content Remove="wwwroot\dist\assets\YouTube-DniV_glS.js" />
+    <Content Remove="wwwroot\dist\index.html" />
+    <Content Remove="wwwroot\dist\vite.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.4.0" />
+    <PackageReference Include="Azure.Identity" Version="1.13.2" />
+    <PackageReference Include="Blurhash.Core" Version="4.0.0" />
+    <PackageReference Include="MailKit" Version="4.11.0" />
     <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.9.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
@@ -32,20 +59,41 @@
     <PackageReference Include="Stripe.net" Version="47.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.0" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\moviewebsite.client\moviewebsite.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\Server.Model\Server.Model.csproj" />
-    <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\videos\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\dist\assets\DailyMotion-DG3h8Kr0.js" />
+    <None Include="wwwroot\dist\assets\deco1-CBQXo-KB.jpg" />
+    <None Include="wwwroot\dist\assets\deco2-Bp365bJF.jpeg" />
+    <None Include="wwwroot\dist\assets\Facebook-OAB4fqrL.js" />
+    <None Include="wwwroot\dist\assets\FilePlayer-CxgUL9LI.js" />
+    <None Include="wwwroot\dist\assets\index-DsWaUqVs.css" />
+    <None Include="wwwroot\dist\assets\index-qS6ADN6Q.js" />
+    <None Include="wwwroot\dist\assets\Kaltura-CMMX9a7U.js" />
+    <None Include="wwwroot\dist\assets\logo-qSBbOe0W.png" />
+    <None Include="wwwroot\dist\assets\Mixcloud-Dh6QPAg4.js" />
+    <None Include="wwwroot\dist\assets\Mux-CYg2TseK.js" />
+    <None Include="wwwroot\dist\assets\Preview-DtSkQIS0.js" />
+    <None Include="wwwroot\dist\assets\SoundCloud-LKPKgceO.js" />
+    <None Include="wwwroot\dist\assets\Streamable-BYhVTQQw.js" />
+    <None Include="wwwroot\dist\assets\Twitch-C0W1lDuy.js" />
+    <None Include="wwwroot\dist\assets\Vidyard-C_ljFYeW.js" />
+    <None Include="wwwroot\dist\assets\Vimeo-CRm8_apE.js" />
+    <None Include="wwwroot\dist\assets\Wistia-DjZeMZh3.js" />
+    <None Include="wwwroot\dist\assets\YouTube-DniV_glS.js" />
+    <None Include="wwwroot\dist\index.html" />
+    <None Include="wwwroot\dist\vite.svg" />
   </ItemGroup>
 
 </Project>
